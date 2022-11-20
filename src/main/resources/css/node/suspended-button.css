@@ -1,0 +1,19 @@
+.button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+
+    -fx-text-fill: rgb(125,125,125);
+    -fx-font-family: "bilibilifx-home";
+    -fx-font-size: 25px;
+}
+
+.button:hover {
+    -fx-text-fill: rgb(125,125,125);
+    -fx-background-color: rgba(225,225,225,0.5);
+}
+
+.button:pressed {
+    -fx-text-fill: rgb(125,125,125);
+    -fx-background-color: rgba(155,155,155,0.5);
+}

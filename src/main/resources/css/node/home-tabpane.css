@@ -1,0 +1,11 @@
+.tab-pane {
+    -fx-border-color: transparent;
+}
+
+.tab-pane .tab-header-background {
+    -fx-border-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-border-color: transparent;
+}
