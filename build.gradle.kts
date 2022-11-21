@@ -30,7 +30,8 @@ dependencies {
     //GUI
     implementation(files("libs\\ElementFX.jar"))
     implementation(files("libs\\CloudTools.jar"))
-    implementation(files("libs\\TornadoFX.jar"))
+//    implementation(files("libs\\TornadoFX.jar"))
+    implementation(files("D:\\IDEA_WorkSpace\\kotlinfx\\build\\libs\\kotlinfx-2.0.0-SNAPSHOT.jar"))
 
     //Kotlin
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-javafx", version = "1.6.4")

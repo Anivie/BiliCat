@@ -7,7 +7,6 @@ import tornadofx.*
 
 @Single
 class MainViewController : Controller() {
-
     override fun View.initUi() = (this as MainView).run {
         rightBox.run {
             top = hbox(10, Pos.CENTER) {

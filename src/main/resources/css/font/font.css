@@ -1,14 +1,24 @@
 @font-face {
     font-family: "HarmonyOS Sans SC";
-    src:url("HarmonyOS_Sans_SC_Regular.ttf");
+    src:url("ttf/HarmonyOS_Sans_SC_Regular.ttf");
 }
 @font-face {
     font-family: "HarmonyOS Sans SC Bold";
-    src:url("HarmonyOS_Sans_SC_Bold.ttf");
+    src:url("ttf/HarmonyOS_Sans_SC_Bold.ttf");
 }
 @font-face {
     font-family: "HarmonyOS Sans SC Medium";
-    src:url("HarmonyOS_Sans_SC_Medium.ttf");
+    src:url("ttf/HarmonyOS_Sans_SC_Medium.ttf");
+}
+
+@font-face {
+    font-family: "Alibaba PuHuiTi 2.0 55 Regular";
+    src:url("ttf/AlibabaPuHuiTi-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Smiley Sans Oblique";
+    src:url("ttf/SmileySans-Oblique.ttf");
 }
 
 .root{

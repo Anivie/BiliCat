@@ -1,13 +1,23 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
+import ink.bluecloud.service.clientservice.init.LoadCookie
+import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
+import ink.bluecloud.service.clientservice.video.stream.VideoStream
+import ink.bluecloud.service.clientservice.video.stream.param.Qn
 import ink.bluecloud.ui.HarmonySans
+import ink.bluecloud.ui.fragment.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
+import ink.bluecloud.utils.ioScope
+import ink.bluecloud.utils.uiContext
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import tornadofx.*
@@ -45,28 +55,18 @@ class MainView: KoinComponent,MainViewNodes() {
                 }
 
                 button("Debug!") {
-/*
                     action {
-                        UI {
-                            val dispatcher = find<ClientServiceDispatcher>()
-
-                            dispatcher.service<DefaultProvider, LoadCookie> { load() }
-                            val url = suspendCoroutine { coroutine ->
-                                dispatcher.service<VideoServiceProvider, VideoWeeklyList> {
-                                    getVideos {
-                                        dispatcher.service<VideoServiceProvider, VideoStream> {
-                                            val builder = VideoStreamParamBuilder()
-                                            getVideoStream(it[8].id,it[8].cid, builder) {
-                                                coroutine.resume(it.video.get(Qn.P4K.value).values().first()[0])
-                                            }
-                                        }
-                                    }
+                        ioScope.launch {
+                            get<LoadCookie>().load()
+                            val (_, _, _, id, cid, _, _, _, _, _) = get<VideoWeeklyList>().getVideos().first()
+                            get<VideoStream>().getVideoStream(id, cid).run {
+                                withContext(uiContext) {
+                                    find<VideoPlayer>(params = mapOf("url" to video.get(Qn.P720_ALL.value).values().first()[0])).openWindow()
                                 }
                             }
-                            find<VideoPlayer>(params = mapOf("url" to url)).openWindow()
                         }
                     }
-*/
+
                     style {
                         padding = box(10.px,50.px)
                     }
