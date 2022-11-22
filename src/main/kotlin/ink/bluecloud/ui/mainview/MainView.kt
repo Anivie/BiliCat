@@ -2,6 +2,7 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStage
+import ink.bluecloud.model.data.video.keepURL
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.service.clientservice.video.stream.param.Qn
@@ -72,10 +73,8 @@ class MainView : KoinComponent,MainViewNodes() {
                             Stage(StageStyle.TRANSPARENT).apply {
                                 scene = Scene(get<VideoPlayer> {
                                     parametersOf(
-                                        video.get(Qn
-                                            .P1080P60_ALL_COOKIE_VIP
-                                            .value
-                                        ).values().first()[0]
+                                        video.getVideoStreamData(Qn.P1080_ALL_COOKIE).url[0]
+//                                        video.getVideoStreamData(Qn.P1080_ALL_COOKIE).keepURL()
                                     )
                                 })
 

@@ -29,6 +29,13 @@ abstract class HttpClient : Client(),Closeable {
         onResponse: Response.(Call) -> Unit
     )
 
+    abstract fun headFor(
+        url: HttpUrl,
+        headers: Headers? = defaultHeader,
+        onFailure: (Call.(IOException) -> Unit)? = null,
+        onResponse: Response.(Call) -> Unit
+    )
+
     abstract fun postFor(
         url: HttpUrl,
         params: Map<String, String>,
