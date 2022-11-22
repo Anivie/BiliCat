@@ -8,6 +8,8 @@ import org.koin.core.annotation.Factory
 @Factory
 class LoadCookie: ClientService() {
     fun load() {
-        httpClient.getCookieStore().parseTo(settingCenter.readSettingOnly<CookieJson>()?: throw IllegalArgumentException())
+        settingCenter.readSettingOnly<CookieJson>()?.run {
+            httpClient.getCookieStore().parseTo(this)
+        }
     }
 }
