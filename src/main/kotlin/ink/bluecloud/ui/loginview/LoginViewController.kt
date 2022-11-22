@@ -3,32 +3,32 @@ package ink.bluecloud.ui.loginview
 import com.alibaba.fastjson2.JSONWriter
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
+import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.service.clientservice.account.login.LoginService
-import ink.bluecloud.service.clientservice.release.ReleaseService
 import ink.bluecloud.ui.Controller
 import ink.bluecloud.ui.cloudnotice
 import javafx.application.Platform
 import javafx.scene.image.Image
+import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
-import tornadofx.*
+import org.koin.core.component.inject
 
 @Single
-class LoginViewController: Controller() {
+class LoginViewController: Controller<LoginView>() {
+    private val loginService by inject<LoginService>()
 
-    override fun View.initUi() {
-        this as LoginView
-
+    override fun initUi(view: LoginView) = view.run {
         (root.top as TitleBar).onCloseRequest = {
-            get<ReleaseService>().onExit()
+            get<HttpClient>().close()
             Platform.exit()
         }
 
-        val loginService = get<LoginService>()
-        ui {
-            qrCodeBox.image = Image(loginService.getCode())
-        }
         io {
+            withContext(uiContext) {
+                qrCodeBox.image = Image(loginService.getCode())
+            }
+
             val jsonObject = loginService.whenSuccess()
             cloudnotice(NoticeType.Right, "登录成功！")
             println(jsonObject.toJSONString(JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue))

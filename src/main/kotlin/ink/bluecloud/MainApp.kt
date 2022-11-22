@@ -2,11 +2,13 @@ package ink.bluecloud
 
 import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStageAndRoot
 import ink.bluecloud.css.themes
+import ink.bluecloud.service.clientservice.init.LoadCookie
 import ink.bluecloud.ui.mainview.MainView
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.context.stopKoin
 import tornadofx.*
 
@@ -21,6 +23,8 @@ class MainApp: App(
             reloadViewsOnFocus()
             reloadStylesheetsOnFocus()
         }
+
+        get<LoadCookie>().load()
     }
 
     override fun start(stage: Stage) {

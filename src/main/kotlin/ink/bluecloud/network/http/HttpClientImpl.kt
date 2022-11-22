@@ -3,9 +3,17 @@ package ink.bluecloud.network.http
 import okhttp3.*
 import okio.IOException
 import org.koin.core.annotation.Single
+import java.time.Duration
 
 @Single
 class HttpClientImpl: HttpClient() {
+
+    //创建一个带有Cookie管理器的okhttp实例
+    private val okHttpClient = OkHttpClient.Builder().apply {
+        cookieJar(CookieManager())
+        connectTimeout(Duration.ofSeconds(10))
+    }.build()
+
     override fun getCookieStore(): CookieManager {
         return this.okHttpClient.cookieJar as CookieManager
     }
@@ -61,4 +69,7 @@ class HttpClientImpl: HttpClient() {
         })
     }
 
+    override fun close() {
+        okHttpClient.dispatcher.executorService.shutdown()
+    }
 }

@@ -10,7 +10,6 @@ import com.google.zxing.qrcode.QRCodeWriter
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.settingloader.saveSetting
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import java.io.ByteArrayOutputStream
 import kotlin.coroutines.resume
@@ -22,8 +21,7 @@ class LoginService: ClientService() {
 
     suspend fun getCode() = suspendCoroutine { coroutine ->
         httpClient.getFor(
-            netWorkResourcesProvider.api.getLoginQRCode,
-            netWorkResourcesProvider.headers.biliLoginAuthHeaders,
+            netWorkResourcesProvider.api.getLoginQRCode
         ) {
             body.string().parseObject().getJSONObject("data").run {
                 authKey = getString("oauthKey")
@@ -39,7 +37,6 @@ class LoginService: ClientService() {
                 httpClient.postFor(
                     netWorkResourcesProvider.api.getLoginStatus,
                     mapOf("oauthKey" to authKey, "gourl" to "https://www.bilibili.com/"),
-                    netWorkResourcesProvider.headers.biliLoginAuthVaHeaders
                 ) {
                     coroutine.resume(body.string().parseObject())
                 }
@@ -60,7 +57,6 @@ class LoginService: ClientService() {
         httpClient.postFor(
             netWorkResourcesProvider.api.getLoginStatus,
             mapOf("oauthKey" to authKey, "gourl" to "https://www.bilibili.com/"),
-            netWorkResourcesProvider.headers.biliLoginAuthVaHeaders
         ) {
             coroutine.resume(body.string().parseObject())
         }
@@ -69,7 +65,6 @@ class LoginService: ClientService() {
     private fun String.genericQRCode(size: Int) = ByteArrayOutputStream(500).apply {
         val hints = buildMap {
             put(EncodeHintType.MARGIN, 0)
-            httpClient.okHttpClient.cookieJar
         }
 
         MatrixToImageWriter.writeToStream(

@@ -2,13 +2,11 @@ package ink.bluecloud.service.clientservice.video.rank
 
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
-import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -41,7 +39,9 @@ class FullRank : ClientService() {
                     duration = Duration.ofSeconds(it.duration),
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
-                    cover = cover(it)
+                    cover = ioScope.async(start = CoroutineStart.LAZY) {
+                        cover(it)
+                    }
                 ).run {
                     emit(this)
                 }

@@ -10,6 +10,7 @@ import kotlinx.serialization.serializer
 import org.koin.core.annotation.Single
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
+import kotlin.io.path.exists
 import kotlin.io.path.notExists
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -29,7 +30,9 @@ class SettingCenterImpl : SettingCenter() {
 
     override fun <T : Any> readSettingOnly(clazz: Class<T>): T? {
         return configPath[clazz]?.run {
-            ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this))
+            if (exists()) {
+                ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this))
+            } else null
         }
     }
 

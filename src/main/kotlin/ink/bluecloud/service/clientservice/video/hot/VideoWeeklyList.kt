@@ -3,17 +3,13 @@ package ink.bluecloud.service.clientservice.video.hot
 import com.alibaba.fastjson2.to
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
-import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyHistoryListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyListJsonRoot
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
@@ -47,7 +43,9 @@ class VideoWeeklyList : ClientService() {
                     duration = Duration.ofSeconds(it.duration),
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
-                    cover = cover(it)
+                    cover = ioScope.async(start = CoroutineStart.LAZY) {
+                        cover(it)
+                    }
                 ).run {
                     emit(this)
                 }

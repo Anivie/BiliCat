@@ -1,174 +1,0 @@
-
-&
-Originhttps://message.bilibili.com
-+
-Accept!application/json, text/plain, */*
-
-
-Connection
-keep-alive
-C
-Referer8https://message.bilibili.com/pages/nav/index_new_pc_sync
-\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
-
-Hostapi.bilibili.com
- 
-Accept-Encodinggzip, deflate
-!
-Accept-Languagezh-CN,zh;q=0.8"
-Originhttps://www.bilibili.com+
-Accept!application/json, text/plain, */*
-Cache-Controlno-cache
-
-Connection
-keep-alive>
-Referer3https://www.bilibili.com/medialist/detail/ml?type=2\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
-Hostapi.bilibili.com 
-Accept-Encodinggzip, deflate!
-Accept-Languagezh-CN,zh;q=0.8
-Pragmano-cache"
-Originhttps://www.bilibili.com+
-Accept!application/json, text/plain, */*
-Cache-Controlno-cache
-
-Connection
-keep-alive*
-Refererhttps://www.bilibili.com/video/\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
-Hostapi.bilibili.com 
-Accept-Encodinggzip, deflate!
-Accept-Languagezh-CN,zh;q=0.8
-Pragmano-cache""
-Originhttps://www.bilibili.com"+
-Accept!application/json, text/plain, */*"
-Cache-Controlno-cache"
-
-Connection
-keep-alive"$
-Refererhttps://www.bilibili.com/"\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0"
-Hostapi.bilibili.com" 
-Accept-Encodinggzip, deflate"!
-Accept-Languagezh-CN,zh;q=0.8"
-Pragmano-cache"1
-Content-Type!application/x-www-form-urlencoded*"
-Originhttps://www.bilibili.com*
-Accept*/**
-Cache-Controlno-cache*-
-X-Requested-WithShockwaveFlash/28.0.0.137*
-
-Connection
-keep-alive*#
-Refererhttps://app.bilibili.com*Å
-
-User-AgentsMozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36*
-Hostapp.bilibili.com* 
-Accept-Encodinggzip, deflate*!
-Accept-Languagezh-CN,zh;q=0.8*
-Pragmano-cache*1
-Content-Type!application/x-www-form-urlencoded2
-Cache-Control	max-age=02
-
-Connection
-keep-alive2\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.02 
-Accept-Encodinggzip, deflate2!
-Accept-Languagezh-CN,zh;q=0.8:
-Cache-Control	max-age=0:
-
-Connection
-keep-alive:\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0: 
-Accept-Encodinggzip, deflate:!
-Accept-Languagezh-CN,zh;q=0.8B
-Cache-Control	max-age=0B
-Accept*/*B-
-X-Requested-WithShockwaveFlash/28.0.0.137B
-
-Connection
-keep-aliveB\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0B*
-Refererhttps://www.bilibili.com/video/B
-Hostapi.bilibili.comB 
-Accept-Encodinggzip, deflateB!
-Accept-Languagezh-CN,zh;q=0.8J*
-
-User-AgentBilibili Freedoooooom/MarkIIR'
-Originhttps://passport.bilibili.comR8
-Accept.application/json, text/javascript, */*; q=0.01R"
-X-Requested-WithXMLHttpRequestR
-
-Connection
-keep-aliveR.
-Referer#https://passport.bilibili.com/loginR\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0R
-Hostpassport.bilibili.comR 
-Accept-Encodinggzip, deflateR!
-Accept-Languagezh-CN,zh;q=0.8R@
-Content-Type0application/x-www-form-urlencoded; charset=UTF-8Z8
-Accept.application/json, text/javascript, */*; q=0.01Z"
-X-Requested-WithXMLHttpRequestZ
-
-Connection
-keep-aliveZ.
-Referer#https://passport.bilibili.com/loginZ\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0Z
-Hostpassport.bilibili.comZ 
-Accept-Encodinggzip, deflateZ!
-Accept-Languagezh-CN,zh;q=0.8b
-Cache-Controlno-cacheb
-
-Connection
-keep-aliveb\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0b
-Hostapi.bilibili.comb
-Accept-Encodinggzipb!
-Accept-Languagezh-CN,zh;q=0.8j$
-Originhttps://space.bilibili.comj+
-Accept!application/json, text/plain, */*j
-
-Connection
-keep-alivej2
-Referer'https://space.bilibili.com/null/favlistj\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0j
-Hostapi.bilibili.comj 
-Accept-Encodinggzip, deflatej!
-Accept-Languagezh-CN,zh;q=0.8r$
-Originhttps://space.bilibili.comr+
-Accept!application/json, text/plain, */*r-
-X-Requested-WithShockwaveFlash/28.0.0.137r
-
-Connection
-keep-aliver*
-Refererhttps://www.bilibili.com/video/r\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0r
-Hostapi.bilibili.comr 
-Accept-Encodinggzip, deflater!
-Accept-Languagezh-CN,zh;q=0.8z"
-Originhttps://www.bilibili.comz+
-Accept!application/json, text/plain, */*z-
-X-Requested-WithShockwaveFlash/28.0.0.137z
-
-Connection
-keep-alivez*
-Refererhttps://www.bilibili.com/video/z\
-
-User-AgentNMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0z
-Hostapi.bilibili.comz 
-Accept-Encodinggzip, deflatezN
-Accept-Language;zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2z1
-Content-Type!application/x-www-form-urlencoded

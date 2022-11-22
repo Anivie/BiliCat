@@ -3,9 +3,11 @@ package ink.bluecloud.ui.loginview
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import tornadofx.*
 
-class LoginView: LoginViewNodes() {
+class LoginView: KoinComponent,LoginViewNodes() {
 
     override val root = borderpane {
         top = TitleBar("登录", primaryStage)
@@ -52,8 +54,6 @@ class LoginView: LoginViewNodes() {
     }
 
     override fun onDock() {
-        find<LoginViewController>().run {
-            initUi()
-        }
+        get<LoginViewController>().initUi(this)
     }
 }

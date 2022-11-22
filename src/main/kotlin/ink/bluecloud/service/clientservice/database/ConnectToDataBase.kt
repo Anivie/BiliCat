@@ -3,7 +3,6 @@
 package ink.bluecloud.service.clientservice.database
 
 import ink.bluecloud.service.ClientService
-import kotlinx.coroutines.Dispatchers.IO
 import org.koin.core.annotation.Factory
 import org.ktorm.database.Database
 

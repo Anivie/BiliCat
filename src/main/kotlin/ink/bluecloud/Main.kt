@@ -12,10 +12,12 @@ import org.koin.dsl.module
 import org.koin.ksp.generated.*
 import org.koin.logger.slf4jLogger
 
+
 fun main(args: Array<String>) {
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        println(coroutineContext)
+        System.err.println("Hava a error on coroutine:${coroutineContext}")
         throwable.printStackTrace()
+        System.err.println("by coroutine error handler")
     }
 
     startKoin {

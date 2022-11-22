@@ -5,7 +5,6 @@ import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
 import ink.bluecloud.service.ClientService
-import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.*
@@ -39,33 +38,22 @@ class HotVideoList: ClientService() {
                 HomePagePushCard(
                     id = it.bvid,
                     cid = it.cid,
-                    cover = cover(it),
                     title = it.title,
                     duration = Duration.ofSeconds(it.duration),
                     mid = it.owner.mid,
                     author = it.owner.name,
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
-                    time = Date(it.pubdate * 1000)
+                    time = Date(it.pubdate * 1000),
+                    cover = ioScope.async(start = CoroutineStart.LAZY) {
+                        cover(it)
+                    }
                 ).run {
                     emit(this)
                 }
             }
         }
     }
-
-/*
-    private val cover: suspend CoroutineScope.(VideoHotListJsonRoot.Item) -> Deferred<InputStream> = {
-        async(start = CoroutineStart.LAZY) {
-            suspendCoroutine { coroutine ->
-                httpClient.getFor(it.pic.toHttpUrl()) {
-                    coroutine.resume(body.byteStream())
-                    logger.info("获取热榜视频封面成功，返回值${code}.")
-                }
-            }
-        }
-    }
-*/
 
     private val cover: suspend CoroutineScope.(VideoHotListJsonRoot.Item) -> InputStream = {
         suspendCoroutine { coroutine ->
@@ -83,7 +71,8 @@ class HotVideoList: ClientService() {
      * @exception PojoException 将会抛出一个POJO解析异常，此时通常是服务器返回的JSON 字段发生了变动导致的不兼容
      */
     private suspend fun getJsonPOJO(pn: Int = 1, ps: Int = 50): VideoHotListJsonRoot.Root {
-       return getPage(pn, ps).toObjJson(VideoHotListJsonRoot.Root::class.java)
+        logger.info("page success")
+        return getPage(pn, ps).toObjJson(VideoHotListJsonRoot.Root::class.java)
     }
 
     /**

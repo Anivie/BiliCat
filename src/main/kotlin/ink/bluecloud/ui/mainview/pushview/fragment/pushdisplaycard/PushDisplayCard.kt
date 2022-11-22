@@ -6,7 +6,6 @@ import ink.bluecloud.ui.animationTo
 import javafx.beans.binding.Bindings
 import javafx.geometry.Pos
 import javafx.scene.Cursor
-import javafx.scene.image.Image
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color

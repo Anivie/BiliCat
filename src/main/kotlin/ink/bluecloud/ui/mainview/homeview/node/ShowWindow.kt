@@ -3,7 +3,6 @@ package ink.bluecloud.ui.mainview.homeview.node
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.ui.cloudTimeline
-import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.uiScope
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.geometry.Pos
@@ -19,18 +18,10 @@ import javafx.util.Duration
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.javafx.JavaFx
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 import tornadofx.*
-import java.io.ByteArrayInputStream
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
-@Suppress("UNCHECKED_CAST")
 @Factory
 class ShowWindow(
     private val images: Flow<HomePagePushCard>,
@@ -40,10 +31,11 @@ class ShowWindow(
     init {
         uiScope.launch {
             val image = images.first()
+            val cover = image.cover.await()
 
             pane view@{
                 background = Background(BackgroundImage(
-                    Image(image.cover),
+                    Image(cover),
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,

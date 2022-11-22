@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.service.clientservice.init.LoadCookie
+import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStage
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.service.clientservice.video.stream.param.Qn
@@ -9,20 +9,26 @@ import ink.bluecloud.ui.HarmonySans
 import ink.bluecloud.ui.fragment.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
-import ink.bluecloud.utils.ioScope
-import ink.bluecloud.utils.uiContext
+import ink.bluecloud.utils.uiScope
 import javafx.geometry.Pos
+import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
+import javafx.stage.Stage
+import javafx.stage.StageStyle
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
 import tornadofx.*
 
-class MainView: KoinComponent,MainViewNodes() {
+class MainView : KoinComponent,MainViewNodes() {
+    override fun onDock() {
+        get<MainViewController>().initUi(this)
+    }
 
     override val root = borderpane root@{
         top = TitleBar("BilibiliFX", primaryStage).apply {
@@ -56,14 +62,27 @@ class MainView: KoinComponent,MainViewNodes() {
 
                 button("Debug!") {
                     action {
-                        ioScope.launch {
-                            get<LoadCookie>().load()
-                            val (_, _, _, id, cid, _, _, _, _, _) = get<VideoWeeklyList>().getVideos().first()
-                            get<VideoStream>().getVideoStream(id, cid).run {
-                                withContext(uiContext) {
-                                    find<VideoPlayer>(params = mapOf("url" to video.get(Qn.P720_ALL.value).values().first()[0])).openWindow()
-                                }
-                            }
+                        uiScope.launch {
+                            val (_, _, _, id, cid, _, _, _, _, _) = get<VideoWeeklyList>().getVideos().filter {
+                                it.title == "我用400天，做了一款让所有人免费商用的开源字体"
+                            }.first()
+
+                            val (video, _) = get<VideoStream>().getVideoStream(id, cid)
+
+                            Stage(StageStyle.TRANSPARENT).apply {
+                                scene = Scene(get<VideoPlayer> {
+                                    parametersOf(
+                                        video.get(Qn
+                                            .P1080P60_ALL_COOKIE_VIP
+                                            .value
+                                        ).values().first()[0]
+                                    )
+                                })
+
+                                width = 1000.0
+                                height = 1000.0
+                                initCustomizeStage()
+                            }.show()
                         }
                     }
 
@@ -110,11 +129,5 @@ class MainView: KoinComponent,MainViewNodes() {
 
         prefWidth = 1200.0
         prefHeight = 900.0
-    }
-
-    override fun onDock() {
-        get<MainViewController>().run {
-            initUi()
-        }
     }
 }

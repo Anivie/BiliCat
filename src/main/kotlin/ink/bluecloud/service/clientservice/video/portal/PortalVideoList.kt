@@ -2,23 +2,17 @@ package ink.bluecloud.service.clientservice.portal
 
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
 import ink.bluecloud.model.pojo.video.portal.PortalVideoJsonRoot
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Single
 import java.io.InputStream
 import java.time.Duration
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -40,14 +34,17 @@ class PortalVideoList : ClientService() {
                 HomePagePushCard(
                     id = it.bvid,
                     cid = it.cid,
-                    cover = cover(it.pic),
                     title = it.title,
                     duration = Duration.ofSeconds(it.duration),
                     mid = it.owner.mid,
                     author = it.owner.name,
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
-                    time = Date(it.pubdate * 1000)
+                    time = Date(it.pubdate * 1000),
+                    cover = ioScope.async(start = CoroutineStart.LAZY) {
+                        println(this)
+                        cover(it.pic)
+                    }
                 ).run {
                     emit(this)
                 }

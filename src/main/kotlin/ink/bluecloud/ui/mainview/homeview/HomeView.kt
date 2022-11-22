@@ -4,21 +4,19 @@ import ink.bluecloud.ui.HarmonySans
 import javafx.geometry.NodeOrientation
 import javafx.geometry.Pos
 import javafx.scene.control.TabPane
-import javafx.scene.control.skin.ButtonSkin
 import javafx.scene.control.skin.TabPaneSkin
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
-import javafx.scene.media.Media
-import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import tornadofx.*
-import java.io.File
-import kotlin.reflect.KClass
 
-@Single
 class HomeView: KoinComponent,HomeViewNodes() {
+
+    override fun onDock() {
+        get<HomeViewController>().initUi(this)
+    }
 
     override val root = vbox(20) {
         borderpane base@{
@@ -104,9 +102,5 @@ class HomeView: KoinComponent,HomeViewNodes() {
         }
 
         stylesheets += "ui/homeview/font/icon_home.css"
-
-        get<HomeViewController>().run {
-            initUi()
-        }
     }
 }

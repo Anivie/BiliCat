@@ -24,6 +24,6 @@ data class HomePagePushCard(
     val duration: Duration,
     val playVolume: Int,
     val barrageVolume: Int,
-    val cover: InputStream
-//    val cover: Deferred<InputStream>
+//    val cover: InputStream
+    val cover: Deferred<InputStream>
 )

@@ -1,20 +1,24 @@
 package ink.bluecloud.network.http
 
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProviderImpl
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Headers
+import okhttp3.HttpUrl
+import okhttp3.Response
 import okio.IOException
-import java.time.Duration
+import java.io.Closeable
 
 /**
  * Http工具类，提供了post和get两种方法的请求
  * */
-abstract class HttpClient : Client() {
-    //创建一个带有Cookie管理器的okhttp实例
-    val okHttpClient = OkHttpClient.Builder().apply {
-        cookieJar(CookieManager())
-        connectTimeout(Duration.ofSeconds(10))
-    }.build()
+abstract class HttpClient : Client(),Closeable {
     override val netResourcesProvider = NetWorkResourcesProviderImpl()
+
+    protected val defaultOnFailure: Call.(IOException) -> Unit by lazy {
+        {
+            it.printStackTrace()
+        }
+    }
 
     abstract fun getCookieStore(): CookieManager
 
@@ -32,10 +36,4 @@ abstract class HttpClient : Client() {
         onFailure: (Call.(IOException) -> Unit)? = null,
         onResponse: Response.(Call) -> Unit
     )
-
-    protected val defaultOnFailure: Call.(IOException) -> Unit by lazy {
-        {
-            it.printStackTrace()
-        }
-    }
 }

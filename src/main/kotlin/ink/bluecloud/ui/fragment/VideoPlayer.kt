@@ -1,32 +1,28 @@
 package ink.bluecloud.ui.fragment
 
 import ink.bluecloud.service.clientservice.video.player.VideoPlayerBuilder
-import ink.bluecloud.utils.uiScope
-import javafx.scene.media.MediaPlayer
+import javafx.scene.layout.StackPane
 import javafx.scene.media.MediaView
-import kotlinx.coroutines.launch
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import tornadofx.*
 
 
-class VideoPlayer: KoinComponent,Fragment() {
+@Factory
+class VideoPlayer(
+    url: String
+): KoinComponent,StackPane() {
 
-    override val root = stackpane {
-        uiScope.launch {
-            children += MediaView(getPlayer().apply {
-                isAutoPlay = true
+    init {
+        val player = get<VideoPlayerBuilder>().buildPlayer(url)
 
-                prefWidthProperty().bind(this@stackpane.widthProperty())
-                prefHeightProperty().bind(this@stackpane.heightProperty())
-            })
+        children += MediaView(player.apply {
+            isAutoPlay = true
 
-            prefWidthProperty().bind(currentStage!!.widthProperty())
-            prefHeightProperty().bind(currentStage!!.heightProperty())
-        }
+            errorProperty().addListener { _, _, newValue ->
+                newValue.printStackTrace()
+            }
+        })
     }
 
-    private fun getPlayer():MediaPlayer {
-        return get<VideoPlayerBuilder>().buildPlayer(params["url"]as String)
-    }
 }

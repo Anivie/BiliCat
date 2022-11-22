@@ -2,18 +2,23 @@ package ink.bluecloud.ui
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import tornadofx.*
 import tornadofx.Controller
 
-abstract class Controller: KoinComponent,Controller() {
-    abstract fun View.initUi()
+abstract class Controller<T: View>: KoinComponent,Controller() {
+    abstract fun initUi(view: T)
 
     private val ioScope by inject<CoroutineScope>(named("ioScope"))
     private val uiScope by inject<CoroutineScope>(named("uiScope"))
+
+    internal inline val ioContext
+        get() = ioScope.coroutineContext
+
+    internal inline val uiContext
+        get() = uiScope.coroutineContext
 
     /**
      * 运行在JavaFx协程上
@@ -32,5 +37,4 @@ abstract class Controller: KoinComponent,Controller() {
             block()
         }
     }
-
 }

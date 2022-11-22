@@ -85,12 +85,7 @@ class VideoStream : ClientService() {
         bvid: String,
         cid: Long,
         builder: VideoStreamParamBuilder = VideoStreamParamBuilder(),
-    ):VideoStreamJsonRoot.Root = suspendCoroutine { c ->
-        getPage(bvid, cid, builder) {
-            val json = it.toObjJson(VideoStreamJsonRoot.Root::class.java)
-            c.resume(json)
-        }
-    }
+    ):VideoStreamJsonRoot.Root = getPage(bvid, cid, builder).toObjJson(VideoStreamJsonRoot.Root::class.java)
 
     /**
      * 获取视频的URL 原始数据
@@ -99,19 +94,18 @@ class VideoStream : ClientService() {
      * @param builder 视频参数构造器,默认为Dash 760P视频
      * @param handle 回调函数，可内置原始数据处理逻辑
      */
-    private fun getPage(
+    private suspend fun getPage(
         bvid: String,
         cid: Long,
         builder: VideoStreamParamBuilder = VideoStreamParamBuilder(),
-        handle: (String) -> Unit,
-    ) = newIO {
+    ) = suspendCoroutine { c ->
         val param = netWorkResourcesProvider.api.getVideoStreamURL.param(builder.build()) {
-            it.put("bvid", bvid)
-            it.put("cid", cid.toString())
+            it["bvid"] = bvid
+            it["cid"] = cid.toString()
         }
 
         httpClient.getFor(param) {
-            handle(body.string())
+            c.resume(body.string())
         }
     }
 }
