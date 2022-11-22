@@ -1,103 +1,185 @@
 package ink.bluecloud.model.data.video
 
+import ink.bluecloud.network.http.HttpClient
+import ink.bluecloud.network.http.HttpClientImpl
+import ink.bluecloud.service.clientservice.video.stream.VideoStream
+import ink.bluecloud.service.clientservice.video.stream.param.Qn
+import ink.bluecloud.service.clientservice.video.stream.param.toQn
+import okhttp3.Request
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Single
+import org.koin.core.component.KoinComponent
+import org.koin.java.KoinJavaComponent.inject
+
+/**
+ * 视频流数据
+ */
 data class VideoStreamData(
     val video: StreamMap,
     val audio: StreamMap,
 )
 
-class StreamMap {
-    private val map: HashMap<Int, StreamList> = HashMap()
+/**
+ * 流数据
+ */
+data class StreamData(
+    val qn: Int,
+    val codec: Codec,
+    val url: List<String>,
+)
 
-    fun set(id: Int, list: StreamList) {
-        map[id] = list
-    }
+/**
+ * 媒体数据映射表
+ */
+class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
+    private val videoQns: ArrayList<Qn> = ArrayList()
+    private val audioQns: ArrayList<AudioQn> = ArrayList()
+    private val list: ArrayList<StreamData> = ArrayList()
+    private val qnMap: HashMap<Int, ArrayList<StreamData>> = HashMap()
+    private var maxQN: Int = 0
+    private val isVideo: Boolean
 
-    fun put(id: Int, codecs: String, url: String) {
-        val list = map[id] ?: StreamList()
-        map[id] = list.put(codecs, url)
-    }
-
-    fun put(id: Int, codecs: String, urls: ArrayList<String>) {
-        val list = map[id] ?: StreamList()
-        map[id] = list.put(codecs, urls)
-    }
-
-    fun get(id: Int, codecs: String): ArrayList<String> {
-        return map.get(id)?.get(codecs) ?: ArrayList()
+    init {
+        this.isVideo = isVideo
+        this.list.addAll(list)
+        for (data in list) {
+            val qnList = qnMap[data.qn] ?: ArrayList()
+            qnList.add(data)
+            qnMap[data.qn] = qnList
+        }
     }
 
     /**
-     * 获取该清晰度的媒体文件的URL
-     * @param id 媒体文件质量
-     * @param codecs 媒体文件编码
+     * 获取清晰度最高的媒体数据
      */
-    fun get(id: Int, codecs: VideoCodec): ArrayList<String> {
-        return map.get(id)?.get(codecs.value) ?: ArrayList()
+    fun get(): StreamData {
+        if (maxQN <= 0) maxQN = qnMap.keys.max()
+        return get(maxQN)
     }
 
     /**
-     * 获取该清晰度的媒体文件的URL
-     * @param id 媒体文件质量
-     * @throws IllegalArgumentException 如果没有找到该清晰度的媒体文件就抛出此异常。所以在获取某一个清晰度视频时请确定是否存在该清晰度
+     * 获取指定清晰度的媒体数据
+     * @param qn 清晰度
      */
-    fun get(id: Int): StreamList {
-        return map.get(id) ?: throw NullPointerException("not found for id: $id")
+    fun get(qn: Int): StreamData {
+        return qnMap[qn]?.get(0) ?: throw NullPointerException("Not qn value found: $qn")
     }
 
-    fun keys(): MutableSet<Int> {
-        return map.keys
+
+    /**
+     * 获取指定清晰度的音频媒体数据
+     * @param qn 清晰度
+     */
+    fun getAudioStreamData(qn: AudioQn): StreamData {
+        if (isVideo) throw IllegalStateException("This is not a audio media data map")
+        return qnMap[qn.value]?.get(0) ?: throw NullPointerException("No audio QN value found: ${qn.value}")
     }
 
-    fun values(): MutableCollection<StreamList> {
-        return map.values
+    /**
+     * 获取关于指定清晰度的所有音频媒体数据
+     * @param qn 清晰度
+     */
+    fun getAudioStreamDataAll(qn: AudioQn): ArrayList<StreamData> {
+        if (isVideo) throw IllegalStateException("This is not a audio media data map")
+        return qnMap[qn.value] ?: throw NullPointerException("Not audio QN value found: ${qn.value}")
     }
 
-    override fun toString(): String {
-        return map.toString()
+    /**
+     * 获取指定清晰度的视频媒体数据
+     * @param qn 清晰度
+     */
+    fun getVideoStreamData(qn: Qn): StreamData {
+        if (!isVideo) throw IllegalStateException("This is not a video media data map")
+        return qnMap[qn.value]?.get(0) ?: throw NullPointerException("No video QN value found: ${qn.value}")
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
-    class StreamList {
-        private val map: HashMap<String, ArrayList<String>> = HashMap()
 
-        fun set(codecs: String, urls: ArrayList<String>): StreamList {
-            map[codecs] = urls
-            return this
+    /**
+     * 获取指定清晰度与编码的视频媒体数据
+     * @param qn 清晰度
+     * @param codec 编码
+     */
+    fun getVideoStreamData(qn: Qn, codec: Codec): StreamData {
+        if (!isVideo) throw IllegalStateException("This is not a video media data map")
+        var data0: StreamData? = null
+        for (data in getVideoStreamDataAll(qn)) if (codec.value == data.codec.value) data0 = data
+        return data0 ?: throw NullPointerException("Not codec value found: ${codec.value}")
+    }
+
+    /**
+     * 获取关于指定清晰度的所有视频媒体数据
+     * @param qn 清晰度
+     */
+    fun getVideoStreamDataAll(qn: Qn): ArrayList<StreamData> {
+        if (!isVideo) throw IllegalStateException("This is not a video media data map")
+        return qnMap[qn.value] ?: throw NullPointerException("Not video QN value found: ${qn.value}")
+    }
+
+
+    /**
+     * 获取所有媒体数据
+     */
+    fun getAll(): ArrayList<StreamData> {
+        return this.list
+    }
+
+    /**
+     * 获取视频所有清晰度
+     */
+    fun getVideoQnALL(): ArrayList<Qn> {
+        if (!isVideo) throw IllegalStateException("This is not a video")
+        if (videoQns.size > 0) return videoQns
+        for (qn in this.qnMap.keys) {
+            videoQns.add(qn.toQn())
         }
+        return videoQns
+    }
 
-        fun put(codecs: String, url: String): StreamList {
-            val list = map[codecs] ?: ArrayList()
-            list.add(url)
-            map[codecs] = list
-            return this
+    /**
+     * 获取音频所有清晰度
+     */
+    fun getAudioQnALL(): ArrayList<AudioQn> {
+        if (isVideo) throw IllegalStateException("This is not a audio")
+        if (audioQns.size > 0) return audioQns
+        for (qn in this.qnMap.keys) {
+            audioQns.add(qn.toAudioQn())
         }
+        return audioQns
+    }
 
-        fun put(codecs: String, urls: ArrayList<String>): StreamList {
-            val list = map[codecs] ?: ArrayList()
-            list.addAll(urls)
-            map[codecs] = list
-            return this
-        }
-
-        fun get(codecs: String): ArrayList<String> {
-            return map.get(codecs) ?: ArrayList()
-        }
-
-        fun get(codecs: VideoCodec): ArrayList<String> {
-            return map.get(codecs.value) ?: ArrayList()
-        }
-
-        fun values(): MutableCollection<java.util.ArrayList<String>> {
-            return map.values
-        }
-
-        fun key(): MutableSet<String> {
-            return map.keys
-        }
+    /**
+     * 获取所有清晰度
+     */
+    fun getQnAllInt(): MutableSet<Int> {
+        return this.qnMap.keys
+    }
 
 
-        override fun toString(): String {
-            return map.toString()
+    /**
+     * 是否是视频媒体数据
+     */
+    fun isVideoMedia(): Boolean {
+        return this.isVideo
+    }
+
+    /**
+     * 是否是视频媒体数据
+     */
+    fun isAudioMedia(): Boolean {
+        return !isVideoMedia()
+    }
+}
+
+/**
+ * 从 StreamData 中获取存活的URL，如果没有就 throw IllegalStateException()
+ * @Test
+ */
+suspend inline fun StreamData.keepURL(): String {
+    val stream = VideoStream()
+    for (item in url) {
+        if (stream.keepUrl(item)) {
+            return item
         }
     }
+    throw NullPointerException()
 }

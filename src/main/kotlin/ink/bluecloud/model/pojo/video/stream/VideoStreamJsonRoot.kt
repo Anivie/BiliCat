@@ -1,6 +1,5 @@
 package ink.bluecloud.model.pojo.video.stream
 
-import ink.bluecloud.model.data.video.Video
 
 /**
  * 获取视频的URL
@@ -15,26 +14,12 @@ class VideoStreamJsonRoot {
     )
 
     data class Data(
-//        val accept_description: List<String>,
-//        val accept_format: String,
         val accept_quality: List<Int>,
 
         val durl : ArrayList<DurlItem>?,
         val dash: Dash?,
 
         val format: String,
-//        val from: String,
-//        val high_format: Any,
-//        val last_play_cid: Int,
-//        val last_play_time: Int,
-//        val message: String,
-//        val quality: Int,
-//        val result: String,
-//        val seek_param: String,
-//        val seek_type: String,
-//        val support_formats: List<SupportFormat>,
-//        val timelength: Int,
-//        val video_codecid: Int,
     )
 
 
@@ -49,22 +34,15 @@ class VideoStreamJsonRoot {
     )
 
     data class Dash(
-        val audio: List<Video.AudioStreamJson>,
+//        val audio: List<Video.AudioStreamJson>,
+        val audio: List<Media>,
         val dolby: String?,
         val duration: String?,
         val flac: String?,
         val minBufferTime: Double,
         val min_buffer_time: Double,
-        val video: List<Video.VideoStreamJson>,
-    )
-
-    data class SupportFormat(
-        val codecs: List<String>,
-        val display_desc: String,
-        val format: String,
-        val new_description: String,
-        val quality: Int,
-        val superscript: String,
+//        val video: List<Video.VideoStreamJson>,
+        val video: List<Media>,
     )
 
     data class SegmentBase(
@@ -75,5 +53,70 @@ class VideoStreamJsonRoot {
     data class SegmentBaseX(
         val index_range: String,
         val initialization: String,
+    )
+
+
+    data class Media(
+        /**
+         * 下载链接
+         */
+        val backupUrl: ArrayList<String>?,
+
+        /**
+         * 下载链接
+         */
+        val backup_url: ArrayList<String>?,
+
+        /**
+         * 视频最低带宽
+         */
+        val bandwidth: Int,
+
+        /**
+         * 下载链接
+         */
+        val baseUrl: String?,
+
+        /**
+         * 下载链接
+         */
+        val base_url: String?,
+
+        /**
+         * 编码类型
+         */
+        val codecid: Long,
+
+        /**
+         * 编码类型
+         */
+        val codecs: String,
+        val frameRate: String,
+        val frame_rate: String,
+        val height: Int,
+
+        /**
+         * 清晰度等
+         */
+        val id: Int,
+
+        /**
+         * 文件类型
+         */
+        val mimeType: String,
+
+        /**
+         * 文件类型
+         */
+        val mime_type: String,
+
+        /**
+         * 文件类型
+         */
+        var type: String?,
+        val sar: String,
+        val startWithSap: Int,
+        val start_with_sap: Int,
+        val width: Int,
     )
 }

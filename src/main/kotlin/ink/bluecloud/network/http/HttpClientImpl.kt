@@ -31,6 +31,19 @@ class HttpClientImpl: HttpClient() {
         executeRequest(request, onFailure, onResponse)
     }
 
+    override fun headFor(
+        url: HttpUrl,
+        headers: Headers?,
+        onFailure: (Call.(IOException) -> Unit)?,
+        onResponse: Response.(Call) -> Unit,
+    ) {
+        executeRequest(Request.Builder().apply {
+            headers?.run { headers(this) }
+            url(url)
+            head()
+        }.build(), onFailure, onResponse)
+    }
+
     override fun postFor(
         url: HttpUrl,
         params: Map<String, String>,

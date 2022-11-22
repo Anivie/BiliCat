@@ -10,3 +10,9 @@ suspend inline fun HttpClient.getForString(url: HttpUrl): String = suspendCorout
         coroutine.resume(body.string())
     }
 }
+
+suspend inline fun HttpClient.getForHead(url: HttpUrl): Boolean = suspendCoroutine { coroutine ->
+    headFor(url) {
+        coroutine.resume(code == 200)
+    }
+}
