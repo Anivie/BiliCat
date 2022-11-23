@@ -6,7 +6,7 @@
     <!-- 自定义一些变量 -->
     <Properties>
         <!-- 变量定义 -->
-        <Property name="project_name">bfx_main</Property>
+        <Property name="project_name">bilicat</Property>
         <Property name="log_base_dir">logs/${project_name}</Property>
         <!-- Appender在将日志数据写入目标位置之前，一般会将日志数据通过Layout进行格式化。PatternLayout可以使用与C语言printf函数类似
         的转换模式来指定输出格式。常见的配置如下：

@@ -28,9 +28,11 @@ javafx {
 
 dependencies {
     //GUI
-    implementation(files("libs\\ElementFX.jar"))
-    implementation(files("libs\\CloudTools.jar"))
-    implementation(files("libs\\KotlinFx.jar"))
+    implementation(files(
+        "libs\\ElementFX.jar",
+        "libs\\CloudTools.jar",
+        "libs\\KotlinFx.jar"
+    ))
 
     //Kotlin
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-javafx", version = "1.6.4")

@@ -1,9 +1,7 @@
 package ink.bluecloud
 
 import javafx.application.Application
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.javafx.JavaFx
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
@@ -11,22 +9,37 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.ksp.generated.*
 import org.koin.logger.slf4jLogger
+import org.slf4j.LoggerFactory
+import java.io.ByteArrayOutputStream
+import java.io.PrintWriter
 
-
+class Main
 fun main(args: Array<String>) {
+    val logger = LoggerFactory.getLogger(Main::class.java)
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        System.err.println("Hava a error on coroutine:${coroutineContext}")
-        throwable.printStackTrace()
-        System.err.println("by coroutine error handler")
+        coroutineContext.cancel()
+        val stream = ByteArrayOutputStream(1000)
+
+        PrintWriter(stream).use {
+            throwable.printStackTrace(it)
+        }
+
+        val err = buildString {
+            append("\nHava a error on coroutine:${coroutineContext}\n")
+            append(String(stream.toByteArray()))
+            append("---By coroutine error handler---")
+        }
+
+        logger.error(err)
     }
 
     startKoin {
         val parentModule = module {
             single(named("uiScope")) {
-                CoroutineScope(Dispatchers.JavaFx + errorHandler)
+                CoroutineScope(Dispatchers.JavaFx + errorHandler + SupervisorJob())
             }
             single(named("ioScope")) {
-                CoroutineScope(Dispatchers.IO + errorHandler)
+                CoroutineScope(Dispatchers.IO + errorHandler + SupervisorJob())
             }
 
             includes(

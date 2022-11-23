@@ -1,6 +1,7 @@
 package ink.bluecloud.ui.fragment
 
 import ink.bluecloud.service.clientservice.video.player.VideoPlayerBuilder
+import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.media.MediaView
 import org.koin.core.annotation.Factory
@@ -21,7 +22,11 @@ class VideoPlayer(
 
             errorProperty().addListener { _, _, newValue ->
                 newValue.printStackTrace()
+                (parent as Pane).children -= this@VideoPlayer
             }
+
+            prefWidthProperty().bind(this@VideoPlayer.widthProperty())
+            prefHeightProperty().bind(this@VideoPlayer.heightProperty())
         })
     }
 
