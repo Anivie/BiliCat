@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ink.bluecloud.model.data.video
 
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
@@ -70,7 +72,7 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
      * @param qn 清晰度
      */
     fun getAudioStreamData(qn: AudioQn): StreamData {
-        if (isVideo) throw IllegalStateException("This is not a audio media data map")
+        notAudio()
         return qnMap[qn.value]?.get(0) ?: throw NullPointerException("No audio QN value found: ${qn.value}")
     }
 
@@ -79,7 +81,7 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
      * @param qn 清晰度
      */
     fun getAudioStreamDataAll(qn: AudioQn): ArrayList<StreamData> {
-        if (isVideo) throw IllegalStateException("This is not a audio media data map")
+        notAudio()
         return qnMap[qn.value] ?: throw NullPointerException("Not audio QN value found: ${qn.value}")
     }
 
@@ -88,7 +90,7 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
      * @param qn 清晰度
      */
     fun getVideoStreamData(qn: Qn): StreamData {
-        if (!isVideo) throw IllegalStateException("This is not a video media data map")
+        notVideo()
         return qnMap[qn.value]?.get(0) ?: throw NullPointerException("No video QN value found: ${qn.value}")
     }
 
@@ -99,18 +101,21 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
      * @param codec 编码
      */
     fun getVideoStreamData(qn: Qn, codec: Codec): StreamData {
-        if (!isVideo) throw IllegalStateException("This is not a video media data map")
-        var data0: StreamData? = null
-        for (data in getVideoStreamDataAll(qn)) if (codec.value == data.codec.value) data0 = data
-        return data0 ?: throw NullPointerException("Not codec value found: ${codec.value}")
+        notVideo()
+        return getVideoStreamDataAll(qn).filter {
+            it.codec.value == codec.value
+        }.run {
+            if (isEmpty()) throw IllegalArgumentException("Not codec value found: ${codec.value}")
+            first()
+        }
     }
 
     /**
      * 获取关于指定清晰度的所有视频媒体数据
      * @param qn 清晰度
      */
-    fun getVideoStreamDataAll(qn: Qn): ArrayList<StreamData> {
-        if (!isVideo) throw IllegalStateException("This is not a video media data map")
+    fun getVideoStreamDataAll(qn: Qn): List<StreamData> {
+        notVideo()
         return qnMap[qn.value] ?: throw NullPointerException("Not video QN value found: ${qn.value}")
     }
 
@@ -118,27 +123,33 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
     /**
      * 获取所有媒体数据
      */
-    fun getAll(): ArrayList<StreamData> {
-        return this.list
-    }
+    fun getAll(): ArrayList<StreamData> = list
 
     /**
      * 获取视频所有清晰度
      */
-    fun getVideoQnALL(): ArrayList<Qn> {
-        if (!isVideo) throw IllegalStateException("This is not a video")
-        if (videoQns.size > 0) return videoQns
-        for (qn in this.qnMap.keys) {
-            videoQns.add(qn.toQn())
+    fun getVideoQnALL(): List<Qn> {
+        return videoQns.ifEmpty {//第一次使用，构建缓存
+            videoQns.apply {
+                qnMap.keys.forEach {
+                    this += it.toQn()
+                }
+            }.sortedByDescending {//对清晰度排序
+                it.index
+            }.apply {//保存进缓存
+                videoQns.forEachIndexed { index, qn ->
+                    if (qn != this[index]) videoQns[index] = this[index]
+                }
+            }
         }
-        return videoQns
     }
+
 
     /**
      * 获取音频所有清晰度
      */
     fun getAudioQnALL(): ArrayList<AudioQn> {
-        if (isVideo) throw IllegalStateException("This is not a audio")
+        notAudio()
         if (audioQns.size > 0) return audioQns
         for (qn in this.qnMap.keys) {
             audioQns.add(qn.toAudioQn())
@@ -167,18 +178,23 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
     fun isAudioMedia(): Boolean {
         return !isVideoMedia()
     }
+
+    private fun notVideo() {
+        if (!isVideo) throw IllegalStateException("This is not a video")
+    }
+
+    private fun notAudio() {
+        if (isVideo) throw IllegalStateException("This is not a video")
+    }
 }
 
 /**
  * 从 StreamData 中获取存活的URL，如果没有就 throw IllegalStateException()
  * @Test
  */
-suspend inline fun StreamData.keepURL(): String {
-    val stream = VideoStream()
-    for (item in url) {
-        if (stream.keepUrl(item)) {
-            return item
-        }
+suspend inline fun StreamData.keepURL(stream: VideoStream): String {
+    url.forEach {
+        if (stream.keepUrl(it)) return it
     }
     throw NullPointerException()
 }

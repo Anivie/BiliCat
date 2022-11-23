@@ -1,7 +1,5 @@
 package ink.bluecloud.service.clientservice.video.stream.param
 
-import ink.bluecloud.model.data.video.AudioQn
-
 enum class Qn(val index: Int, val value: Int) {
     /**
      * 仅mp4方式支持
@@ -27,9 +25,10 @@ enum class Qn(val index: Int, val value: Int) {
     PDOLBY(11,126),
     P8K(12,127)
 }
-fun Int.toQn(): Qn {
+@Suppress("NOTHING_TO_INLINE")
+inline fun Int.toQn(): Qn {
     val qn = this
-    val values = Qn.values();
+    val values = Qn.values()
     for (value in values) {
         if (value.value == qn) return value
     }
