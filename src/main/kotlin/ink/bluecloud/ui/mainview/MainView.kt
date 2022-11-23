@@ -5,7 +5,7 @@ import ink.bluecloud.model.data.video.tryAvailableURL
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.ui.HarmonySans
-import ink.bluecloud.ui.fragment.VideoPlayer
+import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.sceneRoot
@@ -69,6 +69,7 @@ class MainView : KoinComponent,MainViewNodes() {
                                 val (video, _) = videoStream.getVideoStream(id, cid)
                                 val urls = video.getVideoStreamData(video.getVideoQnALL().first())
                                 val url = urls.tryAvailableURL(videoStream)
+                                println(urls.codec)
 
                                 sceneRoot.children += get<VideoPlayer> {
                                     parametersOf(url)

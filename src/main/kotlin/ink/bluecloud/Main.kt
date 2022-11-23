@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
 
 class Main
-fun main(args: Array<String>) {
+fun main() {
     val logger = LoggerFactory.getLogger(Main::class.java)
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         coroutineContext.cancel()
@@ -56,5 +56,5 @@ fun main(args: Array<String>) {
     }
 
     System.setProperty("prism.lcdtext", "false")
-    Application.launch(MainApp::class.java,*args)
+    Application.launch(MainApp::class.java)
 }

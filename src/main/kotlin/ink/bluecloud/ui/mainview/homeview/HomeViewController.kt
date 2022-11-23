@@ -4,7 +4,7 @@ import ink.bluecloud.service.clientservice.video.hot.HotVideoList
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.rank.FullRank
 import ink.bluecloud.ui.Controller
-import ink.bluecloud.ui.fragment.VideoPlayer
+import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.node.ShowWindow
 import ink.bluecloud.utils.sceneRoot
 import javafx.scene.layout.Priority

@@ -15,7 +15,8 @@ enum class Codec(val value: String) {
     AUDIO_MP4("MP4")
 }
 
-fun String.toCodec(): Codec {
+@Suppress("NOTHING_TO_INLINE")
+inline fun String.toCodec(): Codec {
     val str = this.uppercase()
     for (codec in Codec.values()) {
         if (str.contains(codec.value)) return codec
