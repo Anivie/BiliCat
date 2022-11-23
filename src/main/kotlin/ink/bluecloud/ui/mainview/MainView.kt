@@ -73,7 +73,7 @@ class MainView : KoinComponent,MainViewNodes() {
                                 Stage(StageStyle.TRANSPARENT).apply {
                                     scene = Scene(get<VideoPlayer> {
                                         parametersOf(
-                                            video.getVideoStreamData(Qn.P1080_ALL_COOKIE).url[0]
+                                            video.getVideoStreamData(Qn.P306_ALL).url[0]
 //                                            video.getVideoStreamData(Qn.P1080_ALL_COOKIE).keepURL()
                                         )
                                     })
