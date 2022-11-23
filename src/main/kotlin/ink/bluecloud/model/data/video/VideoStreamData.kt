@@ -1,15 +1,9 @@
 package ink.bluecloud.model.data.video
 
-import ink.bluecloud.network.http.HttpClient
-import ink.bluecloud.network.http.HttpClientImpl
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.service.clientservice.video.stream.param.Qn
 import ink.bluecloud.service.clientservice.video.stream.param.toQn
-import okhttp3.Request
-import org.koin.core.annotation.Factory
-import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
-import org.koin.java.KoinJavaComponent.inject
 
 /**
  * 视频流数据
@@ -17,6 +11,11 @@ import org.koin.java.KoinJavaComponent.inject
 data class VideoStreamData(
     val video: StreamMap,
     val audio: StreamMap,
+    /**
+     * 视频支持的视频清晰度列表
+     */
+    val acceptQuality:List<Qn>,
+    val acceptQualityDescribe:List<String>
 )
 
 /**

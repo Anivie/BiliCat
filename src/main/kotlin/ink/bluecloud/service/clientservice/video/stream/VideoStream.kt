@@ -7,12 +7,12 @@ import ink.bluecloud.model.data.video.toCodec
 import ink.bluecloud.model.pojo.video.stream.VideoStreamJsonRoot
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.service.clientservice.video.stream.param.VideoStreamParamBuilder
+import ink.bluecloud.service.clientservice.video.stream.param.toQn
 import ink.bluecloud.utils.getForHead
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.Request
 import org.koin.core.annotation.Factory
 
 /**
@@ -34,7 +34,9 @@ class VideoStream : ClientService() {
         cid: Long,
         builder: VideoStreamParamBuilder = VideoStreamParamBuilder(),
     ): VideoStreamData {
-        val dash = getJsonPOJO(bvid, cid, builder).data?.dash ?: throw NullPointerException("dash is null")
+        val data = getJsonPOJO(bvid, cid, builder).data ?: throw NullPointerException("video stream response data is null")
+        val dash = data.dash ?: throw NullPointerException("dash is null")
+
         //构建视频URL列表
         val videos = StreamMap(dash.video.map { it.getStreamData() }, true)
 
@@ -42,7 +44,7 @@ class VideoStream : ClientService() {
         val audios = StreamMap(dash.audio.map { it.getStreamData() }, false)
 
         //整合
-        return VideoStreamData(video = videos, audio = audios)
+        return VideoStreamData(video = videos, audio = audios, data.accept_quality.map { it.toQn() },data.accept_description)
     }
 
     /**
@@ -72,7 +74,6 @@ class VideoStream : ClientService() {
      * @param bvid 视频的bv号
      * @param cid 视频的cid，如果没有请通过工具类 IDConvert 获取
      * @param builder 视频参数构造器
-     * @param handle 回调函数，可内置JSON数据处理逻辑
      */
     private suspend fun getJsonPOJO(
         bvid: String,

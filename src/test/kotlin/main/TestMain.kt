@@ -1,7 +1,5 @@
 package main
 
-import ink.bluecloud.model.data.video.keepURL
-import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,11 +10,12 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.ksp.generated.*
 import org.koin.logger.slf4jLogger
+import kotlin.system.exitProcess
 
 suspend fun main() {
     init()
-    val stream = VideoStream().getVideoStream("BV1Mg411i74w", 898882561)
-    println(stream.video.get().keepURL())
+    TestRun().main()
+    exitProcess(0)
 }
 
 private fun init() {

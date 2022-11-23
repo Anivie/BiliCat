@@ -15,11 +15,10 @@ class VideoStreamJsonRoot {
 
     data class Data(
         val accept_quality: List<Int>,
-
         val durl : ArrayList<DurlItem>?,
         val dash: Dash?,
-
         val format: String,
+        val accept_description:List<String>,
     )
 
 
@@ -34,26 +33,15 @@ class VideoStreamJsonRoot {
     )
 
     data class Dash(
-//        val audio: List<Video.AudioStreamJson>,
         val audio: List<Media>,
         val dolby: String?,
         val duration: String?,
         val flac: String?,
         val minBufferTime: Double,
         val min_buffer_time: Double,
-//        val video: List<Video.VideoStreamJson>,
         val video: List<Media>,
     )
 
-    data class SegmentBase(
-        val Initialization: String,
-        val indexRange: String,
-    )
-
-    data class SegmentBaseX(
-        val index_range: String,
-        val initialization: String,
-    )
 
 
     data class Media(
