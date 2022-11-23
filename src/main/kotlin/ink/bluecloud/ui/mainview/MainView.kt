@@ -2,9 +2,9 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStage
+import ink.bluecloud.model.data.video.keepURL
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
-import ink.bluecloud.service.clientservice.video.stream.param.Qn
 import ink.bluecloud.ui.HarmonySans
 import ink.bluecloud.ui.fragment.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.HomeView
@@ -68,16 +68,13 @@ class MainView : KoinComponent,MainViewNodes() {
                                     it.title == "我用400天，做了一款让所有人免费商用的开源字体"
                                 }.first()
 
-                                val (video, _) = get<VideoStream>().getVideoStream(id, cid)
+                                val videoStream = get<VideoStream>()
+                                val (video, _) = videoStream.getVideoStream(id, cid)
+                                val url = video.getVideoStreamData(video.getVideoQnALL().first()).keepURL(videoStream)
 
                                 Stage(StageStyle.TRANSPARENT).apply {
                                     scene = Scene(get<VideoPlayer> {
-                                        parametersOf(
-                                            video.get(Qn
-                                                .P1080P60_ALL_COOKIE_VIP
-                                                .value
-                                            ).values().first()[0]
-                                        )
+                                        parametersOf(url)
                                     })
 
                                     width = 1000.0
