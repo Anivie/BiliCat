@@ -22,8 +22,8 @@ class MainApp: App(
     init {
         //debug
         System.getProperty("intellij.debug.agent")?.run {
-            reloadViewsOnFocus()
-            reloadStylesheetsOnFocus()
+//            reloadViewsOnFocus()
+//            reloadStylesheetsOnFocus()
         }
 
         FX.dicontainer = object :DIContainer {

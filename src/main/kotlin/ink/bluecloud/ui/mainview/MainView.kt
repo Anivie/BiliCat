@@ -1,7 +1,6 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.model.data.video.tryAvailableURL
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.ui.HarmonySans
@@ -14,9 +13,9 @@ import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -66,13 +65,13 @@ class MainView : KoinComponent,MainViewNodes() {
                                 }.first()
 
                                 val videoStream = get<VideoStream>()
-                                val (video, _) = videoStream.getVideoStream(id, cid)
-                                val urls = video.getVideoStreamData(video.getVideoQnALL().first())
-                                val url = urls.tryAvailableURL(videoStream)
-                                println(urls.codec)
+                                val (video, audio) = videoStream.getVideoStream(id, cid)
 
                                 sceneRoot.children += get<VideoPlayer> {
-                                    parametersOf(url)
+                                    parametersOf(
+                                        video.get().url.first(),
+                                        audio.get().url.first()
+                                    )
                                 }
                             }
                         }
@@ -90,12 +89,10 @@ class MainView : KoinComponent,MainViewNodes() {
                     "\uE610" to "动态",
                     "\uE629" to "分区"
                 )) {
-/*
                 (this@root.center as StackPane).children[0] = when (it.second) {
                     0 -> find<HomeView>().root
                     else -> throw IllegalArgumentException("无法解析的页面：${it}！")
                 }
-*/
                 }.apply {
                     (this@root.center as StackPane).children += find<HomeView>().root
                     maxWidthProperty().bind(this@leftBox.widthProperty())

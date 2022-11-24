@@ -26,8 +26,13 @@ inline fun <T> animationTo(vararg writableValue: WritableValue<T>,endValue: T, d
 inline fun UIComponent.cloudnotice(type: NoticeType, message: String) = CloudNotice(type, message, primaryStage).show()
 //inline fun Stage.windowHandle() = (MethodHandles.privateLookupIn(Window::class.java, MethodHandles.lookup()).findVarHandle(Window::class.java,"peer", TKStage::class.java)[this]as TKStage).rawHandle
 
+@Suppress("unused")
 object HarmonySans {
     const val BOLD = "HarmonyOS Sans SC Bold"
     const val Medium = "HarmonyOS Sans SC Medium"
     const val REGULAR = "HarmonyOS Sans SC"
+}
+
+object CssNode {
+    const val floatingButton = "css/node/suspended-button.css"
 }

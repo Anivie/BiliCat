@@ -1,13 +1,18 @@
 package ink.bluecloud.ui.fragment.javafxmediaplayer
 
+import ink.bluecloud.ui.CssNode
 import javafx.scene.layout.BorderPane
-import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
 import tornadofx.*
 
-class ControlBar:BorderPane() {
+class ControlBar: KoinComponent, BorderPane() {
     init {
         top = borderpane {
-            left = label("<")
+            left = button("<") {
+                stylesheets += CssNode.floatingButton
+            }
+
+            minHeight = 50.0
         }
 
         bottom = borderpane {

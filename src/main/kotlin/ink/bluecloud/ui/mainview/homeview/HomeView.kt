@@ -1,5 +1,6 @@
 package ink.bluecloud.ui.mainview.homeview
 
+import ink.bluecloud.ui.CssNode
 import ink.bluecloud.ui.HarmonySans
 import javafx.geometry.NodeOrientation
 import javafx.geometry.Pos
@@ -43,7 +44,7 @@ class HomeView: KoinComponent,HomeViewNodes() {
             }
 
             right = button("\uE716") {
-                stylesheets += "css/node/suspended-button.css"
+                stylesheets += CssNode.floatingButton
             }
             fitToParentWidth()
         }
