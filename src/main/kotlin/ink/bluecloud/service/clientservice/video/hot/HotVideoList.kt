@@ -30,7 +30,6 @@ class HotVideoList: ClientService() {
      * 获取热门视频列表
      * @param pn 页数
      * @param ps 获取视频数量总数
-     * @param handle 回调函数，用来处理当前已经被解析出来的视频单元
      */
     suspend fun getVideos(pn: Int = 1, ps: Int = 50) = io {
         flow {
@@ -71,7 +70,6 @@ class HotVideoList: ClientService() {
      * @exception PojoException 将会抛出一个POJO解析异常，此时通常是服务器返回的JSON 字段发生了变动导致的不兼容
      */
     private suspend fun getJsonPOJO(pn: Int = 1, ps: Int = 50): VideoHotListJsonRoot.Root {
-        logger.info("page success")
         return getPage(pn, ps).toObjJson(VideoHotListJsonRoot.Root::class.java)
     }
 
@@ -79,7 +77,6 @@ class HotVideoList: ClientService() {
      * 获取热门视频列表原始数据
      * @param pn 页数
      * @param ps 获取视频数量总数
-     * @param handle 回调函数，用来处理获取到的原始数据
      */
     private suspend fun getPage(pn: Int = 1, ps: Int = 50) = suspendCoroutine { coroutine ->
         val param = get<NetWorkResourcesProvider>().api.getHotVideoList.param {

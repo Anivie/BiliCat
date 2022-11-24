@@ -11,6 +11,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.stopKoin
 import tornadofx.*
+import kotlin.reflect.KClass
 
 class MainApp: App(
     icon = Image("ui/icon.png"),
@@ -19,9 +20,16 @@ class MainApp: App(
 ),KoinComponent {
 
     init {
+        //debug
         System.getProperty("intellij.debug.agent")?.run {
             reloadViewsOnFocus()
             reloadStylesheetsOnFocus()
+        }
+
+        FX.dicontainer = object :DIContainer {
+            override fun <T : Any> getInstance(type: KClass<T>): T {
+                return getKoin().get(type)
+            }
         }
 
         get<LoadCookie>().load()

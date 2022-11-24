@@ -24,16 +24,19 @@ import tornadofx.*
 
 @Factory
 class ShowWindow(
-    private val images: Flow<HomePagePushCard>,
+    private val card: Flow<HomePagePushCard>,
     private val widthProperty: ReadOnlyDoubleProperty?,
     private val spacing: Double?
 ): KoinComponent,StackPane() {
+
+//    lateinit var currentUrl:String
+
     init {
         uiScope.launch {
-            val image = images.first()
+            val image = card.first()
             val cover = image.cover.await()
 
-            pane view@{
+            pane {
                 background = Background(BackgroundImage(
                     Image(cover),
                     BackgroundRepeat.NO_REPEAT,
@@ -66,8 +69,10 @@ class ShowWindow(
                 prefHeight = 30.0
                 maxHeight = 30.0
                 alignment = Pos.BOTTOM_LEFT
-                StackPane.setAlignment(this,Pos.BOTTOM_LEFT)
+                setAlignment(this,Pos.BOTTOM_LEFT)
             }
+
+
 
             val zoomAnimation = cloudTimeline {
                 keyframe(Duration.millis(300.0)) {
@@ -106,6 +111,7 @@ class ShowWindow(
                     }
                 }
             }
+
             cursor = Cursor.HAND
         }
     }

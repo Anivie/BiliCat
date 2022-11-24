@@ -1,25 +1,22 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStage
-import ink.bluecloud.model.data.video.keepURL
+import ink.bluecloud.model.data.video.tryAvailableURL
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.ui.HarmonySans
-import ink.bluecloud.ui.fragment.VideoPlayer
+import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
+import ink.bluecloud.utils.sceneRoot
 import ink.bluecloud.utils.uiScope
 import javafx.geometry.Pos
-import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
-import javafx.stage.Stage
-import javafx.stage.StageStyle
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -70,17 +67,13 @@ class MainView : KoinComponent,MainViewNodes() {
 
                                 val videoStream = get<VideoStream>()
                                 val (video, _) = videoStream.getVideoStream(id, cid)
-                                val url = video.getVideoStreamData(video.getVideoQnALL().first()).keepURL(videoStream)
+                                val urls = video.getVideoStreamData(video.getVideoQnALL().first())
+                                val url = urls.tryAvailableURL(videoStream)
+                                println(urls.codec)
 
-                                Stage(StageStyle.TRANSPARENT).apply {
-                                    scene = Scene(get<VideoPlayer> {
-                                        parametersOf(url)
-                                    })
-
-                                    width = 1000.0
-                                    height = 1000.0
-                                    initCustomizeStage()
-                                }.show()
+                                sceneRoot.children += get<VideoPlayer> {
+                                    parametersOf(url)
+                                }
                             }
                         }
 

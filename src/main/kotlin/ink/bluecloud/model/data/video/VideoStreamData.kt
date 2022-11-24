@@ -192,7 +192,7 @@ class StreamMap(list: List<StreamData>, isVideo: Boolean) : KoinComponent {
  * 从 StreamData 中获取存活的URL，如果没有就 throw IllegalStateException()
  * @Test
  */
-suspend inline fun StreamData.keepURL(stream: VideoStream): String {
+suspend inline fun StreamData.tryAvailableURL(stream: VideoStream): String {
     url.forEach {
         if (stream.keepUrl(it)) return it
     }
