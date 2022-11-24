@@ -38,7 +38,7 @@
                 <TimeBasedTriggeringPolicy />
             </Policies>
             <!-- 在同一个目录下，文件的个限定为 30个，超过进行覆盖 -->
-            <DefaultRolloverStrategy max="30">
+            <DefaultRolloverStrategy max="10">
                 <Delete basePath="${LOG_HOME}/$${date:yyyy-MM}/" maxDepth="2">
                     <IfFileName glob="*/*rollog*.log" />
                     <!--!Note: 这里的age必须和filePattern协调, 后者是精确到HH, 这里就要写成xH, xd就不起作用

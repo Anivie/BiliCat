@@ -100,11 +100,16 @@ class CookieManager : CookieJar {
 
     fun toCookies(host: HttpUrl = apiHost): CookieJson {
         val json = toJson(host)
-        return CookieJson(
-            csrf = json.getString("bili_jct"),
-            id = json.getString("DedeUserID"),
-            hashCode = json.getString("DedeUserID__ckMd5"),
-            session = json.getString("SESSDATA")
-        )
+        try {
+            return CookieJson(
+                csrf = json.getString("bili_jct"),
+                id = json.getString("DedeUserID"),
+                hashCode = json.getString("DedeUserID__ckMd5"),
+                session = json.getString("SESSDATA")
+            )
+        }catch (e:NullPointerException){
+            throw NullPointerException("cookie is null")
+        }
+
     }
 }

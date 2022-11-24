@@ -73,6 +73,7 @@ class FullRank : ClientService() {
     }
 
     private suspend fun getJsonPojo():RankListJsonRoot.Root {
+        logger.debug("API Get FullRank -> ${netWorkResourcesProvider.api.getFullRank}")
         return httpClient.getForString(netWorkResourcesProvider.api.getFullRank)
             .toObjJson(RankListJsonRoot.Root::class.java)
     }
