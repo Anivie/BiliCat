@@ -45,6 +45,9 @@ class HomeView: KoinComponent,HomeViewNodes() {
 
             right = button("\uE716") {
                 stylesheets += CssNode.floatingButton
+                style {
+                    fontFamily = "bilibilifx-home"
+                }
             }
             fitToParentWidth()
         }
