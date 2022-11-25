@@ -1,16 +1,16 @@
-package ink.bluecloud.ui.fragment.javafxmediaplayer
+package ink.bluecloud.ui.fragment.javafxmediaplayer.node
 
 import ink.bluecloud.ui.CssNode
 import javafx.geometry.Pos
-import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
-import org.koin.core.component.KoinComponent
 import tornadofx.*
 
-class ControlBar: KoinComponent, BorderPane() {
+class ControlBar: ControlBarNodes() {
     init {
         top = borderpane {
-            left = button("\uE629")
+            left {
+                backButton = button("\uE629")
+            }
 
             style {
                 backgroundColor += Color.WHITE
@@ -23,15 +23,19 @@ class ControlBar: KoinComponent, BorderPane() {
         bottom = vbox(5) {
             borderpane {
                 left = hbox {
-                    button("\uE7F4")
+                    listButton = button("\uE7F4")
                 }
 
                 center = hbox(15,Pos.CENTER) {
-                    button("\uEA44")
-                    button("\uEA82").style {
-                        fontSize = 40.px
+                    lastButton = button("\uEA44")
+
+                    playButton = button("\uEA81"){
+                        style {
+                            fontSize = 40.px
+                        }
                     }
-                    button("\uEA47")
+
+                    nextButton = button("\uEA47")
                 }
 
                 right = hbox(10) {
@@ -40,7 +44,9 @@ class ControlBar: KoinComponent, BorderPane() {
                             fontSize = 20.px
                         }
                     }
-                    progressbar(0.3)
+
+                    volumeBar = progressbar(0.3)
+
                     label("\uE67B") {
                         style {
                             fontSize = 20.px
@@ -49,7 +55,7 @@ class ControlBar: KoinComponent, BorderPane() {
                 }
             }
 
-            progressbar(0.5) {
+            progressBar = progressbar(0.5) {
                 fitToParentWidth()
             }
 

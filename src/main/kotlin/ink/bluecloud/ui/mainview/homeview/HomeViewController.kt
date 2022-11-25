@@ -3,7 +3,7 @@ package ink.bluecloud.ui.mainview.homeview
 import ink.bluecloud.service.clientservice.video.hot.HotVideoList
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.rank.FullRank
-import ink.bluecloud.ui.Controller
+import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.node.ShowWindow
 import ink.bluecloud.utils.sceneRoot
@@ -14,7 +14,7 @@ import org.koin.core.parameter.parametersOf
 import tornadofx.*
 
 @Single
-class HomeViewController: Controller<HomeView>() {
+class HomeViewController: CloudController<HomeView>() {
     override fun initUi(view: HomeView) = view.run {
         ui {
             val videos = get<HotVideoList>().getVideos()

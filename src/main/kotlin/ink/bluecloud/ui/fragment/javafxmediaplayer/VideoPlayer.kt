@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.fragment.javafxmediaplayer
 
+import ink.bluecloud.ui.fragment.javafxmediaplayer.node.ControlBar
 import ink.bluecloud.utils.uiScope
-import javafx.beans.binding.Bindings
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.media.MediaPlayer
@@ -18,26 +18,73 @@ data class PlayingData(
 @Factory
 class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
 
+    val videoPlayer:MediaPlayer
+    val audioPlayer:MediaPlayer
+
     init {
-        println(data.videoUrl)
-        println(data.audioUrl)
+        videoPlayer = builder.buildPlayer(data.videoUrl)
 
-        val player = builder.buildPlayer(data.videoUrl).apply {
-            isAutoPlay = true
-        }
-
-        val audioPlayer = builder.buildPlayer(data.videoUrl).apply {
-            isAutoPlay = true
+        audioPlayer = builder.buildPlayer(data.audioUrl).apply {
             currentTimeProperty().addListener { _, _, newValue -> println(newValue) }
 
-            currentTimeProperty().isNotEqualTo(player.currentTimeProperty()).addListener { _, _, newValue ->
+            currentTimeProperty().isNotEqualTo(videoPlayer.currentTimeProperty()).addListener { _, _, newValue ->
                 if (!newValue) return@addListener
-                seek(player.currentTime)
+                seek(videoPlayer.currentTime)
             }
         }
 
+        audioPlayer.statusProperty().addListener { _, _, newValue ->
+            if (newValue == MediaPlayer.Status.READY && (videoPlayer.status == MediaPlayer.Status.READY)) {
+                videoPlayer.play()
+                audioPlayer.play()
+            }
+        }
+
+        videoPlayer.statusProperty().addListener { _, _, newValue ->
+            if (newValue == MediaPlayer.Status.READY && (audioPlayer.status == MediaPlayer.Status.READY)) {
+                videoPlayer.play()
+                audioPlayer.play()
+            }
+        }
+
+/* todo: can't working but under code is working
+        if ((videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)) {
+            videoPlayer.play()
+            audioPlayer.play()
+        }
+
+        videoPlayer.statusProperty().isEqualTo(audioPlayer.statusProperty()).addListener { _, _, newValue ->
+            println(newValue)
+            if (!newValue) return@addListener
+            videoPlayer.play()
+            audioPlayer.play()
+        }
+        val status = Bindings.createBooleanBinding({
+            (videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)
+        }, videoPlayer.statusProperty(), audioPlayer.statusProperty())
+
+        status.addListener { _, _, newValue ->
+            println(newValue)
+            if (!newValue) return@addListener
+            videoPlayer.play()
+            audioPlayer.play()
+        }
+*/
+
+
+
+        /*
+                ioScope.launch {
+                    while (true) {
+                        println((videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY))
+                        delay(500)
+                    }
+                }
+        */
+
+
         stackpane {
-            children += MediaView(player).apply {
+            children += MediaView(videoPlayer).apply {
                 fitWidthProperty().bind(this@VideoPlayer.widthProperty())
                 fitHeightProperty().bind(this@VideoPlayer.heightProperty())
 
@@ -48,26 +95,39 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
 
             children += ControlBar().apply {
+                playButton.userData = videoPlayer.statusProperty()
+
                 controlBar = this
             }
         }
 
         registerForControllerBar()
 
-        player.errorProperty().addListener { _, _, newValue ->
+/*
+        Bindings.createObjectBinding({
+            videoPlayer.error ?: audioPlayer.error
+        },videoPlayer.errorProperty(),audioPlayer.errorProperty()).addListener { _, _, newValue ->
             newValue.printStackTrace()
-            back(player, audioPlayer)
+            back(videoPlayer, audioPlayer)
+        }
+*/
+
+        videoPlayer.errorProperty().addListener { _, _, newValue ->
+            newValue.printStackTrace()
+            back(videoPlayer, audioPlayer)
         }
 
-        Bindings.createObjectBinding({
-            player.error ?: audioPlayer.error
-        },player.errorProperty(),audioPlayer.errorProperty()).addListener { _, _, newValue ->
-            back(player, audioPlayer)
+        audioPlayer.errorProperty().addListener { _, _, newValue ->
+            newValue.printStackTrace()
+            back(videoPlayer, audioPlayer)
         }
 
         setOnMouseClicked {
-            back(player, audioPlayer)
+            back(videoPlayer, audioPlayer)
         }
+
+
+        VideoPlayerController(this)
     }
 
     private fun back(player: MediaPlayer, audioPlayer: MediaPlayer) {

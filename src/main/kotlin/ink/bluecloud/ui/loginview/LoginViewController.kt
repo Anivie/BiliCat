@@ -5,7 +5,7 @@ import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.service.clientservice.account.login.LoginService
-import ink.bluecloud.ui.Controller
+import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.cloudnotice
 import javafx.application.Platform
 import javafx.scene.image.Image
@@ -15,7 +15,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 
 @Single
-class LoginViewController: Controller<LoginView>() {
+class LoginViewController: CloudController<LoginView>() {
     private val loginService by inject<LoginService>()
 
     override fun initUi(view: LoginView) = view.run {

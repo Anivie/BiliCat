@@ -7,7 +7,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import tornadofx.*
 
-abstract class Controller<T: View>: KoinComponent {
+abstract class CloudController<T: View>: KoinComponent {
     abstract fun initUi(view: T)
 
     private val ioScope by inject<CoroutineScope>(named("ioScope"))

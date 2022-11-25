@@ -1,10 +1,10 @@
 package ink.bluecloud.ui.mainview
 
-import ink.bluecloud.ui.Controller
+import ink.bluecloud.ui.CloudController
 import org.koin.core.annotation.Single
 
 @Single
-class MainViewController : Controller<MainView>() {
+class MainViewController : CloudController<MainView>() {
     override fun initUi(view: MainView) = view.run {
 
     }
