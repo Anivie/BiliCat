@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "mediaplayer";
+    src:url("icon_player.ttf");
+}
+
+.button {
+    -fx-font-size: 25px;
+    -fx-font-family: mediaplayer;
+}
