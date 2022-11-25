@@ -3,7 +3,9 @@
 <!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出-->
 <!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，可设置一个非零的间隔秒数来检测配置变更 -->
 <Configuration status="WARN" monitorInterval="60">
-    <!-- 自定义一些变量 -->
+    <!--
+        自定义一些变量
+    -->
     <Properties>
         <!-- 变量定义 -->
         <Property name="project_name">bilicat</Property>
