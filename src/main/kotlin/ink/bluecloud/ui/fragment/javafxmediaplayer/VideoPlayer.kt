@@ -25,8 +25,6 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
         videoPlayer = builder.buildPlayer(data.videoUrl)
 
         audioPlayer = builder.buildPlayer(data.audioUrl).apply {
-            currentTimeProperty().addListener { _, _, newValue -> println(newValue) }
-
             currentTimeProperty().isNotEqualTo(videoPlayer.currentTimeProperty()).addListener { _, _, newValue ->
                 if (!newValue) return@addListener
                 seek(videoPlayer.currentTime)
@@ -47,7 +45,7 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
         }
 
-/* todo: can't working but under code is working
+/*
         if ((videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)) {
             videoPlayer.play()
             audioPlayer.play()
@@ -59,29 +57,15 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             videoPlayer.play()
             audioPlayer.play()
         }
-        val status = Bindings.createBooleanBinding({
-            (videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)
-        }, videoPlayer.statusProperty(), audioPlayer.statusProperty())
 
-        status.addListener { _, _, newValue ->
-            println(newValue)
+        Bindings.createBooleanBinding({
+            (videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)
+        }, videoPlayer.statusProperty(), audioPlayer.statusProperty()).addListener { _, _, newValue ->
             if (!newValue) return@addListener
             videoPlayer.play()
             audioPlayer.play()
         }
 */
-
-
-
-        /*
-                ioScope.launch {
-                    while (true) {
-                        println((videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY))
-                        delay(500)
-                    }
-                }
-        */
-
 
         stackpane {
             children += MediaView(videoPlayer).apply {
@@ -137,6 +121,7 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
     }
 
     private fun registerForControllerBar() {
+
         controlBar.run {
             addEventFilter(MouseEvent.MOUSE_EXITED) {
                 if (job?.isActive == true) job?.cancel()
@@ -144,20 +129,23 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
 
             addEventFilter(MouseEvent.MOUSE_ENTERED) {
-                timer.value = 5.0
+                timer.value = timerValue
                 job?.cancel()
             }
         }
 
+        //Stop timer then mouse inter playing area
         addEventFilter(MouseEvent.MOUSE_MOVED) {
             if (it.target !is MediaView) return@addEventFilter
 
-            timer.value = 5.0
+            timer.value = controlBar.timerValue
             if (job?.isActive == true) job?.cancel()
             if (!controlBar.isVisible) controlBar.isVisible = true
         }
 
+        //Add timer:hide controller then timer return to zero
         timer.addListener { _, _, newValue ->
+            println(newValue)
             if (newValue.toDouble() == 0.0) controlBar.isVisible = false
         }
 
@@ -172,7 +160,7 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
                 if (controlBar.isHover) return@coroutineScope
 
                 if (timer.value > 0.0) {
-                    timer.value -= 1.0
+                    timer.value--
                 } else cancel()
 
                 delay(1000)

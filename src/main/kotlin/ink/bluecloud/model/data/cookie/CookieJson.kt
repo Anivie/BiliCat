@@ -14,6 +14,7 @@ data class CookieJson(
     val csrf:String,
     @JSONField(name = "DedeUserID")
     val id:String,
+
     @JSONField(name = "gourl")
     val url:String="http%3A%2F%2Fwww.bilibili.com",
 //    @JSONField(name = "Expires")

@@ -30,7 +30,9 @@ class LoginViewController: CloudController<LoginView>() {
             }
 
             val jsonObject = loginService.whenSuccess()
-            cloudnotice(NoticeType.Right, "登录成功！")
+            withContext(uiContext) {
+                cloudnotice(NoticeType.Right, "登录成功！")
+            }
             println(jsonObject.toJSONString(JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue))
         }
     }

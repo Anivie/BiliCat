@@ -16,7 +16,6 @@ class VideoPlayerController(player: VideoPlayer):KoinComponent {
             }
 
             playButton.setOnAction {
-                println(player.videoPlayer.statusProperty().get())
                 if (player.videoPlayer.statusProperty().get() == Status.PLAYING) {
                     player.videoPlayer.pause()
                     player.audioPlayer.pause()
