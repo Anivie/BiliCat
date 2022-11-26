@@ -1,9 +1,6 @@
 package ink.bluecloud.model.data.video
 
 
-import ink.bluecloud.model.pojo.video.stream.VideoStreamJsonRoot
-import ink.bluecloud.service.clientservice.video.stream.param.Qn
-
 data class Video(
     /**
      * 视频的AVID可与BVID互相转换

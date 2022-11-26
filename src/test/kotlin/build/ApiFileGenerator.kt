@@ -5,11 +5,9 @@ package build
 import ink.bluecloud.model.networkapi.api.data.HttpApi
 import ink.bluecloud.model.networkapi.api.data.OKHttpURLSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.nio.file.Files
 import java.nio.file.Paths

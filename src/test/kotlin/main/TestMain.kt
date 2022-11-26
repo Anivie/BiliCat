@@ -1,7 +1,6 @@
 package main
 
 import ink.bluecloud.model.data.cookie.CookieJson
-import ink.bluecloud.service.clientservice.account.cookie.CookieUpdate
 import ink.bluecloud.utils.settingloader.SettingCenterImpl
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
