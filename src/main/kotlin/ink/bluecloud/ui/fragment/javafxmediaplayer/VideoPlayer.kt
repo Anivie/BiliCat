@@ -1,12 +1,14 @@
 package ink.bluecloud.ui.fragment.javafxmediaplayer
 
 import ink.bluecloud.ui.fragment.javafxmediaplayer.node.ControlBar
-import ink.bluecloud.utils.uiScope
+import ink.bluecloud.utils.ioScope
+import javafx.beans.binding.Bindings
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.media.MediaPlayer
 import javafx.scene.media.MediaView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.annotation.Factory
 import tornadofx.*
 
@@ -31,6 +33,7 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
         }
 
+/*
         audioPlayer.statusProperty().addListener { _, _, newValue ->
             if (newValue == MediaPlayer.Status.READY && (videoPlayer.status == MediaPlayer.Status.READY)) {
                 videoPlayer.play()
@@ -44,28 +47,20 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
                 audioPlayer.play()
             }
         }
-
-/*
-        if ((videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)) {
-            videoPlayer.play()
-            audioPlayer.play()
-        }
-
-        videoPlayer.statusProperty().isEqualTo(audioPlayer.statusProperty()).addListener { _, _, newValue ->
-            println(newValue)
-            if (!newValue) return@addListener
-            videoPlayer.play()
-            audioPlayer.play()
-        }
+*/
 
         Bindings.createBooleanBinding({
             (videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)
-        }, videoPlayer.statusProperty(), audioPlayer.statusProperty()).addListener { _, _, newValue ->
-            if (!newValue) return@addListener
-            videoPlayer.play()
-            audioPlayer.play()
+        }, videoPlayer.statusProperty(), audioPlayer.statusProperty()).apply {
+            this@VideoPlayer.properties["readyListener"] = this//for keep reference
+
+            addListener { _, _, newValue ->
+                if (!newValue) return@addListener
+
+                videoPlayer.play()
+                audioPlayer.play()
+            }
         }
-*/
 
         stackpane {
             children += MediaView(videoPlayer).apply {
@@ -85,31 +80,28 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
         }
 
-        registerForControllerBar()
+        val registerForControllerBar = registerForControllerBar()
+        parentProperty().addListener { _, _, newValue ->
+            if (newValue == null) {
+                timer?.cancel()
+                registerForControllerBar.cancel()
+            }
+        }
 
-/*
         Bindings.createObjectBinding({
-            videoPlayer.error ?: audioPlayer.error
-        },videoPlayer.errorProperty(),audioPlayer.errorProperty()).addListener { _, _, newValue ->
-            newValue.printStackTrace()
-            back(videoPlayer, audioPlayer)
-        }
-*/
+            audioPlayer.error ?: audioPlayer.error
+        },audioPlayer.errorProperty(),audioPlayer.errorProperty()).apply {
+            this@VideoPlayer.properties["errorListener"] = this//for keep reference
 
-        videoPlayer.errorProperty().addListener { _, _, newValue ->
-            newValue.printStackTrace()
-            back(videoPlayer, audioPlayer)
-        }
-
-        audioPlayer.errorProperty().addListener { _, _, newValue ->
-            newValue.printStackTrace()
-            back(videoPlayer, audioPlayer)
+            addListener { _, _, newValue ->
+                newValue.printStackTrace()
+                back(audioPlayer, audioPlayer)
+            }
         }
 
         setOnMouseClicked {
             back(videoPlayer, audioPlayer)
         }
-
 
         VideoPlayerController(this)
     }
@@ -120,51 +112,34 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
         audioPlayer.dispose()
     }
 
-    private fun registerForControllerBar() {
-
-        controlBar.run {
-            addEventFilter(MouseEvent.MOUSE_EXITED) {
-                if (job?.isActive == true) job?.cancel()
-                job = uiScope.launch { timer() }
-            }
-
-            addEventFilter(MouseEvent.MOUSE_ENTERED) {
-                timer.value = timerValue
-                job?.cancel()
-            }
-        }
-
-        //Stop timer then mouse inter playing area
+    private fun registerForControllerBar() = ioScope.launch timerScope@{
         addEventFilter(MouseEvent.MOUSE_MOVED) {
-            if (it.target !is MediaView) return@addEventFilter
-
-            timer.value = controlBar.timerValue
-            if (job?.isActive == true) job?.cancel()
-            if (!controlBar.isVisible) controlBar.isVisible = true
+            if (timerTarget.value != it.target::class) timerTarget.value = it.target::class
         }
 
-        //Add timer:hide controller then timer return to zero
-        timer.addListener { _, _, newValue ->
-            println(newValue)
-            if (newValue.toDouble() == 0.0) controlBar.isVisible = false
-        }
+        timerTarget.addListener { _, _, newValue ->
+            when (newValue) {
+                VideoPlayer::class -> {
+                    if (!controlBar.isVisible) return@addListener
+                    timer = ioScope.launch { timer() }
+                }
 
-        parentProperty().addListener { _, _, newValue ->
-            if (newValue == null) job?.cancel()
+                MediaView::class -> {
+                    controlBar.isVisible = true
+                    timer?.cancel()
+                }
+
+                ControlBar::class -> {
+                    timer?.cancel()
+                    timer = ioScope.launch { timer() }
+                }
+                else -> {}
+            }
         }
     }
 
     private suspend fun timer() {
-        coroutineScope {
-            while (isActive) {
-                if (controlBar.isHover) return@coroutineScope
-
-                if (timer.value > 0.0) {
-                    timer.value--
-                } else cancel()
-
-                delay(1000)
-            }
-        }
+        delay(timerValue)
+        controlBar.isVisible = false
     }
 }

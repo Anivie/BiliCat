@@ -85,7 +85,6 @@ class VideoStream : ClientService() {
             it["cid"] = cid.toString()
         }
         logger.debug("API Get VideoStream -> $param")
-        println(httpClient.getForString(param))
         return httpClient.getForString(param).toObjJson(VideoStreamJsonRoot.Root::class.java)
     }
 }

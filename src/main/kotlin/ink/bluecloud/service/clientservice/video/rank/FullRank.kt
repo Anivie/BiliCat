@@ -49,20 +49,6 @@ class FullRank : ClientService() {
         }
     }
 
-/*
-    private val cover: suspend CoroutineScope.(RankListJsonRoot.Item) -> Deferred<InputStream> = {
-        async(start = CoroutineStart.LAZY) {
-            println(it)
-            suspendCoroutine { coroutine ->
-                httpClient.getFor(it.pic.toHttpUrl()) {
-                    coroutine.resume(body.byteStream())
-                    logger.info("获取热榜视频封面成功，返回值${code}.")
-                }
-            }
-        }
-    }
-*/
-
     private val cover: suspend CoroutineScope.(RankListJsonRoot.Item) -> InputStream = {
         suspendCoroutine { coroutine ->
             httpClient.getFor(it.pic.toHttpUrl()) {

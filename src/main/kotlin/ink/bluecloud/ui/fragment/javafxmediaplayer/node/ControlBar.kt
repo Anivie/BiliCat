@@ -9,7 +9,11 @@ class ControlBar: ControlBarNodes() {
     init {
         top = borderpane {
             left {
-                backButton = button("\uE629")
+                backButton = button("\uE629") {
+                    action {
+                        this@ControlBar.isVisible = false
+                    }
+                }
             }
 
             style {

@@ -7,7 +7,6 @@ import org.koin.core.component.KoinComponent
 import tornadofx.*
 
 abstract class ControlBarNodes: KoinComponent, BorderPane() {
-    val timerValue = 3.0
 
     var backButton by singleAssign<Button>()
 
