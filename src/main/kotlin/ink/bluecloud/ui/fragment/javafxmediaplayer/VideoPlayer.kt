@@ -33,22 +33,6 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
         }
 
-/*
-        audioPlayer.statusProperty().addListener { _, _, newValue ->
-            if (newValue == MediaPlayer.Status.READY && (videoPlayer.status == MediaPlayer.Status.READY)) {
-                videoPlayer.play()
-                audioPlayer.play()
-            }
-        }
-
-        videoPlayer.statusProperty().addListener { _, _, newValue ->
-            if (newValue == MediaPlayer.Status.READY && (audioPlayer.status == MediaPlayer.Status.READY)) {
-                videoPlayer.play()
-                audioPlayer.play()
-            }
-        }
-*/
-
         Bindings.createBooleanBinding({
             (videoPlayer.status == MediaPlayer.Status.READY) && (audioPlayer.status == MediaPlayer.Status.READY)
         }, videoPlayer.statusProperty(), audioPlayer.statusProperty()).apply {

@@ -56,6 +56,7 @@ dependencies {
     //Http
     implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "5.0.0-alpha.10")
     implementation(group = "org.jsoup", name = "jsoup", version = "1.15.3")
+    implementation(group = "org.bouncycastle", name = "bcprov-jdk15on", version = "1.70")
 
     //Serialization
     implementation(group = "com.alibaba.fastjson2", name = "fastjson2-kotlin", version = "2.0.19")
@@ -93,3 +94,10 @@ tasks.withType<KotlinCompile> {
 application {
     mainClass.set("ink.bluecloud.MainKt")
 }
+
+/*
+* running vm options on hotspot
+* --add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
+--add-opens=javafx.media/javafx.scene.media=ALL-UNNAMED
+--add-opens=javafx.media/com.sun.media.jfxmedia.locator=ALL-UNNAMED
+* */

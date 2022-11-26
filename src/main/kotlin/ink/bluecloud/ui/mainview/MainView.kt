@@ -1,11 +1,13 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
+import ink.bluecloud.service.clientservice.init.LoadCookie
 import ink.bluecloud.service.clientservice.video.hot.HotVideoList
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
 import ink.bluecloud.ui.HarmonySans
 import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
+import ink.bluecloud.ui.loginview.LoginView
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.sceneRoot
@@ -24,6 +26,10 @@ import tornadofx.*
 class MainView : KoinComponent,MainViewNodes() {
     override fun onDock() {
         get<MainViewController>().initUi(this)
+
+        if (!get<LoadCookie>().load()) {
+            openInternalWindow<LoginView>(closeButton = false)
+        }
     }
 
     override val root = stackpane {

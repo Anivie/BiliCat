@@ -15,9 +15,9 @@ import javafx.scene.paint.LinearGradient
 import javafx.scene.paint.Stop
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import tornadofx.*
@@ -29,12 +29,12 @@ class ShowWindow(
     private val spacing: Double?
 ): KoinComponent,StackPane() {
 
-//    lateinit var currentUrl:String
+    lateinit var currentCard:HomePagePushCard
 
     init {
         uiScope.launch {
-            val image = card.first()
-            val cover = image.cover.await()
+            currentCard = card.first()
+            val cover = currentCard.cover.await()
 
             pane {
                 background = Background(BackgroundImage(
@@ -47,7 +47,7 @@ class ShowWindow(
             }
 
             stackpane {
-                label(image.title) {
+                label(currentCard.title) {
                     style {
                         textFill = Color.WHITE
                     }

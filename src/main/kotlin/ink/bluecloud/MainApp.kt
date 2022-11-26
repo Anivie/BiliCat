@@ -2,6 +2,7 @@ package ink.bluecloud
 
 import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStageAndRoot
 import ink.bluecloud.css.themes
+import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.service.clientservice.init.LoadCookie
 import ink.bluecloud.ui.mainview.MainView
 import javafx.scene.Scene
@@ -15,16 +16,17 @@ import kotlin.reflect.KClass
 
 class MainApp: App(
     icon = Image("ui/icon.png"),
-//    primaryView = LoginView::class,
     primaryView = MainView::class,
 ),KoinComponent {
 
     init {
         //debug
+/*
         System.getProperty("intellij.debug.agent")?.run {
-//            reloadViewsOnFocus()
-//            reloadStylesheetsOnFocus()
+            reloadViewsOnFocus()
+            reloadStylesheetsOnFocus()
         }
+*/
 
         FX.dicontainer = object :DIContainer {
             override fun <T : Any> getInstance(type: KClass<T>): T {
@@ -50,6 +52,7 @@ class MainApp: App(
     }
 
     override fun stop() {
+        get<HttpClient>().close()
         stopKoin()
         super.stop()
     }

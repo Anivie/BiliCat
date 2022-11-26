@@ -3,6 +3,7 @@ package ink.bluecloud
 import javafx.application.Application
 import kotlinx.coroutines.*
 import kotlinx.coroutines.javafx.JavaFx
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.core.qualifier.named
@@ -12,6 +13,10 @@ import org.koin.logger.slf4jLogger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
+import java.security.Security
+
+
+
 
 class Main
 fun main() {
@@ -56,5 +61,7 @@ fun main() {
     }
 
     System.setProperty("prism.lcdtext", "false")
+    Security.addProvider(BouncyCastleProvider())
+
     Application.launch(MainApp::class.java)
 }

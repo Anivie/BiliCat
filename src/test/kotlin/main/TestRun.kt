@@ -1,9 +1,7 @@
 package main
 
-import ink.bluecloud.service.clientservice.video.hot.HotVideoList
 import ink.bluecloud.service.clientservice.video.info.VideoInfo
 import ink.bluecloud.service.clientservice.video.stream.VideoStream
-import org.apache.logging.log4j.LogManager
 
 class TestRun {
     suspend fun run() {

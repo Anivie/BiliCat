@@ -1,6 +1,5 @@
 package ink.bluecloud.ui.loginview
 
-import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import org.koin.core.component.KoinComponent
@@ -10,7 +9,7 @@ import tornadofx.*
 class LoginView: KoinComponent,LoginViewNodes() {
 
     override val root = borderpane {
-        top = TitleBar("登录", primaryStage)
+//        top = TitleBar("登录", primaryStage)
 
         center = getQrCodeBox()
 /*
@@ -30,6 +29,7 @@ class LoginView: KoinComponent,LoginViewNodes() {
         prefHeight = 450.0
     }
 
+    @Suppress("unused")
     private fun getPasswordBox() = gridpane {
         row {
             label("用户名:")

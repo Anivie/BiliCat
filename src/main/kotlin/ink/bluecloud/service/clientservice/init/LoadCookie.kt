@@ -8,9 +8,10 @@ import org.koin.core.annotation.Factory
 
 @Factory
 class LoadCookie: ClientService() {
-    fun load() {
-        settingCenter.readSettingOnly<CookieJson>()?.run {
+    fun load():Boolean {
+        return settingCenter.readSettingOnly<CookieJson>()?.run {
             CookieUpdate().loadCookie(this)
-        }
+            true
+        }?: false
     }
 }
