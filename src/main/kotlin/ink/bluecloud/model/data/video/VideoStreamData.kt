@@ -13,6 +13,11 @@ import org.koin.core.component.KoinComponent
 data class VideoStreamData(
     val video: StreamMap,
     val audio: StreamMap,
+    /**
+     * 视频支持的视频清晰度列表
+     */
+    val acceptQuality:List<Qn>,
+    val acceptQualityDescribe:List<String>
 )
 
 /**

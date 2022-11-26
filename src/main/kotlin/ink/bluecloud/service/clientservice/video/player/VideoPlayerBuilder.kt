@@ -20,7 +20,7 @@ class VideoPlayerBuilder: ClientService() {
                 isAccessible = true
             }.get(locator)as TreeMap<String, Any>
 
-            map["cookie"] = httpClient.getCookieStore().toCookies().toString().replace("\n","")
+            map["cookie"] = httpClient.getCookieStore().toString()
         })
     }
 }

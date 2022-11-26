@@ -15,6 +15,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 
 @Serializable
 data class HttpApi(
+//  Login
     val getLoginQRCode: HttpUrl,
     val getLoginStatus: HttpUrl,
 //    Video
@@ -27,6 +28,8 @@ data class HttpApi(
     val getFullRank: HttpUrl,
 //    User
     val getAccountInfo: HttpUrl,
+//    Other
+    val getBili: HttpUrl,
 )
 
 object OKHttpURLSerializer : KSerializer<HttpUrl> {

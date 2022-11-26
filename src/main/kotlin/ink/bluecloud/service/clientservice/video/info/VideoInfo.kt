@@ -5,6 +5,7 @@ import ink.bluecloud.model.data.video.Video
 import ink.bluecloud.model.pojo.video.info.VideoInfoJsonRoot
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.getForString
+import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
 
@@ -18,7 +19,7 @@ class VideoInfo : ClientService() {
     /**
      * 获取视频信息
      */
-    suspend fun getVideoInfo(bvid: String):Video? {
+    suspend fun getVideoInfo(bvid: String): Video? {
         val pojo = getJsonPOJO(bvid)
 
         if (pojo.code != 0 || pojo.data == null) {
@@ -71,7 +72,7 @@ class VideoInfo : ClientService() {
             CCSubtitle = data.subtitle?.let { sub ->//cc字幕
                 Video.Subtitle(
                     allow_submit = sub.allow_submit,
-                    list = getCC(data)?: throw IllegalArgumentException()
+                    list = getCC(data) ?: throw IllegalArgumentException()
                 )
             },
             authorName = data.owner.name,//up名称
@@ -141,7 +142,7 @@ class VideoInfo : ClientService() {
      */
     private fun getPages(data: VideoInfoJsonRoot.Data): ArrayList<Video.Page> {
         //构建page
-       return data.pages.mapTo(ArrayList()) {
+        return data.pages.mapTo(ArrayList()) {
             Video.Page(
                 cid = it.cid,
                 duration = it.duration,
@@ -163,8 +164,12 @@ class VideoInfo : ClientService() {
      * 获取详细数据
      */
     private suspend fun getJsonPOJO(bvid: String): VideoInfoJsonRoot.Root {
+        val param = netWorkResourcesProvider.api.getVideoINFO.param {
+            it["bvid"] = bvid
+        }
+        logger.debug("API Get VideoInfo -> $param")
         return httpClient.getForString(
-            netWorkResourcesProvider.api.getVideoINFO.newBuilder("?bvid=${bvid}")?.build()!!
+            param
         ).toObjJson(VideoInfoJsonRoot.Root::class.java)
     }
 }

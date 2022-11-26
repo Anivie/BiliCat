@@ -94,6 +94,7 @@ class PortalVideoList : ClientService() {
         val param = netWorkResourcesProvider.api.getVideoStreamURL.param {
             it["ps"] = num.toString()
         }
+        logger.debug("API Get PortalVideo -> $param")
         httpClient.getFor(param) {
             coroutine.resume(body.string())
         }
