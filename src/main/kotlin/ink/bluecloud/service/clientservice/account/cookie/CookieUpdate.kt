@@ -27,10 +27,12 @@ class CookieUpdate : ClientService() {
      * 更新 Cookie (不等待更新，但在未来更新完毕)
      */
     private fun updateCookie() = httpClient.getFor(netWorkResourcesProvider.api.getBili) {
-        if (code != 200) throw HttpStatusException(
-            "http status code is not 200",
-            code,
-            netWorkResourcesProvider.api.getBili.toString()
-        )
+        use {
+            if (it.code != 200) throw HttpStatusException(
+                "http status code is not 200",
+                code,
+                netWorkResourcesProvider.api.getBili.toString()
+            )
+        }
     }
 }

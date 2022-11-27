@@ -10,6 +10,7 @@ import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.loginview.LoginView
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
+import ink.bluecloud.utils.koin
 import ink.bluecloud.utils.sceneRoot
 import ink.bluecloud.utils.uiScope
 import javafx.geometry.Pos
@@ -26,9 +27,14 @@ import tornadofx.*
 class MainView : KoinComponent,MainViewNodes() {
     override fun onDock() {
         get<MainViewController>().initUi(this)
+        koin.setProperty("primaryStage", primaryStage)
 
         if (!get<LoadCookie>().load()) {
-            openInternalWindow<LoginView>(closeButton = false)
+            openInternalWindow<LoginView>(
+                closeButton = false,
+                hasContent = false,
+                hasTitle = false
+            )
         }
     }
 

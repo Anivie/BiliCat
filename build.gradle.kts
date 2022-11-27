@@ -96,8 +96,8 @@ application {
 }
 
 /*
-* running vm options on hotspot
-* --add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
+running vm options on hotspot
+--add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
 --add-opens=javafx.media/javafx.scene.media=ALL-UNNAMED
 --add-opens=javafx.media/com.sun.media.jfxmedia.locator=ALL-UNNAMED
-* */
+*/

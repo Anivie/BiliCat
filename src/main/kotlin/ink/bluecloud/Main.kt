@@ -1,7 +1,13 @@
 package ink.bluecloud
 
+import ink.bluecloud.cloudtools.cloudnotice.CloudNotice
+import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import javafx.application.Application
-import kotlinx.coroutines.*
+import javafx.stage.Stage
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.javafx.JavaFx
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.koin.core.context.startKoin
@@ -15,30 +21,28 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
 import java.security.Security
 
-
-
-
-class Main
 fun main() {
-    val logger = LoggerFactory.getLogger(Main::class.java)
-    val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        coroutineContext.cancel()
-        val stream = ByteArrayOutputStream(1000)
-
-        PrintWriter(stream).use {
-            throwable.printStackTrace(it)
-        }
-
-        val err = buildString {
-            append("\nHava a error on coroutine:${coroutineContext}\n")
-            append(String(stream.toByteArray()))
-            append("---By coroutine error handler---")
-        }
-
-        logger.error(err)
-    }
+    val logger = LoggerFactory.getLogger("CoroutineErrorHandler")
 
     startKoin {
+        val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            val stream = ByteArrayOutputStream(1000)
+
+            PrintWriter(stream).use {
+                throwable.printStackTrace(it)
+            }
+
+            val err = buildString {
+                append("\nHava a error on coroutine:${coroutineContext}\n")
+                append(String(stream.toByteArray()))
+                append("---By global coroutine error handler---")
+            }
+
+            val window = koin.getProperty<Stage>("primaryStage")?: throw IllegalArgumentException("An error occur but primary stage not register.")
+            CloudNotice(NoticeType.Error,throwable.message ?: "Unknown Error on $throwable", window).show()
+            logger.error(err)
+        }
+
         val parentModule = module {
             single(named("uiScope")) {
                 CoroutineScope(Dispatchers.JavaFx + errorHandler + SupervisorJob())

@@ -58,8 +58,6 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
             }
 
             children += ControlBar().apply {
-                playButton.userData = videoPlayer.statusProperty()
-
                 controlBar = this
             }
         }
