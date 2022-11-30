@@ -16,3 +16,9 @@ suspend inline fun HttpClient.getForHead(url: HttpUrl): Boolean = suspendCorouti
         coroutine.resume(code == 200)
     }
 }
+
+suspend inline fun HttpClient.getForBytes(url: HttpUrl): ByteArray = suspendCoroutine { coroutine ->
+    getFor(url) {
+        coroutine.resume(body.bytes())
+    }
+}

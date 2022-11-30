@@ -12,7 +12,6 @@ import org.koin.core.annotation.Factory
 /**
  * 获取视频具体信息
  * @Guess: 此接口会自动调用获取视频流链接API
- * @TestAPI: 等待测试API稳定后移除此项
  */
 @Factory
 class VideoInfo : ClientService() {

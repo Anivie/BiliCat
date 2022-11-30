@@ -65,3 +65,5 @@ class IDConvert {
         return String(arr)
     }
 }
+
+inline fun String.toAvNumber():Int = IDConvert().BvToAvNumber(this)

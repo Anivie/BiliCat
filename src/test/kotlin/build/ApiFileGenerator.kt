@@ -31,6 +31,8 @@ fun main() {
             getAccountInfo = "https://api.bilibili.com/x/web-interface/nav".toHttpUrl(),
             //  Other
             getBili = "https://www.bilibili.com".toHttpUrl(),
+            // Barrage
+            getRealTimeBarrage = "http://api.bilibili.com/x/v2/dm/web/seg.so ".toHttpUrl(),
         )
     ).run {
         println(contentToString())

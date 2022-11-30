@@ -30,6 +30,8 @@ data class HttpApi(
     val getAccountInfo: HttpUrl,
 //    Other
     val getBili: HttpUrl,
+//    Barrage
+    val getRealTimeBarrage:HttpUrl,
 )
 
 object OKHttpURLSerializer : KSerializer<HttpUrl> {
