@@ -17,7 +17,7 @@ class AccountInfo : ClientService() {
     /**
      * 获取这个账号自己的信息（需要Cookie）
      */
-    suspend fun getAccountInfo() =io {
+    suspend fun getAccountInfo() = io {
         return@io getJsonPOJO().data.run {
             AccountCard(
                 name = uname!!,

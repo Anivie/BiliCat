@@ -2,26 +2,20 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.service.clientservice.init.LoadCookie
-import ink.bluecloud.service.clientservice.video.hot.HotVideoList
-import ink.bluecloud.service.clientservice.video.stream.VideoStream
+import ink.bluecloud.service.clientservice.user.AccountInfo
 import ink.bluecloud.ui.HarmonySans
-import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
-import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.loginview.LoginView
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
+import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.koin
-import ink.bluecloud.utils.sceneRoot
-import ink.bluecloud.utils.uiScope
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
 import tornadofx.*
 
 class MainView : KoinComponent,MainViewNodes() {
@@ -71,6 +65,7 @@ class MainView : KoinComponent,MainViewNodes() {
 
                     button("Debug!") {
                         action {
+/*
                             uiScope.launch {
                                 val videos = get<HotVideoList>().getVideos()
                                 videos.first()
@@ -88,6 +83,10 @@ class MainView : KoinComponent,MainViewNodes() {
                                     )
                                 }
                             }
+*/
+                            ioScope.launch {
+                                println(get<AccountInfo>().getAccountInfo())
+                            }
                         }
 
                         style {
@@ -103,10 +102,12 @@ class MainView : KoinComponent,MainViewNodes() {
                     "\uE610" to "动态",
                     "\uE629" to "分区"
                 )) {
+/*
                 (this@root.center as StackPane).children[0] = when (it.second) {
                     0 -> find<HomeView>().root
                     else -> throw IllegalArgumentException("无法解析的页面：${it}！")
                 }
+*/
                 }.apply {
                     (this@root.center as StackPane).children += find<HomeView>().root
                     maxWidthProperty().bind(this@leftBox.widthProperty())
@@ -115,8 +116,6 @@ class MainView : KoinComponent,MainViewNodes() {
 
                 padding = insets(20.0, 0.0, 20.0, 20.0)
             }
-
-
             /*
                     right {
                         rightBox = borderpane {

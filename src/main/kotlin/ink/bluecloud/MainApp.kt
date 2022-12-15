@@ -27,7 +27,6 @@ class MainApp: App(
             reloadStylesheetsOnFocus()
         }
 */
-
         FX.dicontainer = object :DIContainer {
             override fun <T : Any> getInstance(type: KClass<T>): T {
                 return getKoin().get(type)
