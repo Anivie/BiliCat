@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
 import java.security.Security
 
+
 fun main() {
     val logger = LoggerFactory.getLogger("CoroutineErrorHandler")
 
@@ -66,6 +67,5 @@ fun main() {
 
     System.setProperty("prism.lcdtext", "false")
     Security.addProvider(BouncyCastleProvider())
-
     Application.launch(MainApp::class.java)
 }

@@ -1,12 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+/*
+object Version {
+//    val kotlinVersion by properties
+    val koinVersion by properties
+    val koinKspVersion by properties
+}
+*/
+
 plugins {
     application
-    kotlin("jvm") version "1.7.21"
-    id("org.openjfx.javafxplugin") version "0.0.13"
-    id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.21"
-    id("com.google.devtools.ksp") version "1.7.21-1.0.8"
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.openjfx.javafxplugin")
+    id("com.github.johnrengelman.shadow")
 }
 
 group = "ink.bluecloud"
@@ -26,6 +34,22 @@ javafx {
     modules = listOf("javafx.controls", "javafx.media")
 }
 
+val zxingVersion:String by properties
+val koinVersion:String by properties
+val koinKspVersion:String by properties
+val okhttpVersion:String by properties
+val coroutineVersion:String by properties
+val kotlinVersion:String by properties
+val ztExecVersion:String by properties
+val bouncycastleVersion:String by properties
+val jsoupVersion:String by properties
+val log4jVersion:String by properties
+val fastjsonVersion:String by properties
+val protobufVersion:String by properties
+val h2Version:String by properties
+val ktormCoreVersion:String by properties
+val ktormKspVersion:String by properties
+
 dependencies {
     //GUI
     implementation(files(
@@ -35,41 +59,42 @@ dependencies {
     ))
 
     //Kotlin
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-javafx", version = "1.6.4")
-    implementation(group = "org.jetbrains.kotlin", name = "kotlin-reflect", version = "1.7.21")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-javafx", version = coroutineVersion)
+    implementation(group = "org.jetbrains.kotlin", name = "kotlin-reflect", version = kotlinVersion)
 
     //koin
-    implementation("io.insert-koin:koin-core:3.2.2")
-    implementation("io.insert-koin:koin-annotations:1.0.3")
-    implementation("io.insert-koin:koin-logger-slf4j:3.2.2")
-    ksp("io.insert-koin:koin-ksp-compiler:1.0.3")
+    implementation("io.insert-koin:koin-core:${koinVersion}")
+    implementation("io.insert-koin:koin-annotations:${koinKspVersion}")
+    implementation("io.insert-koin:koin-logger-slf4j:${koinVersion}")
+    ksp("io.insert-koin:koin-ksp-compiler:${koinKspVersion}")
 
     //Utils
-    implementation(group = "org.zeroturnaround", name = "zt-exec", version = "1.12")
+    implementation(group = "org.zeroturnaround", name = "zt-exec", version = ztExecVersion)
 
     //DataBase
-    implementation(group = "org.ktorm", name = "ktorm-core", version = "3.5.0")
-    implementation(group = "org.ktorm", name = "ktorm-ksp-api", version = "1.0.0-RC3")
-    implementation(group = "com.h2database", name = "h2", version = "2.1.214")
-    ksp(group = "org.ktorm", name = "ktorm-ksp-compiler", version = "1.0.0-RC3")
+    implementation(group = "com.h2database", name = "h2", version = h2Version)
+
+    implementation(group = "org.ktorm", name = "ktorm-core", version = ktormCoreVersion)
+    implementation(group = "org.ktorm", name = "ktorm-ksp-api", version = ktormKspVersion)
+    ksp(group = "org.ktorm", name = "ktorm-ksp-compiler", version = ktormKspVersion)
 
     //Http
-    implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "5.0.0-alpha.10")
-    implementation(group = "org.jsoup", name = "jsoup", version = "1.15.3")
-    implementation(group = "org.bouncycastle", name = "bcprov-jdk15on", version = "1.70")
+    implementation(group = "com.squareup.okhttp3", name = "okhttp", version = okhttpVersion)
+    implementation(group = "org.jsoup", name = "jsoup", version = jsoupVersion)
+    implementation(group = "org.bouncycastle", name = "bcprov-jdk15on", version = bouncycastleVersion)
 
     //Serialization
-    implementation(group = "com.alibaba.fastjson2", name = "fastjson2-kotlin", version = "2.0.19")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version = "1.4.1")
+    implementation(group = "com.alibaba.fastjson2", name = "fastjson2-kotlin", version = fastjsonVersion)
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version = protobufVersion)
 
     //QRCode
-    implementation(group = "com.google.zxing", name = "core", version = "3.5.1")
-    implementation(group = "com.google.zxing", name = "javase", version = "3.5.1")
+    implementation(group = "com.google.zxing", name = "core", version = zxingVersion)
+    implementation(group = "com.google.zxing", name = "javase", version = zxingVersion)
 
     //Logger
-    implementation(group = "org.apache.logging.log4j", name = "log4j-core", version = "2.19.0")
-    implementation(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.19.0")
-    implementation(group = "org.apache.logging.log4j", name = "log4j-slf4j-impl", version = "2.19.0")
+    implementation(group = "org.apache.logging.log4j", name = "log4j-core", version = log4jVersion)
+    implementation(group = "org.apache.logging.log4j", name = "log4j-api", version = log4jVersion)
+    implementation(group = "org.apache.logging.log4j", name = "log4j-slf4j-impl", version = log4jVersion)
 //    implementation(group = "io.github.microutils", name = "kotlin-logging-jvm", version = "3.0.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
