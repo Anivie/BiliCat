@@ -34,13 +34,13 @@ class AccountInfo : ClientService() {
                 pid = pendant!!.pid,
                 expire = pendant.expire,
                 pendantName = pendant.name,
-                image = getInputStream(pendant.image),
-                imageEnhanceFrame = getInputStream(pendant.image_enhance_frame),
-                imageEnhance = getInputStream(pendant.image_enhance),
+                image = getInputStream(pendant.image!!),
+                imageEnhanceFrame = getInputStream(pendant.image_enhance_frame!!),
+                imageEnhance = getInputStream(pendant.image_enhance!!),
 
-                officialDesc = official!!.desc,
+                officialDesc = official!!.desc!!,
                 officialRole = official.role,
-                officialTitle = official.title,
+                officialTitle = official.title!!,
                 officialType = official.type
             )
         }
