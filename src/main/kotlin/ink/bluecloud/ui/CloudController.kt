@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import tornadofx.*
+import tornadofx.View
 
 abstract class CloudController<T: View>: KoinComponent {
     abstract fun initUi(view: T)

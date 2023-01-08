@@ -33,6 +33,12 @@ fun main() {
             getBili = "https://www.bilibili.com".toHttpUrl(),
             // Barrage
             getRealTimeBarrage = "http://api.bilibili.com/x/v2/dm/web/seg.so ".toHttpUrl(),
+            // Comment
+            getCommentAreaPageLoad = "http://api.bilibili.com/x/v2/reply".toHttpUrl(),//20221215
+            getCommentLazyPageLoad = "http://api.bilibili.com/x/v2/reply/main".toHttpUrl(),//20230108
+            getCommentReply = "http://api.bilibili.com/x/v2/reply/reply".toHttpUrl(),//20230108
+            getCommentReplyTree = "http://api.bilibili.com/x/v2/reply/dialog/cursor".toHttpUrl(),//20230108
+            getCommentAreaHot = "http://api.bilibili.com/x/v2/reply/hot".toHttpUrl(),//20230108
         )
     ).run {
         println(contentToString())

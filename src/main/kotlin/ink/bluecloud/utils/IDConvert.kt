@@ -17,7 +17,7 @@ class IDConvert {
      * @param bv
      * @return
      */
-    fun BvToAv(bv: String): String? {
+    fun BvToAv(bv: String): String {
         return "AV" + BvToAvNumber(bv)
     }
 
@@ -26,6 +26,7 @@ class IDConvert {
      * @param bv
      */
     fun BvToAvNumber(bv: String): Int {
+        if (!isBvid(bv)) throw IllegalArgumentException("Bvid is not legal")
         val a = table.toCharArray()
         for (i in 0..57) {
             val map: MutableMap<String, Any> = HashMap()
@@ -51,7 +52,7 @@ class IDConvert {
      * Av 转 BV
      * @param av
      */
-    fun AvToBv(av: String): String? {
+    fun AvToBv(av: String): String {
         var av = av
         av = av.replace("\\D.".toRegex(), "")
         val temp = av.toInt()
@@ -64,6 +65,8 @@ class IDConvert {
         }
         return String(arr)
     }
+
+    fun isBvid(bvid:String):Boolean = bvid.uppercase().indexOf("BV") == 0
 }
 
 inline fun String.toAvNumber():Int = IDConvert().BvToAvNumber(this)

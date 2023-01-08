@@ -14,7 +14,8 @@ import org.koin.core.annotation.Single
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import tornadofx.*
+import tornadofx.hgrow
+import tornadofx.vgrow
 
 @Single
 class HomeViewController: CloudController<HomeView>() {
