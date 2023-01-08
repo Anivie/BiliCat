@@ -2,7 +2,7 @@ package ink.bluecloud.ui.mainview.pushview
 
 import ink.bluecloud.ui.animationTo
 import javafx.scene.layout.Pane
-import tornadofx.*
+import tornadofx.Controller
 import kotlin.math.absoluteValue
 
 class PushViewController: Controller() {

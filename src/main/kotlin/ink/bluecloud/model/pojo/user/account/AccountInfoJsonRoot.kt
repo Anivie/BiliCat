@@ -1,5 +1,9 @@
 package ink.bluecloud.model.pojo.user.account
 
+import ink.bluecloud.model.pojo.user.info.LevelInfo
+import ink.bluecloud.model.pojo.user.info.OfficialVerify
+import ink.bluecloud.model.pojo.user.info.pendant.UserPendant
+
 class AccountInfoJsonRoot {
     data class Root(
         val code: Int,
@@ -35,11 +39,11 @@ class AccountInfoJsonRoot {
         /**
          * 认证信息
          */
-        val official: Official?,
+        val official: OfficialVerify?,
         /**
          * 头像框
          */
-        val pendant: Pendant?,
+        val pendant: UserPendant?,
         /**
          * 用户名称
          */
@@ -61,28 +65,4 @@ class AccountInfoJsonRoot {
          */
         val vip_pay_type: Int?,
     )
-
-    data class LevelInfo(
-        val current_exp: Int,
-        val current_level: Int,
-        val current_min: Int,
-        val next_exp: Int,
-    )
-
-    data class Official(
-        val desc: String,
-        val role: Int,
-        val title: String,
-        val type: Int,
-    )
-
-    data class Pendant(
-        val expire: Int,
-        val image: String,
-        val image_enhance: String,
-        val image_enhance_frame: String,
-        val name: String,
-        val pid: Int,
-    )
-
 }

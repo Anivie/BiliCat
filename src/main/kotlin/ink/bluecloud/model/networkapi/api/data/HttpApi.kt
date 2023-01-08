@@ -30,6 +30,14 @@ data class HttpApi(
     val getAccountInfo: HttpUrl,
 //    Other
     val getBili: HttpUrl,
+//    Barrage
+    val getRealTimeBarrage:HttpUrl,
+    //Comment
+    val getCommentAreaPageLoad: HttpUrl,
+    val getCommentLazyPageLoad: HttpUrl,
+    val getCommentReply: HttpUrl,
+    val getCommentReplyTree: HttpUrl,
+    val getCommentAreaHot: HttpUrl,
 )
 
 object OKHttpURLSerializer : KSerializer<HttpUrl> {

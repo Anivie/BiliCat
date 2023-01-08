@@ -2,7 +2,8 @@ package ink.bluecloud.ui.loginview
 
 import javafx.scene.control.Button
 import javafx.scene.image.ImageView
-import tornadofx.*
+import tornadofx.View
+import tornadofx.singleAssign
 
 abstract class LoginViewNodes: View("登录") {
     var phoneButton by  singleAssign<Button>()
