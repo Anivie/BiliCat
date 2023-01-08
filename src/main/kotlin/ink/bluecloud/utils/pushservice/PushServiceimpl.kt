@@ -11,12 +11,12 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
+import tornadofx.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Single
 class PushServiceimpl: PushService() {
-
     private val noticeChannel = Channel<CloudNotice>().apply channel@{
         ioScope.launch {
             while (isActive) {
@@ -40,4 +40,9 @@ class PushServiceimpl: PushService() {
     override suspend fun makeNotice(type: NoticeType, message: String, window: Window) = withContext(ioContext) {
         noticeChannel.send(CloudNotice(type,message,window))
     }
+}
+
+context(UIComponent)
+suspend inline fun PushService.makeNotice(type: NoticeType, message: String) {
+    makeNotice(type,message,primaryStage)
 }

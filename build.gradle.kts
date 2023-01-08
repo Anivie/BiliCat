@@ -102,8 +102,8 @@ tasks.test {
 tasks.withType<KotlinCompile> {
     kotlinOptions.run {
         jvmTarget = "17"
-//        this.freeCompilerArgs += "-Xlambdas=indy"
-
+//        freeCompilerArgs += "-Xlambdas=indy"
+        freeCompilerArgs += "-Xcontext-receivers"
     }
 }
 
