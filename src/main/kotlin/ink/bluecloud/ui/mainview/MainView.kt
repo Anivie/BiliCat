@@ -1,14 +1,15 @@
 package ink.bluecloud.ui.mainview
 
+import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.service.clientservice.init.LoadCookie
-import ink.bluecloud.service.clientservice.user.AccountInfo
 import ink.bluecloud.ui.HarmonySans
 import ink.bluecloud.ui.loginview.LoginView
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.koin
+import ink.bluecloud.utils.pushservice.PushServiceimpl
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
@@ -85,7 +86,7 @@ class MainView : KoinComponent,MainViewNodes() {
                             }
 */
                             ioScope.launch {
-                                println(get<AccountInfo>().getAccountInfo())
+                                get<PushServiceimpl>().makeNotice(NoticeType.Error,"Debug!",primaryStage)
                             }
                         }
 

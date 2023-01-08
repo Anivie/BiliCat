@@ -56,6 +56,7 @@ fun main() {
                 ink_bluecloud_ui_UIModule,
                 ink_bluecloud_network_NetWorkModel,
                 ink_bluecloud_service_ServiceModule,
+                ink_bluecloud_utils_pushservice_PushModule,
                 ink_bluecloud_model_networkapi_NetWorkApiModule,
                 ink_bluecloud_utils_settingloader_SettingModule
             )

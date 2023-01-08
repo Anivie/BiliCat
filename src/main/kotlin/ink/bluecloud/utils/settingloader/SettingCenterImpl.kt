@@ -36,7 +36,6 @@ class SettingCenterImpl : SettingCenter() {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun <T> getSetting(clazz: Class<T>): T? {
         return setting[clazz.simpleName] as? T
     }
