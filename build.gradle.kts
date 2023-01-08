@@ -1,13 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-/*
-object Version {
-//    val kotlinVersion by properties
-    val koinVersion by properties
-    val koinKspVersion by properties
-}
-*/
-
 plugins {
     application
     kotlin("jvm")
@@ -36,6 +28,7 @@ javafx {
 
 val zxingVersion:String by properties
 val koinVersion:String by properties
+val koinLoggerVersion:String by properties
 val koinKspVersion:String by properties
 val okhttpVersion:String by properties
 val coroutineVersion:String by properties
@@ -64,8 +57,8 @@ dependencies {
 
     //koin
     implementation("io.insert-koin:koin-core:${koinVersion}")
+    implementation("io.insert-koin:koin-logger-slf4j:${koinLoggerVersion}")
     implementation("io.insert-koin:koin-annotations:${koinKspVersion}")
-    implementation("io.insert-koin:koin-logger-slf4j:${koinVersion}")
     ksp("io.insert-koin:koin-ksp-compiler:${koinKspVersion}")
 
     //Utils
@@ -73,7 +66,6 @@ dependencies {
 
     //DataBase
     implementation(group = "com.h2database", name = "h2", version = h2Version)
-
     implementation(group = "org.ktorm", name = "ktorm-core", version = ktormCoreVersion)
     implementation(group = "org.ktorm", name = "ktorm-ksp-api", version = ktormKspVersion)
     ksp(group = "org.ktorm", name = "ktorm-ksp-compiler", version = ktormKspVersion)
@@ -95,7 +87,6 @@ dependencies {
     implementation(group = "org.apache.logging.log4j", name = "log4j-core", version = log4jVersion)
     implementation(group = "org.apache.logging.log4j", name = "log4j-api", version = log4jVersion)
     implementation(group = "org.apache.logging.log4j", name = "log4j-slf4j-impl", version = log4jVersion)
-//    implementation(group = "io.github.microutils", name = "kotlin-logging-jvm", version = "3.0.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
 }
