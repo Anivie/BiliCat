@@ -12,6 +12,7 @@ import org.koin.core.annotation.Factory
 import org.koin.core.component.get
 
 /**
+ * ！不推荐使用
  * 获取评论区热评
  * @BUILD: Under Repair
  */

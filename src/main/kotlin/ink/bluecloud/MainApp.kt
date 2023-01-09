@@ -11,10 +11,7 @@ import javafx.stage.Stage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.stopKoin
-import tornadofx.App
-import tornadofx.DIContainer
-import tornadofx.FX
-import tornadofx.UIComponent
+import tornadofx.*
 import kotlin.reflect.KClass
 
 class MainApp: App(

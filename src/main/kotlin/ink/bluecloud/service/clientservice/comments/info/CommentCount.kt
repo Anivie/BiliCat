@@ -12,7 +12,6 @@ import org.koin.core.component.get
 
 /**
  * 获取评论区评论总数
- *  @BUILD: Under Repair
  */
 @Factory
 class CommentCount : ClientService() {
@@ -26,14 +25,12 @@ class CommentCount : ClientService() {
         oid: String,
         type: CommentType = CommentType.AV_ID,
     ): Long {
-        val param = get<NetWorkResourcesProvider>().api.getCommentAreaHot.param {
+        val param = get<NetWorkResourcesProvider>().api.getCommentAreaCount.param {
             it["type"] = type.value.toString()
             it["oid"] = if (IDConvert().isBvid(oid)) IDConvert().BvToAvNumber(oid).toString() else oid
         }
 
         logger.debug("API Get CommentCount -> $param")
-        val text = httpClient.getForString(param)
-        println(text)
-        return JSONObject.parseObject(text).getJSONObject("data").getLong("count")
+        return JSONObject.parseObject(httpClient.getForString(param)).getJSONObject("data").getLong("count")
     }
 }
