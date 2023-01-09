@@ -56,7 +56,7 @@ data class BarrageSource(
     范围：[0-10]
     值越大权重越高
      */
-    val weight: Int,
+    val weight: Int?,
     /**
      * 未知
      */

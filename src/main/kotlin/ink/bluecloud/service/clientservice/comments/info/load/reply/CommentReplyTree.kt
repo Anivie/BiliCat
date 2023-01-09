@@ -12,6 +12,7 @@ import org.koin.core.annotation.Factory
 import org.koin.core.component.get
 
 /**
+ * ！不推荐
  * 获取指定评论对话树
  */
 @Factory
@@ -42,10 +43,6 @@ class CommentReplyTree : ClientService() {
         }
 
         logger.debug("API Get CommentReplyTree -> $param")
-        val text = httpClient.getForString(param)
-        println(text)
-        println()
-        println()
-        return text.toObjJson(CommentReplyTreePOJO.Root::class.java)
+        return httpClient.getForString(param).toObjJson(CommentReplyTreePOJO.Root::class.java)
     }
 }

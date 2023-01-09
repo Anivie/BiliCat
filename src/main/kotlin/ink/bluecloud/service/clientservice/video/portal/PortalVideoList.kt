@@ -75,7 +75,7 @@ class PortalVideoList : ClientService() {
      */
     @Suppress("unused")
     private suspend fun getPage(num: Int = 11):String = suspendCoroutine { coroutine ->
-        val param = netWorkResourcesProvider.api.getVideoStreamURL.param {
+        val param = netWorkResourcesProvider.api.getPortalVideos.param {
             it["ps"] = num.toString()
         }
         logger.debug("API Get PortalVideo -> $param")

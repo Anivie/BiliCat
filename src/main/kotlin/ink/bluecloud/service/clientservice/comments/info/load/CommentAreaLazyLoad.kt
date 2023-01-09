@@ -26,7 +26,6 @@ class CommentAreaLazyLoad : ClientService() {
      * 默认为 0
      * @param type 评论区类型
      * @param pageSize: ps 每页项数（1-30）,默认20
-     * @param notHot 是否不显示热评：true(1)不显示、false(0)显示(默认)
      */
     suspend fun getCommentAreaInfo(
         oid: String,

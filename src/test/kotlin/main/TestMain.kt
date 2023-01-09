@@ -1,10 +1,13 @@
 package main
 
+import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.service.clientservice.account.cookie.CookieUpdate
-import ink.bluecloud.service.clientservice.comments.info.CommentCount
+import ink.bluecloud.service.clientservice.barrage.HistoricalBarret
+import ink.bluecloud.service.clientservice.video.portal.PortalVideoList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.javafx.JavaFx
 import kotlinx.coroutines.withContext
 import org.koin.core.context.startKoin
@@ -17,29 +20,19 @@ import java.lang.Thread.sleep
 import kotlin.system.exitProcess
 
 class TestRun {
-    private val bvid: String = "BV1L24y1C7ai"
-
-    //    private val bvid: String = "BV1aG4y1g75f"
-    private val cid: Long = 902687446
-
     suspend fun run() {
-//        val root = CommentAreaPageLoad().getCommentAreaInfo("BV1A24y1X7ge",sort=PageCommentAreaSort.LIKE)
-//        root.data?.replies?.forEach{
-//            if (it.member.mid == 3493087730993674)
-////            println("${Date(it.ctime)}  ${it.member?.uname}(${it.member?.mid})      : ${it.content.message}")
-//            {
-//                val content = it.content
-//                println(content)
-//            }
-//        }
-
-//        println(CommentAreaLazyLoad().getCommentAreaInfo("BV11W4y1N7Mq"))
-//        println(CommentAreaHot().getCommentHotInfo("BV1GW4y1L7iJ", pageSize = 5))
-
-        println(CommentCount().getCommentCount("BV11W4y1N7Mq"))
+        HistoricalBarret().getHistoricalBarretDateAll(333387223).forEach {
+            println(it)
+        }
     }
 }
 
+
+suspend fun getBvId(): HomePagePushCard {
+    val videoList = PortalVideoList().getVideoList()
+    println(videoList.first())
+    return videoList.first()
+}
 
 suspend fun main() {
     init()
