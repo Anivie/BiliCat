@@ -17,12 +17,19 @@ import kotlin.reflect.jvm.jvmErasure
 
 @Single
 class SettingCenterImpl : SettingCenter() {
-    private val setting = HashMap<String, Any>()
+    private val settingCache = HashMap<String, Any>()
 
+    /**
+    * Load setting.
+     * If it exists in cache, it will return it from cache(singleton),
+    *  if not, load from config path.
+    * */
     override fun <T : Any> loadSetting(clazz: Class<T>): T? {
-        return configPath[clazz]?.run {
+        return (settingCache[clazz.simpleName]as? T)?: configPath[clazz]?.run {
             if (exists()) {
-                ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this))
+                ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this)).apply {
+                    settingCache[clazz.simpleName] = this
+                }
             } else null
         }
     }
@@ -30,8 +37,8 @@ class SettingCenterImpl : SettingCenter() {
     override fun <T : Any> chaekSettingIsNull(clazz: Class<T>) = loadSetting(clazz) == null
 
     override fun <T: Any> saveSetting(t: T, clazz: KType) {
-        setting[clazz.javaClass.simpleName]?.run {
-            setting[clazz.javaClass.simpleName] = t
+        settingCache[clazz.javaClass.simpleName]?.run {
+            settingCache[clazz.javaClass.simpleName] = t
         }
 
         configPath[clazz.jvmErasure.java]?.run {
