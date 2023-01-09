@@ -11,7 +11,6 @@ import org.koin.core.annotation.Single
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 import kotlin.io.path.exists
-import kotlin.io.path.notExists
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.jvm.jvmErasure
@@ -20,15 +19,7 @@ import kotlin.reflect.jvm.jvmErasure
 class SettingCenterImpl : SettingCenter() {
     private val setting = HashMap<String, Any>()
 
-    override fun readAllSetting() {
-        configPath.forEach {
-            if (it.value.notExists()) return@forEach
-
-            setting[it.key.simpleName ?: "匿名类-${it.key}"] = ProtoBuf.decodeFromByteArray(it.key.kotlin.serializer(), Files.readAllBytes(it.value))
-        }
-    }
-
-    override fun <T : Any> loadSettingOnly(clazz: Class<T>): T? {
+    override fun <T : Any> loadSetting(clazz: Class<T>): T? {
         return configPath[clazz]?.run {
             if (exists()) {
                 ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this))
@@ -36,9 +27,7 @@ class SettingCenterImpl : SettingCenter() {
         }
     }
 
-    override fun <T> getSetting(clazz: Class<T>): T? {
-        return setting[clazz.simpleName] as? T
-    }
+    override fun <T : Any> chaekSettingIsNull(clazz: Class<T>) = loadSetting(clazz) == null
 
     override fun <T: Any> saveSetting(t: T, clazz: KType) {
         setting[clazz.javaClass.simpleName]?.run {
@@ -52,8 +41,11 @@ class SettingCenterImpl : SettingCenter() {
     }
 }
 
-inline fun <reified T : Any> SettingCenter.loadSettingOnly(): T? {
-    return loadSettingOnly(T::class.java)
+inline fun <reified T : Any> SettingCenter.loadSetting(): T? {
+    return loadSetting(T::class.java)
+}
+inline fun <reified T : Any> SettingCenter.chaekSettingIsNull(): Boolean {
+    return chaekSettingIsNull(T::class.java)
 }
 
 inline fun <reified T : Any> SettingCenter.saveSetting(t: T) {
