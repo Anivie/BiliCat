@@ -1,4 +1,4 @@
-package ink.bluecloud.utils.pushservice
+package ink.bluecloud.service.clientservice.push
 
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import javafx.stage.Window

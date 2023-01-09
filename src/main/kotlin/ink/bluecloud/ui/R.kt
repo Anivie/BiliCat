@@ -3,8 +3,6 @@
 package ink.bluecloud.ui
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
-import ink.bluecloud.cloudtools.cloudnotice.CloudNotice
-import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import javafx.animation.Timeline
 import javafx.beans.value.WritableValue
 import javafx.util.Duration
@@ -23,7 +21,7 @@ inline fun <T> animationTo(vararg writableValue: WritableValue<T>,endValue: T, d
     play()
 }
 
-inline fun UIComponent.cloudnotice(type: NoticeType, message: String) = CloudNotice(type, message, primaryStage).show()
+//inline fun UIComponent.cloudnotice(type: NoticeType, message: String) = CloudNotice(type, message, primaryStage).show()
 //inline fun Stage.windowHandle() = (MethodHandles.privateLookupIn(Window::class.java, MethodHandles.lookup()).findVarHandle(Window::class.java,"peer", TKStage::class.java)[this]as TKStage).rawHandle
 
 @Suppress("unused")

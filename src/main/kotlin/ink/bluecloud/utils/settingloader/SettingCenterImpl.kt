@@ -28,7 +28,7 @@ class SettingCenterImpl : SettingCenter() {
         }
     }
 
-    override fun <T : Any> readSettingOnly(clazz: Class<T>): T? {
+    override fun <T : Any> loadSettingOnly(clazz: Class<T>): T? {
         return configPath[clazz]?.run {
             if (exists()) {
                 ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this))
@@ -52,8 +52,8 @@ class SettingCenterImpl : SettingCenter() {
     }
 }
 
-inline fun <reified T : Any> SettingCenter.readSettingOnly(): T? {
-    return readSettingOnly(T::class.java)
+inline fun <reified T : Any> SettingCenter.loadSettingOnly(): T? {
+    return loadSettingOnly(T::class.java)
 }
 
 inline fun <reified T : Any> SettingCenter.saveSetting(t: T) {

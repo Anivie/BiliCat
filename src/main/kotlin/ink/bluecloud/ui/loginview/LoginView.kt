@@ -24,7 +24,6 @@ class LoginView: KoinComponent,LoginViewNodes() {
         style = "-fx-background-image: url(ui/loginview/background.png);" +
                 "-fx-background-size: cover;"
 
-
         prefWidth = 450.0
         prefHeight = 450.0
     }

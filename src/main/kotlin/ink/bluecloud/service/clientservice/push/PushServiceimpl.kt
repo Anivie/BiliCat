@@ -1,8 +1,7 @@
-package ink.bluecloud.utils.pushservice
+package ink.bluecloud.service.clientservice.push
 
 import ink.bluecloud.cloudtools.cloudnotice.CloudNotice
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
-import ink.bluecloud.utils.ioContext
 import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.uiContext
 import javafx.stage.Window
@@ -23,9 +22,9 @@ class PushServiceimpl: PushService() {
                 val notice = this@channel.receive()
 
                 notice.showNotice()
+
                 suspendCoroutine {
                     notice.popup.setOnHiding { e ->
-                        println(e)
                         it.resume(Unit)
                     }
                 }
@@ -37,7 +36,7 @@ class PushServiceimpl: PushService() {
         show()
     }
 
-    override suspend fun makeNotice(type: NoticeType, message: String, window: Window) = withContext(ioContext) {
+    override suspend fun makeNotice(type: NoticeType, message: String, window: Window) = withContext(uiContext) {
         noticeChannel.send(CloudNotice(type,message,window))
     }
 }

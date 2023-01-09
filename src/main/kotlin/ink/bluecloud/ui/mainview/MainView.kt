@@ -2,14 +2,12 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.service.clientservice.init.LoadCookie
+import ink.bluecloud.service.clientservice.push.PushServiceimpl
 import ink.bluecloud.ui.HarmonySans
-import ink.bluecloud.ui.loginview.LoginView
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.koin
-import ink.bluecloud.utils.pushservice.PushServiceimpl
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
@@ -23,14 +21,6 @@ class MainView : KoinComponent,MainViewNodes() {
     override fun onDock() {
         get<MainViewController>().initUi(this)
         koin.setProperty("primaryStage", primaryStage)
-
-        if (!get<LoadCookie>().load()) {
-            openInternalWindow<LoginView>(
-                closeButton = false,
-                hasContent = false,
-                hasTitle = false
-            )
-        }
     }
 
     override val root = stackpane {
@@ -85,6 +75,7 @@ class MainView : KoinComponent,MainViewNodes() {
                                 }
                             }
 */
+//                            openInternalWindow<LoginView>()
                             ioScope.launch {
                                 get<PushServiceimpl>().makeNotice(NoticeType.Error,"Debug!",primaryStage)
                             }

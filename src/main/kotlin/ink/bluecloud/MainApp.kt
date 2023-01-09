@@ -14,9 +14,9 @@ import org.koin.core.context.stopKoin
 import tornadofx.*
 import kotlin.reflect.KClass
 
-class MainApp: App(
+class MainApp : App(
     icon = Image("ui/icon.png"),
-    primaryView = MainView::class,
+    primaryView = MainView::class
 ),KoinComponent {
 
     init {
@@ -24,6 +24,7 @@ class MainApp: App(
             reloadViewsOnFocus()
             reloadStylesheetsOnFocus()
         }
+
         FX.dicontainer = object :DIContainer {
             override fun <T : Any> getInstance(type: KClass<T>): T {
                 return getKoin().get(type)
@@ -50,6 +51,5 @@ class MainApp: App(
     override fun stop() {
         get<HttpClient>().close()
         stopKoin()
-        super.stop()
     }
 }

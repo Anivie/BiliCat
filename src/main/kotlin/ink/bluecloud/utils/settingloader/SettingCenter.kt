@@ -15,7 +15,7 @@ abstract class SettingCenter {
     protected val logger = logger()
 
     abstract fun readAllSetting()
-    abstract fun <T : Any> readSettingOnly(clazz: Class<T>): T?
+    abstract fun <T : Any> loadSettingOnly(clazz: Class<T>): T?
     abstract fun <T> getSetting(clazz: Class<T>): T?
     abstract fun <T: Any> saveSetting(t: T, clazz: KType)
 

@@ -1,12 +1,13 @@
 package ink.bluecloud.ui.loginview
 
-import com.alibaba.fastjson2.JSONWriter
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.service.clientservice.account.login.LoginService
+import ink.bluecloud.service.clientservice.push.PushServiceimpl
+import ink.bluecloud.service.clientservice.push.makeNotice
 import ink.bluecloud.ui.CloudController
-import ink.bluecloud.utils.pushservice.PushServiceimpl
-import ink.bluecloud.utils.pushservice.makeNotice
+import ink.bluecloud.ui.mainview.MainView
 import javafx.scene.image.Image
+import javafx.scene.layout.StackPane
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
@@ -22,12 +23,11 @@ class LoginViewController: CloudController<LoginView>() {
                 qrCodeBox.image = Image(loginService.getCode())
             }
 
-            val jsonObject = loginService.whenSuccess()
+            loginService.whenSuccess()
             withContext(uiContext) {
                 get<PushServiceimpl>().makeNotice(NoticeType.Right,"登录成功！")
-                close()
+                (primaryStage.scene.root as StackPane).children[0] = tornadofx.find<MainView>().root
             }
-            println(jsonObject.toJSONString(JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue))
         }
     }
 }
