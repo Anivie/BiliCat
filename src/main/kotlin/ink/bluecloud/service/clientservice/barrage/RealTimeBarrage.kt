@@ -1,10 +1,9 @@
 package ink.bluecloud.service.clientservice.barrage
 
 import ink.bluecloud.model.pojo.barrage.real.Barrage
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForBytes
-import ink.bluecloud.utils.param
 import org.koin.core.annotation.Single
 
 /**
@@ -12,7 +11,7 @@ import org.koin.core.annotation.Single
  * @Building
  */
 @Single
-class RealTimeBarrage : ClientService() {
+class RealTimeBarrage : APIResources() {
     /**
      * @param bvid 视频的BVID （可选）
      * @param cid 视频的CID （必要参数）
@@ -20,13 +19,12 @@ class RealTimeBarrage : ClientService() {
      * @param type 弹幕类型，默认是 1
      */
     suspend fun getBarrages(cid: Long, bvid: String = "", index: Int = 1, type: Int = 1): List<Barrage> {
-        val param = netWorkResourcesProvider.api.getRealTimeBarrage.param {
+        val api = api(API.getRealTimeBarrage){
             it["type"] = type.toString()
             it["oid"] = cid.toString()
             if (bvid.isNotEmpty()) it["pid"] = IDConvert().BvToAvNumber(bvid).toString()
             it["segment_index"] = index.toString()
         }
-        logger.info("API Get RealTimeBarrage -> $param")
-        return BarrageHandler(cid).handle(httpClient.getForBytes(param))
+        return BarrageHandler(cid).handle(httpClient.getForBytes(api.url))
     }
 }

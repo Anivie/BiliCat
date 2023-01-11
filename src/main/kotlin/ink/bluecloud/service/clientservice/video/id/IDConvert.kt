@@ -3,12 +3,8 @@ package ink.bluecloud.service.clientservice.video.id
 import com.alibaba.fastjson2.JSONArray
 import com.alibaba.fastjson2.JSONObject
 import ink.bluecloud.exceptions.CodeException
-import ink.bluecloud.model.pojo.CodePojo
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.getForCodePojo
-import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
-import ink.bluecloud.utils.toJson
 import org.koin.core.annotation.Single
 
 
@@ -16,7 +12,7 @@ import org.koin.core.annotation.Single
  * ID转换工具
  */
 @Single
-class IDConvert : ClientService() {
+class IDConvert : APIResources() {
     private val table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF"
     private val tr: ArrayList<Map<String, Any>> = ArrayList()
     private val s = intArrayOf(11, 10, 3, 8, 4, 6)
@@ -81,11 +77,10 @@ class IDConvert : ClientService() {
     fun isBvid(bvid: String): Boolean = bvid.uppercase().indexOf("BV") == 0
 
     suspend fun CidToAvId(cid: Long): Long {
-        val param = netWorkResourcesProvider.api.getCidInfo.param {
+        val api = api(API.getCidInfo,APILevel.Get,"CidToAvId"){
             it["cid"] = cid.toString()
         }
-        logger.info("API Get cidToAvId -> $param")
-        val data = httpClient.getForCodePojo(param).data ?: throw CodeException(-1, "CID not included in the third-party website")
+        val data = httpClient.getForCodePojo(api.url).data ?: throw CodeException(-1, "CID not included in the third-party website")
         return JSONObject.parseObject(data).getLong("aid")
     }
 
@@ -94,12 +89,11 @@ class IDConvert : ClientService() {
     }
 
     suspend fun BvidToCidFirst(bv: String): Long {
-        val param = netWorkResourcesProvider.api.getBvIdInfo.param {
+        val api = api(API.getBvIdInfo,APILevel.Get,"BvidToCidFirst"){
             it["bvid"] = bv
             it["jsonp"] = "jsonp"
         }
-        logger.info("API Get BvidToCidFirst -> $param")
-        val data = httpClient.getForCodePojo(param).data ?: throw CodeException(-1, "non-existent bvid")
+        val data = httpClient.getForCodePojo(api.url).data ?: throw CodeException(-1, "non-existent bvid")
         return JSONArray.parseArray(data).getJSONObject(0).getLong("cid")
     }
 }

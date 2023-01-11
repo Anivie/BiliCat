@@ -2,21 +2,21 @@ package ink.bluecloud.service.clientservice.video.hot
 
 import com.alibaba.fastjson2.to
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyHistoryListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyListJsonRoot
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import org.koin.core.component.get
 import java.io.InputStream
 import java.time.Duration
 import java.util.*
+import kotlin.collections.forEach
+import kotlin.collections.maxBy
+import kotlin.collections.set
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,7 +25,7 @@ import kotlin.coroutines.suspendCoroutine
  * @API:https://api.bilibili.com/x/web-interface/popular/series/one?number={page}
  */
 @Factory
-class VideoWeeklyList : ClientService() {
+class VideoWeeklyList : APIResources() {
     /**
      * 获取某期周榜视频列表 以 Video数据类型
      */
@@ -89,11 +89,11 @@ class VideoWeeklyList : ClientService() {
      * @param handle 回调函数，用来处理获取到的周榜视频
      */
     private suspend fun getPageOfVideoWeeklyList(page: Int) = suspendCoroutine { c ->
-        val param = get<NetWorkResourcesProvider>().api.getVideoWeeklyList.param {
+        val api = api(API.getVideoWeeklyList){
             it["number"] = page.toString()
         }
-        logger.info("API Get VideoWeeklyList -> $param")
-        httpClient.getFor(param) {
+
+        httpClient.getFor(api.url) {
             c.resume(body.string())
         }
     }

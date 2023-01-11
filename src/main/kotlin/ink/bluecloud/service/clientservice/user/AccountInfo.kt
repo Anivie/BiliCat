@@ -2,7 +2,7 @@ package ink.bluecloud.service.clientservice.user
 
 import ink.bluecloud.model.data.account.AccountCard
 import ink.bluecloud.model.pojo.user.account.AccountInfoJsonRoot
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
@@ -13,7 +13,7 @@ import java.net.URL
  * 获取账号基本信息
  */
 @Factory
-class AccountInfo : ClientService() {
+class AccountInfo : APIResources() {
     /**
      * 获取这个账号自己的信息（需要Cookie）
      */
@@ -56,9 +56,9 @@ class AccountInfo : ClientService() {
     /**
      * 获取这个账号自己的信息（需要Cookie）  JSON-POJO
      */
-    private suspend fun getJsonPOJO():AccountInfoJsonRoot.Root {
-        logger.info("API Get AccountInfo -> ${netWorkResourcesProvider.api.getAccountInfo}")
-       return httpClient.getForString(netWorkResourcesProvider.api.getAccountInfo)
-           .toObjJson(AccountInfoJsonRoot.Root::class.java)
+    private suspend fun getJsonPOJO(): AccountInfoJsonRoot.Root {
+        val api = api(API.getAccountInfo)
+        return httpClient.getForString(api.url)
+            .toObjJson(AccountInfoJsonRoot.Root::class.java)
     }
 }

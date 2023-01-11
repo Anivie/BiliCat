@@ -37,6 +37,7 @@ data class HttpApi(
     val getHistoricalBarret:HttpUrl,
     val getHistoricalBarretDate:HttpUrl,
     val postSendBarret:HttpUrl,
+    val postCancelBarret:HttpUrl,
     //Comment
     val getCommentAreaPageLoad: HttpUrl,
     val getCommentLazyPageLoad: HttpUrl,

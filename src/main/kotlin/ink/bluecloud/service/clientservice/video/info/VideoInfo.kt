@@ -3,9 +3,8 @@ package ink.bluecloud.service.clientservice.video.info
 
 import ink.bluecloud.model.data.video.Video
 import ink.bluecloud.model.pojo.video.info.VideoInfoJsonRoot
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
 
@@ -14,7 +13,7 @@ import org.koin.core.annotation.Factory
  * @Guess: 此接口会自动调用获取视频流链接API
  */
 @Factory
-class VideoInfo : ClientService() {
+class VideoInfo : APIResources() {
     /**
      * 获取视频信息
      */
@@ -163,12 +162,9 @@ class VideoInfo : ClientService() {
      * 获取详细数据
      */
     private suspend fun getJsonPOJO(bvid: String): VideoInfoJsonRoot.Root {
-        val param = netWorkResourcesProvider.api.getVideoINFO.param {
+        val api = api(API.getVideoINFO){
             it["bvid"] = bvid
         }
-        logger.info("API Get VideoInfo -> $param")
-        return httpClient.getForString(
-            param
-        ).toObjJson(VideoInfoJsonRoot.Root::class.java)
+        return httpClient.getForString(api.url).toObjJson(VideoInfoJsonRoot.Root::class.java)
     }
 }

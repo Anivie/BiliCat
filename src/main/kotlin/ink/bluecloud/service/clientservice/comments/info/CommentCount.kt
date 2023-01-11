@@ -1,20 +1,18 @@
 package ink.bluecloud.service.clientservice.comments.info
 
 import com.alibaba.fastjson2.JSONObject
-import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
 import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import org.koin.core.annotation.Factory
-import org.koin.core.component.get
+import kotlin.collections.set
 
 /**
  * 获取评论区评论总数
  */
 @Factory
-class CommentCount : ClientService() {
+class CommentCount : APIResources() {
 
     /**
      * 获取评论区评论总数
@@ -25,12 +23,10 @@ class CommentCount : ClientService() {
         oid: String,
         type: CommentType = CommentType.AV_ID,
     ): Long {
-        val param = get<NetWorkResourcesProvider>().api.getCommentAreaCount.param {
+        val api = api(API.getCommentAreaCount){
             it["type"] = type.value.toString()
             it["oid"] = if (IDConvert().isBvid(oid)) IDConvert().BvToAvNumber(oid).toString() else oid
         }
-
-        logger.info("API Get CommentCount -> $param")
-        return JSONObject.parseObject(httpClient.getForString(param)).getJSONObject("data").getLong("count")
+        return JSONObject.parseObject(httpClient.getForString(api.url)).getJSONObject("data").getLong("count")
     }
 }

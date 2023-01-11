@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject
 import com.alibaba.fastjson2.toList
 import ink.bluecloud.exceptions.InvalidCookieException
 import ink.bluecloud.model.pojo.barrage.real.Barrage
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.*
 import org.koin.core.annotation.Factory
 import java.util.*
@@ -13,7 +13,7 @@ import java.util.*
  * 获取历史弹幕
  */
 @Factory
-class HistoricalBarrage : ClientService() {
+class HistoricalBarrage : APIResources() {
 
     init {
         kotlin.runCatching { httpClient.getCookieStore().toCookies() }
@@ -27,14 +27,14 @@ class HistoricalBarrage : ClientService() {
      * @param type 弹幕类型，默认是 1
      */
     suspend fun getHistoricalBarret(cid: Long, date: String = Date().format(), type: Int = 1): List<Barrage> {
-        val param = netWorkResourcesProvider.api.getHistoricalBarret.param {
+        val api = api(API.getHistoricalBarret, apiName = "HistoricalBarret"){
             it["type"] = type.toString()
             it["oid"] = cid.toString()
             it["date"] =
                 if (date.isDate()) date else throw IllegalArgumentException("The date(${date}) is wrong. The Date must be YYYY-MM-DD")
+
         }
-        logger.info("API Get HistoricalBarret -> $param")
-        return BarrageHandler(cid).handle(httpClient.getForBytes(param))
+        return BarrageHandler(cid).handle(httpClient.getForBytes(api.url))
     }
 
 
@@ -49,14 +49,13 @@ class HistoricalBarrage : ClientService() {
         date: String = Date().format("yyyy-MM"),
         type: Int = 1,
     ): List<String> {
-        val param = netWorkResourcesProvider.api.getHistoricalBarretDate.param {
+        val api =api(API.getHistoricalBarretDate, apiName = "HistoricalBarretDate"){
             it["type"] = type.toString()
             it["oid"] = cid.toString()
             it["month"] =
                 if (date.isDate("yyyy-MM")) date else throw IllegalArgumentException("The date(${date}) is wrong. The Date must be YYYY-MM")
         }
-        logger.info("API Get HistoricalBarretDate -> $param")
-        val data = JSONObject.parseObject(httpClient.getForString(param)).getJSONArray("data") ?: return ArrayList()
+        val data = JSONObject.parseObject(httpClient.getForString(api.url)).getJSONArray("data") ?: return ArrayList()
         return data.toList<String>()
     }
 
