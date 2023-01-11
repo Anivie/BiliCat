@@ -166,7 +166,7 @@ class VideoInfo : ClientService() {
         val param = netWorkResourcesProvider.api.getVideoINFO.param {
             it["bvid"] = bvid
         }
-        logger.debug("API Get VideoInfo -> $param")
+        logger.info("API Get VideoInfo -> $param")
         return httpClient.getForString(
             param
         ).toObjJson(VideoInfoJsonRoot.Root::class.java)

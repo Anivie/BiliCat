@@ -43,7 +43,7 @@ class CommentAreaLazyLoad : ClientService() {
             it["next"] = pageNumber.toString()
         }
 
-        logger.debug("API Get CommentAreaLazyLoad -> $param")
+        logger.info("API Get CommentAreaLazyLoad -> $param")
         return httpClient.getForString(param).toObjJson(CommentAreaLazyLoadPOJO.Root::class.java)
     }
 }

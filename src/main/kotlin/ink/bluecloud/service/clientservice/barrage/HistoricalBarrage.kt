@@ -33,7 +33,7 @@ class HistoricalBarrage : ClientService() {
             it["date"] =
                 if (date.isDate()) date else throw IllegalArgumentException("The date(${date}) is wrong. The Date must be YYYY-MM-DD")
         }
-        logger.debug("API Get HistoricalBarret -> $param")
+        logger.info("API Get HistoricalBarret -> $param")
         return BarrageHandler(cid).handle(httpClient.getForBytes(param))
     }
 
@@ -55,7 +55,7 @@ class HistoricalBarrage : ClientService() {
             it["month"] =
                 if (date.isDate("yyyy-MM")) date else throw IllegalArgumentException("The date(${date}) is wrong. The Date must be YYYY-MM")
         }
-        logger.debug("API Get HistoricalBarretDate -> $param")
+        logger.info("API Get HistoricalBarretDate -> $param")
         val data = JSONObject.parseObject(httpClient.getForString(param)).getJSONArray("data") ?: return ArrayList()
         return data.toList<String>()
     }

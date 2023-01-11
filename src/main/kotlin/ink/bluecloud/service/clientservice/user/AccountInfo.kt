@@ -57,6 +57,7 @@ class AccountInfo : ClientService() {
      * 获取这个账号自己的信息（需要Cookie）  JSON-POJO
      */
     private suspend fun getJsonPOJO():AccountInfoJsonRoot.Root {
+        logger.info("API Get AccountInfo -> ${netWorkResourcesProvider.api.getAccountInfo}")
        return httpClient.getForString(netWorkResourcesProvider.api.getAccountInfo)
            .toObjJson(AccountInfoJsonRoot.Root::class.java)
     }

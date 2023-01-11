@@ -92,7 +92,7 @@ class VideoWeeklyList : ClientService() {
         val param = get<NetWorkResourcesProvider>().api.getVideoWeeklyList.param {
             it["number"] = page.toString()
         }
-        logger.debug("API Get VideoWeeklyList -> $param")
+        logger.info("API Get VideoWeeklyList -> $param")
         httpClient.getFor(param) {
             c.resume(body.string())
         }

@@ -8,6 +8,7 @@ import ink.bluecloud.service.clientservice.barrage.RealTimeBarrage
 import ink.bluecloud.service.clientservice.barrage.operation.SendBarrage
 import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.service.clientservice.video.portal.PortalVideoList
+import ink.bluecloud.utils.logger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ class TestRun {
                 )
             )
         )
+        logger().info("412")
     }
 }
 

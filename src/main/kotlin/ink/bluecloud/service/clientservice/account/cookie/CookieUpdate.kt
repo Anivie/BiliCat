@@ -32,7 +32,7 @@ class CookieUpdate : ClientService() {
      */
     private fun updateCookie() = httpClient.getFor(netWorkResourcesProvider.api.getBili) {
         use {
-            logger.debug("System-services Get Cookie-Update -> ${netWorkResourcesProvider.api.getBili}")
+            logger.info("System-services Get Cookie-Update -> ${netWorkResourcesProvider.api.getBili}")
             if (it.code != 200) throw HttpStatusException(
                 "http status code is not 200",
                 code,

@@ -84,7 +84,7 @@ class IDConvert : ClientService() {
         val param = netWorkResourcesProvider.api.getCidInfo.param {
             it["cid"] = cid.toString()
         }
-        logger.debug("API Get cidToAvId -> $param")
+        logger.info("API Get cidToAvId -> $param")
         val data = httpClient.getForCodePojo(param).data ?: throw CodeException(-1, "CID not included in the third-party website")
         return JSONObject.parseObject(data).getLong("aid")
     }
@@ -98,7 +98,7 @@ class IDConvert : ClientService() {
             it["bvid"] = bv
             it["jsonp"] = "jsonp"
         }
-        logger.debug("API Get BvidToCidFirst -> $param")
+        logger.info("API Get BvidToCidFirst -> $param")
         val data = httpClient.getForCodePojo(param).data ?: throw CodeException(-1, "non-existent bvid")
         return JSONArray.parseArray(data).getJSONObject(0).getLong("cid")
     }

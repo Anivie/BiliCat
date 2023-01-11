@@ -26,7 +26,7 @@ class RealTimeBarrage : ClientService() {
             if (bvid.isNotEmpty()) it["pid"] = IDConvert().BvToAvNumber(bvid).toString()
             it["segment_index"] = index.toString()
         }
-        logger.debug("API Get RealTimeBarrage -> $param")
+        logger.info("API Get RealTimeBarrage -> $param")
         return BarrageHandler(cid).handle(httpClient.getForBytes(param))
     }
 }

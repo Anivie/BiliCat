@@ -45,7 +45,7 @@ class CommentAreaPageLoad : ClientService() {
             it["pn"] = pageNumber.toString()
         }
 
-        logger.debug("API Get CommentAreaPageLoad -> $param")
+        logger.info("API Get CommentAreaPageLoad -> $param")
         return httpClient.getForString(param).toObjJson(CommentAreaPageLoadPOJO.Root::class.java)
     }
 }

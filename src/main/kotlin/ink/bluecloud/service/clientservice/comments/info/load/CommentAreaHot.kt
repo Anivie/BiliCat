@@ -42,7 +42,7 @@ class CommentAreaHot : ClientService() {
             it["pn"] = pageNumber.toString()
         }
 
-        logger.debug("API Get CommentAreaHot -> $param")
+        logger.info("API Get CommentAreaHot -> $param")
         return httpClient.getForString(param).toObjJson(CommentAreaHotPOJO.Root::class.java)
     }
 }

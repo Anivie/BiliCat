@@ -41,7 +41,7 @@ class CommentReply: ClientService() {
             it["pn"] = pageNumber.toString()
         }
 
-        logger.debug("API Get CommentReply -> $param")
+        logger.info("API Get CommentReply -> $param")
         return httpClient.getForString(param).toObjJson(CommentReplyPOJO.Root::class.java)
     }
 }

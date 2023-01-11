@@ -30,7 +30,7 @@ class CommentCount : ClientService() {
             it["oid"] = if (IDConvert().isBvid(oid)) IDConvert().BvToAvNumber(oid).toString() else oid
         }
 
-        logger.debug("API Get CommentCount -> $param")
+        logger.info("API Get CommentCount -> $param")
         return JSONObject.parseObject(httpClient.getForString(param)).getJSONObject("data").getLong("count")
     }
 }

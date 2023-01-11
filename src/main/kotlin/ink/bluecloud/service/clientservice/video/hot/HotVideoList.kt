@@ -85,7 +85,7 @@ class HotVideoList: ClientService() {
             it["pn"] = pn.toString()
             it["ps"] = ps.toString()
         }
-        logger.debug("API Get HotVideoList -> $param")
+        logger.info("API Get HotVideoList -> $param")
         httpClient.getFor(param) {
             coroutine.resume(body.string())
             logger.info("获取榜单视频列表成功，返回值${code}.")

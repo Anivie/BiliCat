@@ -42,7 +42,7 @@ class CommentReplyTree : ClientService() {
 //                if (pageSize in 1..49) pageSize.toString() else throw IllegalArgumentException("param 'pageSize' must be between 1 and 49")
         }
 
-        logger.debug("API Get CommentReplyTree -> $param")
+        logger.info("API Get CommentReplyTree -> $param")
         return httpClient.getForString(param).toObjJson(CommentReplyTreePOJO.Root::class.java)
     }
 }
