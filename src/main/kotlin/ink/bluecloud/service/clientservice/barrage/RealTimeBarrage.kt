@@ -2,9 +2,9 @@ package ink.bluecloud.service.clientservice.barrage
 
 import ink.bluecloud.model.pojo.barrage.real.Barrage
 import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForBytes
 import ink.bluecloud.utils.param
-import ink.bluecloud.utils.toAvNumber
 import org.koin.core.annotation.Single
 
 /**
@@ -23,10 +23,10 @@ class RealTimeBarrage : ClientService() {
         val param = netWorkResourcesProvider.api.getRealTimeBarrage.param {
             it["type"] = type.toString()
             it["oid"] = cid.toString()
-            if (bvid.isNotEmpty()) it["pid"] = bvid.toAvNumber().toString()
+            if (bvid.isNotEmpty()) it["pid"] = IDConvert().BvToAvNumber(bvid).toString()
             it["segment_index"] = index.toString()
         }
         logger.debug("API Get RealTimeBarrage -> $param")
-        return BarrageHandler().handle(httpClient.getForBytes(param))
+        return BarrageHandler(cid).handle(httpClient.getForBytes(param))
     }
 }

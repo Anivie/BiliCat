@@ -8,3 +8,7 @@ inline fun HttpUrl.param(params: String = "", handle: (HashMap<String, String>) 
         .forEach { builder.append(it.key).append("=").append(it.value).append("&") }
     return newBuilder(builder.deleteCharAt(builder.length - 1).toString())?.build()?: this
 }
+
+inline fun buildParam(handle: (HashMap<String, String>) -> Unit): HashMap<String, String> {
+    return HashMap<String, String>().apply(handle)
+}

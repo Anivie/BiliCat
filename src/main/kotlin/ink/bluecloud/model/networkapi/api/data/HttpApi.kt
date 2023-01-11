@@ -26,6 +26,8 @@ data class HttpApi(
     val getVideoWeeklyHistoryList: HttpUrl,
     val getHotVideoList: HttpUrl,
     val getFullRank: HttpUrl,
+    val getCidInfo: HttpUrl,
+    val getBvIdInfo: HttpUrl,
 //    User
     val getAccountInfo: HttpUrl,
 //    Other
@@ -34,6 +36,7 @@ data class HttpApi(
     val getRealTimeBarrage:HttpUrl,
     val getHistoricalBarret:HttpUrl,
     val getHistoricalBarretDate:HttpUrl,
+    val postSendBarret:HttpUrl,
     //Comment
     val getCommentAreaPageLoad: HttpUrl,
     val getCommentLazyPageLoad: HttpUrl,

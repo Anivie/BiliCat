@@ -4,7 +4,7 @@ import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.comment.info.load.CommentAreaHotPOJO
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
-import ink.bluecloud.utils.IDConvert
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson

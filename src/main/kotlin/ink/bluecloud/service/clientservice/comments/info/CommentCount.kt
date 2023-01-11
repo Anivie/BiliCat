@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
-import ink.bluecloud.utils.IDConvert
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import org.koin.core.annotation.Factory

@@ -5,7 +5,7 @@ import ink.bluecloud.model.pojo.comment.info.load.CommentAreaPageLoadPOJO
 import ink.bluecloud.service.ClientService
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
 import ink.bluecloud.service.clientservice.comments.info.enums.PageCommentAreaSort
-import ink.bluecloud.utils.IDConvert
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson

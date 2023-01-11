@@ -23,6 +23,10 @@ class CookieUpdate : ClientService() {
         return httpClient.getCookieStore()
     }
 
+    fun getCsrf(): String {
+        return getCookieStore().toCookies().csrf
+    }
+
     /**
      * 更新 Cookie (不等待更新，但在未来更新完毕)
      */

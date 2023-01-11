@@ -10,10 +10,10 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import org.koin.core.annotation.Single
 
 @Single
-class BarrageHandler:ClientService() {
-   @OptIn(ExperimentalSerializationApi::class)
+class BarrageHandler(private val cid: Long):ClientService() {
+    @OptIn(ExperimentalSerializationApi::class)
    fun handle(bytes: ByteArray): List<Barrage> {
-        kotlin.runCatching { ProtoBuf.decodeFromByteArray<Barrages>(bytes).barrages.map { it.toBarrage() } }
+        kotlin.runCatching { ProtoBuf.decodeFromByteArray<Barrages>(bytes).barrages.map { it.toBarrage(cid) } }
             .onFailure {
                 logger.error(
                     "An error occurred and the bullet screen package could not be parsed: \n" +

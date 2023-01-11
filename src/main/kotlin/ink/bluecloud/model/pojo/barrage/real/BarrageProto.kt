@@ -75,7 +75,8 @@ data class BarrageSource(
 )
 
 
-inline fun BarrageSource.toBarrage(): Barrage = Barrage(
+inline fun BarrageSource.toBarrage(cid:Long): Barrage = Barrage(
+    cid,
     dmid,
     progress?.toLong()?.let { Duration.ofMillis(it) },
     type.toBarrageType(),

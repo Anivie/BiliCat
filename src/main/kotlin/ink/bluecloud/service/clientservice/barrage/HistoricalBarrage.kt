@@ -13,7 +13,7 @@ import java.util.*
  * 获取历史弹幕
  */
 @Factory
-class HistoricalBarret : ClientService() {
+class HistoricalBarrage : ClientService() {
 
     init {
         kotlin.runCatching { httpClient.getCookieStore().toCookies() }
@@ -34,7 +34,7 @@ class HistoricalBarret : ClientService() {
                 if (date.isDate()) date else throw IllegalArgumentException("The date(${date}) is wrong. The Date must be YYYY-MM-DD")
         }
         logger.debug("API Get HistoricalBarret -> $param")
-        return BarrageHandler().handle(httpClient.getForBytes(param))
+        return BarrageHandler(cid).handle(httpClient.getForBytes(param))
     }
 
 
