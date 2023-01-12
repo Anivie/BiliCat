@@ -3,7 +3,6 @@ package ink.bluecloud.service.clientservice.video.hot
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
-import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -14,7 +13,6 @@ import org.koin.core.annotation.Factory
 import java.io.InputStream
 import java.time.Duration
 import java.util.*
-import kotlin.collections.forEach
 import kotlin.collections.set
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -25,16 +23,14 @@ import kotlin.coroutines.suspendCoroutine
  * @TestAPI: 等待测试API稳定后移除此项
  */
 @Factory
-class HotVideoList: APIResources() {
+class HotVideoList: FrontVideo() {
 
     /**
      * 获取热门视频列表
-     * @param pn 页数
-     * @param ps 获取视频数量总数
      */
-    suspend fun getVideos(pn: Int = 1, ps: Int = 50) = io {
+    override suspend fun getVideos() = io {
         flow {
-            getJsonPOJO(pn, ps).data?.list?.forEach {
+            getJsonPOJO(1, 50).data?.list?.forEach {
                 HomePagePushCard(
                     id = it.bvid,
                     cid = it.cid,

@@ -2,7 +2,7 @@ package ink.bluecloud.service.clientservice.video.rank
 
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
-import ink.bluecloud.service.clientservice.APIResources
+import ink.bluecloud.service.clientservice.video.hot.FrontVideo
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
@@ -21,12 +21,12 @@ import kotlin.coroutines.suspendCoroutine
  * 全站排行榜
  */
 @Factory
-class FullRank : APIResources() {
+class FullRank : FrontVideo() {
 
     /**
      * 获取某期周榜视频列表 以 Video数据类型
      */
-    suspend fun getVideos() = io {
+    override suspend fun getVideos() = io {
         flow {
             getJsonPojo().data?.list?.forEach {
                 HomePagePushCard(
