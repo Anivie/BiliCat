@@ -4,10 +4,7 @@ import ink.bluecloud.cloudtools.cloudnotice.CloudNotice
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import javafx.application.Application
 import javafx.stage.Stage
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import kotlinx.coroutines.javafx.JavaFx
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.koin.core.context.startKoin
@@ -40,7 +37,9 @@ fun main() {
             }
 
             val window = koin.getProperty<Stage>("primaryStage")?: throw IllegalArgumentException("An error occur but primary stage not register.")
-            CloudNotice(NoticeType.Error,throwable.message ?: "Unknown Error on $throwable", window).show()
+            koin.get<CoroutineScope>(named("uiScope")).launch {
+                CloudNotice(NoticeType.Error,throwable.message ?: "Unknown Error on $throwable", window).show()
+            }
             logger.error(err)
         }
 

@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.mainview.homeview
 
-import ink.bluecloud.ui.CssNode
-import ink.bluecloud.ui.HarmonySans
+import ink.bluecloud.utils.HarmonySans
+import ink.bluecloud.utils.uiutil.CssNode
 import javafx.geometry.NodeOrientation
 import javafx.geometry.Pos
 import javafx.scene.control.TabPane

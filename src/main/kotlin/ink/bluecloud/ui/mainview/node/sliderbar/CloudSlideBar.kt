@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.mainview.node.sliderbar
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
-import ink.bluecloud.ui.HarmonySans
+import ink.bluecloud.utils.HarmonySans
 import javafx.animation.Animation.Status.*
 import javafx.animation.TranslateTransition
 import javafx.beans.property.SimpleIntegerProperty

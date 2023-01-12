@@ -1,8 +1,8 @@
 package ink.bluecloud.ui.mainview.pushview.fragment.pushdisplaycard
 
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.ui.HarmonySans
-import ink.bluecloud.ui.animationTo
+import ink.bluecloud.utils.HarmonySans
+import ink.bluecloud.utils.uiutil.animationTo
 import javafx.beans.binding.Bindings
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -67,7 +67,7 @@ class PushDisplayCard(private val data: HomePagePushCard) : VBox(10.0) {
         cursor = Cursor.HAND
     }
 
-    private suspend fun generateCover() = StackPane().apply {
+    private fun generateCover() = StackPane().apply {
         val cover = /*imageview(Image(data.cover.await())) {
             fitWidth = 300.0
             fitHeight = 150.0

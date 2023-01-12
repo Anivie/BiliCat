@@ -10,8 +10,8 @@ import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.node.VideoInformationCard
 import ink.bluecloud.utils.io
-import ink.bluecloud.utils.sceneRoot
 import ink.bluecloud.utils.onUI
+import ink.bluecloud.utils.sceneRoot
 import ink.bluecloud.utils.ui
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single

@@ -4,16 +4,15 @@ import com.alibaba.fastjson2.to
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyHistoryListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyListJsonRoot
+import ink.bluecloud.utils.getForStream
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import java.io.InputStream
 import java.time.Duration
 import java.util.*
 import kotlin.collections.set
@@ -44,7 +43,8 @@ class VideoWeeklyList : FrontVideo() {
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
                     cover = ioScope.async(start = CoroutineStart.LAZY) {
-                        cover(it)
+                        logger.info("获取周榜视频封面成功!")
+                        httpClient.getForStream(it.cover.toHttpUrl())
                     }
                 ).run {
                     emit(this)
@@ -52,29 +52,6 @@ class VideoWeeklyList : FrontVideo() {
             }
         }
     }
-
-    private val cover: suspend CoroutineScope.(VideoWeeklyListJsonRoot.Item) -> InputStream = {
-        suspendCoroutine { coroutine ->
-            httpClient.getFor(it.cover.toHttpUrl()) {
-                coroutine.resume(body.byteStream())
-                logger.info("获取热榜视频封面成功，返回值${code}.")
-            }
-        }
-    }
-
-
-/*
-    val cover: suspend CoroutineScope.(VideoWeeklyListJsonRoot.Item) -> Deferred<InputStream> = { item ->
-        async(start = CoroutineStart.LAZY) {
-            suspendCoroutine { continuation ->
-                httpClient.getFor(item.cover.toHttpUrl()) {
-                    continuation.resume(body.byteStream())
-                    logger.info("获取周榜视频封面成功，返回值${code}.")
-                }
-            }
-        }
-    }
-*/
 
     /**
      * 获取某期周榜视频列表 以 json格式

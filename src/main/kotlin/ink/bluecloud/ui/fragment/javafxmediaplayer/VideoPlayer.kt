@@ -10,9 +10,7 @@ import javafx.scene.media.MediaView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Factory
-import tornadofx.stackpane
-import kotlin.collections.minusAssign
-import kotlin.collections.plusAssign
+import tornadofx.*
 import kotlin.collections.set
 
 data class PlayingData(

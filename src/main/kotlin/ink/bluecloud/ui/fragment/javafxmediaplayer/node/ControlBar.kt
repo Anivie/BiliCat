@@ -1,6 +1,6 @@
 package ink.bluecloud.ui.fragment.javafxmediaplayer.node
 
-import ink.bluecloud.ui.CssNode
+import ink.bluecloud.utils.uiutil.CssNode
 import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.*

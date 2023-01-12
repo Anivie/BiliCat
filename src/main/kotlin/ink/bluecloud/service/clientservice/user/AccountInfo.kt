@@ -3,18 +3,14 @@ package ink.bluecloud.service.clientservice.user
 import ink.bluecloud.model.data.account.AccountCard
 import ink.bluecloud.model.pojo.user.account.AccountInfoJsonRoot
 import ink.bluecloud.service.clientservice.APIResources
+import ink.bluecloud.utils.getForStream
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.io
+import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import java.io.InputStream
-import java.net.URL
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * 获取账号基本信息
@@ -24,14 +20,18 @@ class AccountInfo : APIResources() {
     /**
      * 获取这个账号自己的信息（需要Cookie）
      */
-    suspend fun getAccountInfo() = io {
+    suspend fun getAccountInfo() = onIO {
         getJsonPOJO().data.run {
             AccountCard(
                 name = uname!!,
                 mid = mid!!,
                 coin = money!!,
                 vip = vipStatus == 1,
-                head = URL(face).openStream(),
+                head = ioScope.async(start = CoroutineStart.LAZY) {
+                    face?.run {
+                        httpClient.getForStream(toHttpUrl())
+                    }?: throw IllegalArgumentException("No head picture found!")
+                },
 
                 level = level_info!!.current_level,
                 levelCurrentExp = level_info.current_exp,
@@ -41,24 +41,27 @@ class AccountInfo : APIResources() {
                 pid = pendant!!.pid,
                 expire = pendant.expire,
                 pendantName = pendant.name,
-                image = getInputStream(pendant.image!!),
-                imageEnhanceFrame = getInputStream(pendant.image_enhance_frame!!),
-                imageEnhance = getInputStream(pendant.image_enhance!!),
+                image = ioScope.async(start = CoroutineStart.LAZY) {
+                    pendant.image?.run {
+                        httpClient.getForStream(toHttpUrl())
+                    }
+                },
+                imageEnhanceFrame = ioScope.async(start = CoroutineStart.LAZY) {
+                    pendant.image_enhance_frame?.run {
+                        httpClient.getForStream(toHttpUrl())
+                    }
+                },
+                imageEnhance = ioScope.async(start = CoroutineStart.LAZY) {
+                    pendant.image_enhance?.run {
+                        httpClient.getForStream(toHttpUrl())
+                    }
+                },
 
                 officialDesc = official!!.desc!!,
                 officialRole = official.role,
                 officialTitle = official.title!!,
                 officialType = official.type
             )
-        }
-    }
-
-    private fun CoroutineScope.getInputStream(str: String): Deferred<InputStream> = async {
-        suspendCoroutine { coroutine ->
-            httpClient.getFor(str.toHttpUrl()) {
-                coroutine.resume(body.byteStream())
-                logger.info("获取热榜视频封面成功，返回值${code}.")
-            }
         }
     }
 

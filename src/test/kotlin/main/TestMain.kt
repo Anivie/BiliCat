@@ -1,21 +1,13 @@
 package main
 
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.model.pojo.barrage.real.BarragePool
 import ink.bluecloud.service.clientservice.account.cookie.CookieUpdate
-import ink.bluecloud.service.clientservice.barrage.BarrageFactory
-import ink.bluecloud.service.clientservice.barrage.RealTimeBarrage
-import ink.bluecloud.service.clientservice.barrage.operation.CancelBarrage
-import ink.bluecloud.service.clientservice.barrage.operation.SendBarrage
 import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
-import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.service.clientservice.video.portal.PortalVideoList
-import ink.bluecloud.utils.logger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.javafx.JavaFx
 import kotlinx.coroutines.withContext
 import org.koin.core.context.startKoin
@@ -25,7 +17,6 @@ import org.koin.dsl.module
 import org.koin.ksp.generated.*
 import org.koin.logger.slf4jLogger
 import java.lang.Thread.sleep
-import java.time.Duration
 import kotlin.system.exitProcess
 
 class TestRun {

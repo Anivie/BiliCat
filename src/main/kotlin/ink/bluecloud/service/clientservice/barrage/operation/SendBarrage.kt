@@ -4,8 +4,7 @@ import com.alibaba.fastjson2.JSONObject
 import ink.bluecloud.model.pojo.barrage.real.Barrage
 import ink.bluecloud.model.pojo.barrage.real.BarragePool
 import ink.bluecloud.service.clientservice.APIResources
-import ink.bluecloud.service.clientservice.account.cookie.CookieUpdate
-import ink.bluecloud.utils.*
+import ink.bluecloud.utils.postForCodePojo
 import org.koin.core.annotation.Single
 
 @Single
@@ -20,15 +19,12 @@ class SendBarrage : APIResources() {
         val api = api(API.postSendBarret, APILevel.Post) {
             it["type"] = type.toString()
             it["oid"] = barrage.cid.toString()
-            it["msg"] = barrage.content.toString()
+            it["msg"] = barrage.content
             it["bvid"] = bvid
-            it["progress"] =
-                if (barrage.progress == null) System.currentTimeMillis().toString() else barrage.progress?.toMillis()
-                    .toString() //单位为毫秒
+            it["progress"] = (barrage.progress?.toMillis() ?: System.currentTimeMillis()).toString()//单位为毫秒
             it["color"] = barrage.color.color.toString()
             it["fontsize"] = barrage.fontSize.value.toString()
-            it["pool"] =
-                if (barrage.pool == null) BarragePool.Default.value.toString() else barrage.pool?.value.toString()
+            it["pool"] = (barrage.pool?.value ?: BarragePool.Default.value).toString()
             it["mode"] = barrage.type.value.toString()
             it["rnd"] = (barrage.sendTime * 1000000).toString()
             it["csrf"] = getCsrf()

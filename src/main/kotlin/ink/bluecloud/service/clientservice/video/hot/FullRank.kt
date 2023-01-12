@@ -3,20 +3,17 @@ package ink.bluecloud.service.clientservice.video.rank
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
 import ink.bluecloud.service.clientservice.video.hot.FrontVideo
+import ink.bluecloud.utils.getForStream
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import java.io.InputStream
 import java.time.Duration
 import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * 全站排行榜
@@ -25,7 +22,7 @@ import kotlin.coroutines.suspendCoroutine
 class FullRank : FrontVideo() {
 
     /**
-     * 获取某期周榜视频列表 以 Video数据类型
+     * 获取某期总站热门视频列表 以 Video数据类型
      */
     override suspend fun getVideos() = onIO {
         flow {
@@ -41,20 +38,12 @@ class FullRank : FrontVideo() {
                     playVolume = it.stat.view,
                     barrageVolume = it.stat.danmaku,
                     cover = ioScope.async(start = CoroutineStart.LAZY) {
-                        cover(it)
+                        logger.info("获取总站热门视频封面成功!")
+                        httpClient.getForStream(it.pic.toHttpUrl())
                     }
                 ).run {
                     emit(this)
                 }
-            }
-        }
-    }
-
-    private val cover: suspend CoroutineScope.(RankListJsonRoot.Item) -> InputStream = {
-        suspendCoroutine { coroutine ->
-            httpClient.getFor(it.pic.toHttpUrl()) {
-                coroutine.resume(body.byteStream())
-                logger.info("获取热榜视频封面成功，返回值${code}.")
             }
         }
     }

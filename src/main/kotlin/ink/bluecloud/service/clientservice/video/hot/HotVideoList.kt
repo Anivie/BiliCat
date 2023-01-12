@@ -3,15 +3,14 @@ package ink.bluecloud.service.clientservice.video.hot
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
+import ink.bluecloud.utils.getForStream
 import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import java.io.InputStream
 import java.time.Duration
 import java.util.*
 import kotlin.collections.set
@@ -43,20 +42,12 @@ class HotVideoList: FrontVideo() {
                     barrageVolume = it.stat.danmaku,
                     time = Date(it.pubdate * 1000),
                     cover = ioScope.async(start = CoroutineStart.LAZY) {
-                        cover(it)
+                        logger.info("获取热榜视频封面成功!")
+                        httpClient.getForStream(it.pic.toHttpUrl())
                     }
                 ).run {
                     emit(this)
                 }
-            }
-        }
-    }
-
-    private val cover: suspend CoroutineScope.(VideoHotListJsonRoot.Item) -> InputStream = {
-        suspendCoroutine { coroutine ->
-            httpClient.getFor(it.pic.toHttpUrl()) {
-                coroutine.resume(body.byteStream())
-                logger.info("获取热榜视频封面成功，返回值${code}.")
             }
         }
     }

@@ -2,10 +2,10 @@ package ink.bluecloud.ui.mainview.homeview.node
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.ui.cloudTimeline
 import ink.bluecloud.utils.ioScope
 import ink.bluecloud.utils.uiContext
 import ink.bluecloud.utils.uiScope
+import ink.bluecloud.utils.uiutil.cloudTimeline
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos

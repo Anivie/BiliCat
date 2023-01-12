@@ -10,7 +10,7 @@ import javafx.scene.layout.StackPane
 import kotlinx.coroutines.Job
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import tornadofx.singleAssign
+import tornadofx.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.KClass
 

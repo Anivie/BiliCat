@@ -8,7 +8,7 @@ data class AccountCard(
     val mid:Long,
     val coin: Int,
     val vip:Boolean,
-    val head: InputStream,
+    val head: Deferred<InputStream>,
     //等级
     val level:Int,
     val levelCurrentExp: Int,
@@ -16,9 +16,9 @@ data class AccountCard(
     val levelNextExp: Int,
     //头像框
     val expire: Int,
-    val image: Deferred<InputStream>,
-    val imageEnhance: Deferred<InputStream>,
-    val imageEnhanceFrame: Deferred<InputStream>,
+    val image: Deferred<InputStream?>,
+    val imageEnhance: Deferred<InputStream?>,
+    val imageEnhanceFrame: Deferred<InputStream?>,
     val pendantName: String?,
     val pid: Int,
     //认证信息

@@ -10,7 +10,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
-import tornadofx.UIComponent
+import tornadofx.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
