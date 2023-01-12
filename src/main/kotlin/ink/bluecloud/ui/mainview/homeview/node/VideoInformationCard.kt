@@ -3,8 +3,11 @@ package ink.bluecloud.ui.mainview.homeview.node
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.ui.cloudTimeline
+import ink.bluecloud.utils.ioScope
+import ink.bluecloud.utils.uiContext
 import ink.bluecloud.utils.uiScope
 import javafx.beans.property.ReadOnlyDoubleProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.image.Image
@@ -18,39 +21,52 @@ import javafx.util.Duration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import tornadofx.*
 
 @Factory
-class ShowWindow(
+class VideoInformationCard(
+//    private val name: String,
     private val card: Flow<HomePagePushCard>,
     private val widthProperty: ReadOnlyDoubleProperty?,
     private val spacing: Double?
 ): KoinComponent,StackPane() {
 
-    lateinit var currentCard:HomePagePushCard
+    private val currentCardProperty:SimpleObjectProperty<HomePagePushCard>
+    var currentCard: HomePagePushCard by SimpleObjectProperty<HomePagePushCard>().apply {
+        currentCardProperty = this
+    }
 
     init {
         uiScope.launch {
-            currentCard = card.first()
-            val cover = currentCard.cover.await()
-
             pane {
-                background = Background(BackgroundImage(
-                    Image(cover),
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    BackgroundSize(1.0,1.0,true,true,true,true)
-                ))
+                currentCardProperty.addListener { _, _, newValue ->
+                    ioScope.launch {
+                        val stream = newValue.cover.await()
+                        withContext(uiContext) {
+                            background = Background(
+                                BackgroundImage(
+                                    Image(stream),
+                                    BackgroundRepeat.NO_REPEAT,
+                                    BackgroundRepeat.NO_REPEAT,
+                                    BackgroundPosition.CENTER,
+                                    BackgroundSize(1.0,1.0,true,true,true,true)
+                                )
+                            )
+                        }
+                    }
+                }
             }
 
             stackpane {
-                label(currentCard.title) {
+                label {
                     style {
                         textFill = Color.WHITE
                     }
+
+                    textProperty().bind(currentCardProperty.map { it.title })
 
                     paddingBottom = 5
                     paddingLeft = 5
@@ -72,7 +88,10 @@ class ShowWindow(
                 setAlignment(this,Pos.BOTTOM_LEFT)
             }
 
-
+            currentCard = card.first()
+//            card.collect {
+//                println("running on ${Thread.currentThread().name} get ${it}")
+//            }
 
             val zoomAnimation = cloudTimeline {
                 keyframe(Duration.millis(300.0)) {
@@ -95,8 +114,8 @@ class ShowWindow(
             }
 
             clip = Rectangle().apply {
-                widthProperty().bind(this@ShowWindow.widthProperty())
-                heightProperty().bind(this@ShowWindow.heightProperty())
+                widthProperty().bind(this@VideoInformationCard.widthProperty())
+                heightProperty().bind(this@VideoInformationCard.heightProperty())
 
                 arcWidth = 20.0
                 arcHeight = 20.0

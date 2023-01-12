@@ -5,11 +5,12 @@ import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyHistoryListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyListJsonRoot
-import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
@@ -25,11 +26,11 @@ import kotlin.coroutines.suspendCoroutine
  * @API:https://api.bilibili.com/x/web-interface/popular/series/one?number={page}
  */
 @Factory
-class VideoWeeklyList : ClientService() {
+class VideoWeeklyList : FrontVideo() {
     /**
      * 获取某期周榜视频列表 以 Video数据类型
      */
-     suspend fun getVideos() = io {
+     override suspend fun getVideos() = io {
         val (_, data, _, _) = getJsonPojoToVideoWeeklyList(getNewWeeklyNumber().number)
         flow {
             data?.list?.forEach {
@@ -86,7 +87,6 @@ class VideoWeeklyList : ClientService() {
     /**
      * 获取周榜视频
      * @param page 期数，表述为b站创建周榜第n期收录的视频
-     * @param handle 回调函数，用来处理获取到的周榜视频
      */
     private suspend fun getPageOfVideoWeeklyList(page: Int) = suspendCoroutine { c ->
         val param = get<NetWorkResourcesProvider>().api.getVideoWeeklyList.param {

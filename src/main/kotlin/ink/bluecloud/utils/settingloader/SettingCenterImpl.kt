@@ -25,7 +25,8 @@ class SettingCenterImpl : SettingCenter() {
     *  if not, load from config path.
     * */
     override fun <T : Any> loadSetting(clazz: Class<T>): T? {
-        return (settingCache[clazz.simpleName]as? T)?: configPath[clazz]?.run {
+        return (settingCache[clazz.simpleName]as? T)?:
+        configPath[clazz]?.run {
             if (exists()) {
                 ProtoBuf.decodeFromByteArray(clazz.kotlin.serializer(), Files.readAllBytes(this)).apply {
                     settingCache[clazz.simpleName] = this

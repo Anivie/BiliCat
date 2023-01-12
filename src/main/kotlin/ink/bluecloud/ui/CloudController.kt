@@ -2,10 +2,11 @@ package ink.bluecloud.ui
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import tornadofx.View
+import tornadofx.*
 
 abstract class CloudController<T: View>: KoinComponent {
     abstract fun initUi(view: T)
@@ -33,6 +34,18 @@ abstract class CloudController<T: View>: KoinComponent {
      * */
     protected fun io(block: suspend CoroutineScope.() -> Unit) {
         ioScope.launch {
+            block()
+        }
+    }
+
+
+    protected suspend fun toUI(block: suspend CoroutineScope.() -> Unit) {
+        withContext(uiContext) {
+            block()
+        }
+    }
+    protected suspend fun toIO(block: suspend CoroutineScope.() -> Unit) {
+        withContext(ioContext) {
             block()
         }
     }

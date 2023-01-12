@@ -4,7 +4,6 @@ import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
-import ink.bluecloud.service.ClientService
 import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
@@ -26,16 +25,14 @@ import kotlin.coroutines.suspendCoroutine
  * @TestAPI: 等待测试API稳定后移除此项
  */
 @Factory
-class HotVideoList: ClientService() {
+class HotVideoList: FrontVideo() {
 
     /**
      * 获取热门视频列表
-     * @param pn 页数
-     * @param ps 获取视频数量总数
      */
-    suspend fun getVideos(pn: Int = 1, ps: Int = 50) = io {
+    override suspend fun getVideos(/*pn: Int = 1, ps: Int = 50*/) = io {
         flow {
-            getJsonPOJO(pn, ps).data?.list?.forEach {
+            getJsonPOJO(1, 50).data?.list?.forEach {
                 HomePagePushCard(
                     id = it.bvid,
                     cid = it.cid,

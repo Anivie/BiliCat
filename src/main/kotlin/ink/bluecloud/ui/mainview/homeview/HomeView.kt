@@ -62,10 +62,11 @@ class HomeView: KoinComponent,HomeViewNodes() {
                 }
                 tab("全站榜单") {
                     rootBox = vbox(20) {
-
                         secondBox = hbox(20) {
                             vgrow = Priority.SOMETIMES
                         }
+
+                        region {  }
                     }
                 }
 
