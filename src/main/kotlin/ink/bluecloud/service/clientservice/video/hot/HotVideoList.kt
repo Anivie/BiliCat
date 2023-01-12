@@ -2,9 +2,8 @@ package ink.bluecloud.service.clientservice.video.hot
 
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
-import ink.bluecloud.utils.param
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -12,10 +11,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
-import org.koin.core.component.get
 import java.io.InputStream
 import java.time.Duration
 import java.util.*
+import kotlin.collections.forEach
+import kotlin.collections.set
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,14 +25,16 @@ import kotlin.coroutines.suspendCoroutine
  * @TestAPI: 等待测试API稳定后移除此项
  */
 @Factory
-class HotVideoList: FrontVideo() {
+class HotVideoList: APIResources() {
 
     /**
      * 获取热门视频列表
+     * @param pn 页数
+     * @param ps 获取视频数量总数
      */
-    override suspend fun getVideos(/*pn: Int = 1, ps: Int = 50*/) = io {
+    suspend fun getVideos(pn: Int = 1, ps: Int = 50) = io {
         flow {
-            getJsonPOJO(1, 50).data?.list?.forEach {
+            getJsonPOJO(pn, ps).data?.list?.forEach {
                 HomePagePushCard(
                     id = it.bvid,
                     cid = it.cid,
@@ -78,12 +80,12 @@ class HotVideoList: FrontVideo() {
      * @param ps 获取视频数量总数
      */
     private suspend fun getPage(pn: Int = 1, ps: Int = 50) = suspendCoroutine { coroutine ->
-        val param = get<NetWorkResourcesProvider>().api.getHotVideoList.param {
+        val api = api( API.getHotVideoList) {
             it["pn"] = pn.toString()
             it["ps"] = ps.toString()
         }
-        logger.debug("API Get HotVideoList -> $param")
-        httpClient.getFor(param) {
+
+        httpClient.getFor(api.url) {
             coroutine.resume(body.string())
             logger.info("获取榜单视频列表成功，返回值${code}.")
         }

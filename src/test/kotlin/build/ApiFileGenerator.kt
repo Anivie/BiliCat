@@ -27,6 +27,8 @@ fun main() {
             getVideoWeeklyHistoryList = "https://api.bilibili.com/x/web-interface/popular/series/list".toHttpUrl(),
             getHotVideoList = "https://api.bilibili.com/x/web-interface/popular".toHttpUrl(),
             getFullRank = "https://api.bilibili.com/x/web-interface/ranking/v2".toHttpUrl(),
+            getCidInfo = "https://hd.biliplus.com/api/cidinfo".toHttpUrl(),//20230110
+            getBvIdInfo = "https://api.bilibili.com/x/player/pagelist".toHttpUrl(),//20230110
             //  User
             getAccountInfo = "https://api.bilibili.com/x/web-interface/nav".toHttpUrl(),
             //  Other
@@ -35,6 +37,8 @@ fun main() {
             getRealTimeBarrage = "http://api.bilibili.com/x/v2/dm/web/seg.so".toHttpUrl(),
             getHistoricalBarret = "http://api.bilibili.com/x/v2/dm/web/history/seg.so".toHttpUrl(),//20230109
             getHistoricalBarretDate = "http://api.bilibili.com/x/v2/dm/history/index".toHttpUrl(),//20230109
+            postSendBarret = "http://api.bilibili.com/x/v2/dm/post".toHttpUrl(),//20230110
+            postCancelBarret = "http://api.bilibili.com/x/dm/recall".toHttpUrl(),//20230111
             // Comment
             getCommentAreaPageLoad = "http://api.bilibili.com/x/v2/reply".toHttpUrl(),//20221215
             getCommentLazyPageLoad = "http://api.bilibili.com/x/v2/reply/main".toHttpUrl(),//20230108

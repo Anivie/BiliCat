@@ -1,21 +1,19 @@
 package ink.bluecloud.service.clientservice.comments.info.load.reply
 
-import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.comment.info.load.reply.CommentReplyPOJO
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
-import ink.bluecloud.utils.IDConvert
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
-import org.koin.core.component.get
+import kotlin.collections.set
 
 /**
  * 获取指定评论的回复
  */
 @Factory
-class CommentReply: ClientService() {
+class CommentReply: APIResources() {
 
     /**
      * 获取指定评论的回复
@@ -32,7 +30,7 @@ class CommentReply: ClientService() {
         type: CommentType = CommentType.AV_ID,
         pageSize: Int = 20,
     ): CommentReplyPOJO.Root {
-        val param = get<NetWorkResourcesProvider>().api.getCommentReply.param {
+        val api = api(API.getCommentReply){
             it["type"] = type.value.toString()
             it["root"] = rid.toString()
             it["oid"] = if (IDConvert().isBvid(oid)) IDConvert().BvToAvNumber(oid).toString() else oid
@@ -40,8 +38,6 @@ class CommentReply: ClientService() {
                 if (pageSize in 1..49) pageSize.toString() else throw IllegalArgumentException("param 'pageSize' must be between 1 and 49")
             it["pn"] = pageNumber.toString()
         }
-
-        logger.debug("API Get CommentReply -> $param")
-        return httpClient.getForString(param).toObjJson(CommentReplyPOJO.Root::class.java)
+        return httpClient.getForString(api.url).toObjJson(CommentReplyPOJO.Root::class.java)
     }
 }

@@ -8,7 +8,7 @@ import java.util.*
 /**
  * 格式化如期
  */
-inline fun Date.format(pattern: String = "YYYY-MM-DD"): String = SimpleDateFormat(pattern).format(this)
+inline fun Date.format(pattern: String = "yyyy-MM-dd"): String = SimpleDateFormat(pattern).format(this)
 
 
 /**
@@ -24,7 +24,7 @@ inline fun Date.add(amount: Int, field: Int = Calendar.MONTH): Date {
 /**
  * 日期格式校验
  */
-inline fun String.isDate(format0: String = "YYYY-MM-DD", strict: Boolean = true): Boolean {
+inline fun String.isDate(format0: String = "yyyy-MM-dd", strict: Boolean = true): Boolean {
     if (strict && this.length != format0.length) return false
     if (this.isEmpty() || format0.isEmpty()) return false
 
@@ -35,7 +35,7 @@ inline fun String.isDate(format0: String = "YYYY-MM-DD", strict: Boolean = true)
         val formatter: DateFormat = SimpleDateFormat("/yyyy")
         dttm += formatter.format(Date())
     }
-    val formatter: DateFormat = SimpleDateFormat(format)
+    val formatter = SimpleDateFormat(format)
     formatter.isLenient = false
     val pos = ParsePosition(0)
     val date = formatter.parse(dttm, pos)

@@ -1,15 +1,13 @@
 package ink.bluecloud.service.clientservice.comments.info.load
 
-import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.model.pojo.comment.info.load.CommentAreaHotPOJO
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.service.clientservice.comments.info.enums.CommentType
-import ink.bluecloud.utils.IDConvert
+import ink.bluecloud.service.clientservice.video.id.IDConvert
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
-import org.koin.core.component.get
+import kotlin.collections.set
 
 /**
  * ！不推荐使用
@@ -17,7 +15,7 @@ import org.koin.core.component.get
  * @BUILD: Under Repair
  */
 @Factory
-class CommentAreaHot : ClientService() {
+class CommentAreaHot : APIResources() {
     /**
      * 获取评论区热评
      * @param oid：(对于视频评论来说可以传入BVID或AVID number) 每个type对应一个oid，oid具体是什么见该CommentType的注释中“：”后面的内容
@@ -33,7 +31,8 @@ class CommentAreaHot : ClientService() {
         type: CommentType = CommentType.AV_ID,
         pageSize: Int = 20,
     ): CommentAreaHotPOJO.Root {
-        val param = get<NetWorkResourcesProvider>().api.getCommentAreaHot.param {
+
+        val api = api(API.getCommentAreaHot){
             it["type"] = type.value.toString()
             if (rid >= 0) it["root"] = rid.toString()
             it["oid"] = if (IDConvert().isBvid(oid)) IDConvert().BvToAvNumber(oid).toString() else oid
@@ -41,8 +40,6 @@ class CommentAreaHot : ClientService() {
                 if (pageSize in 1..49) pageSize.toString() else throw IllegalArgumentException("param 'pageSize' must be between 1 and 49")
             it["pn"] = pageNumber.toString()
         }
-
-        logger.debug("API Get CommentAreaHot -> $param")
-        return httpClient.getForString(param).toObjJson(CommentAreaHotPOJO.Root::class.java)
+        return httpClient.getForString(api.url).toObjJson(CommentAreaHotPOJO.Root::class.java)
     }
 }

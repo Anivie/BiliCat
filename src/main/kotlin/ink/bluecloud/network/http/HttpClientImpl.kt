@@ -6,7 +6,7 @@ import org.koin.core.annotation.Single
 import java.time.Duration
 
 @Single
-class HttpClientImpl: HttpClient() {
+class HttpClientImpl : HttpClient() {
 
     //创建一个带有Cookie管理器的okhttp实例
     private val okHttpClient = OkHttpClient.Builder().apply {
@@ -22,11 +22,11 @@ class HttpClientImpl: HttpClient() {
         url: HttpUrl,
         headers: Headers?,
         onFailure: (Call.(IOException) -> Unit)?,
-        onResponse: Response.(Call) -> Unit
+        onResponse: Response.(Call) -> Unit,
     ) {
         val request = headers?.run {
             Request(url, headers)
-        }?: Request(url)
+        } ?: Request(url)
 
         executeRequest(request, onFailure, onResponse)
     }
@@ -49,11 +49,11 @@ class HttpClientImpl: HttpClient() {
         params: Map<String, String>,
         headers: Headers?,
         onFailure: (Call.(IOException) -> Unit)?,
-        onResponse: Response.(Call) -> Unit
+        onResponse: Response.(Call) -> Unit,
     ) {
         val requestBody = FormBody.Builder().apply {
             params.forEach { (k, v) ->
-                add(k,v)
+                add(k, v)
             }
         }.build()
 
@@ -67,7 +67,7 @@ class HttpClientImpl: HttpClient() {
     private fun executeRequest(
         request: Request,
         onFailure: (Call.(IOException) -> Unit)?,
-        onResponse: Response.(Call) -> Unit
+        onResponse: Response.(Call) -> Unit,
     ) {
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

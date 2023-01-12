@@ -3,8 +3,7 @@ package ink.bluecloud.service.clientservice.video.portal
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.portal.PortalVideoJsonRoot
-import ink.bluecloud.service.ClientService
-import ink.bluecloud.utils.param
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
@@ -22,7 +21,7 @@ import kotlin.coroutines.suspendCoroutine
  * @TestAPI: 等待测试API稳定后移除此项
  */
 @Factory
-class PortalVideoList : ClientService() {
+class PortalVideoList : APIResources() {
     /**
      * 获取首页视频推荐
      * @param num 首页推荐的视频个数。此参数存在最大值，当超过最大值服务器会自动返回最大个数的视频数
@@ -75,11 +74,10 @@ class PortalVideoList : ClientService() {
      */
     @Suppress("unused")
     private suspend fun getPage(num: Int = 11):String = suspendCoroutine { coroutine ->
-        val param = netWorkResourcesProvider.api.getPortalVideos.param {
+        val api = api(API.getPortalVideos){
             it["ps"] = num.toString()
         }
-        logger.debug("API Get PortalVideo -> $param")
-        httpClient.getFor(param) {
+        httpClient.getFor(api.url) {
             coroutine.resume(body.string())
         }
     }

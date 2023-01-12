@@ -5,12 +5,11 @@ import ink.bluecloud.model.data.video.StreamMap
 import ink.bluecloud.model.data.video.VideoStreamData
 import ink.bluecloud.model.data.video.toCodec
 import ink.bluecloud.model.pojo.video.stream.VideoStreamJsonRoot
-import ink.bluecloud.service.ClientService
+import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.service.clientservice.video.stream.param.VideoStreamParamBuilder
 import ink.bluecloud.service.clientservice.video.stream.param.toQn
 import ink.bluecloud.utils.getForHead
 import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.param
 import ink.bluecloud.utils.toObjJson
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
@@ -21,7 +20,7 @@ import org.koin.core.annotation.Factory
  * @Building: 构建API中
  */
 @Factory
-class VideoStream : ClientService() {
+class VideoStream : APIResources() {
     /**
      * 获取视频播放流
      * @param bvid 视频 BV 号
@@ -80,11 +79,10 @@ class VideoStream : ClientService() {
         cid: Long,
         builder: VideoStreamParamBuilder = VideoStreamParamBuilder(),
     ): VideoStreamJsonRoot.Root {
-        val param = netWorkResourcesProvider.api.getVideoStreamURL.param(builder.build()) {
+        val api = api(API.getVideoStreamURL, getParams = builder.build()){
             it["bvid"] = bvid
             it["cid"] = cid.toString()
         }
-        logger.debug("API Get VideoStream -> $param")
-        return httpClient.getForString(param).toObjJson(VideoStreamJsonRoot.Root::class.java)
+        return httpClient.getForString(api.url).toObjJson(VideoStreamJsonRoot.Root::class.java)
     }
 }

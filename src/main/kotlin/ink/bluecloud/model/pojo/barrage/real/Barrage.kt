@@ -4,6 +4,10 @@ import java.time.Duration
 
 data class Barrage(
     /**
+     * 视频CID
+     */
+    val cid:Long,
+    /**
      * 弹幕dmid: 唯一 可用于操作参数
      */
     val dmid: Long,
@@ -44,5 +48,5 @@ data class Barrage(
     /**
      * 弹幕池
      */
-    val pool: BarragePool?,
+    var pool: BarragePool?,
 )
