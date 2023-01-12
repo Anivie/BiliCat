@@ -4,6 +4,7 @@ import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.portal.PortalVideoJsonRoot
 import ink.bluecloud.service.clientservice.APIResources
+import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
@@ -27,7 +28,7 @@ class PortalVideoList : APIResources() {
      * @param num 首页推荐的视频个数。此参数存在最大值，当超过最大值服务器会自动返回最大个数的视频数
      */
     @Suppress("unused")
-    suspend fun getVideoList(num: Int = 11) = io {
+    suspend fun getVideoList(num: Int = 11) = onIO {
         flow {
             getJsonPOJO(num).data?.item?.forEach {
                 HomePagePushCard(

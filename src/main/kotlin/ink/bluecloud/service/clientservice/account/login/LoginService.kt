@@ -8,6 +8,7 @@ import com.google.zxing.client.j2se.MatrixToImageConfig
 import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.qrcode.QRCodeWriter
 import ink.bluecloud.service.ClientService
+import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.settingloader.saveSetting
 import kotlinx.coroutines.delay
 import org.koin.core.annotation.Factory
@@ -30,7 +31,7 @@ class LoginService: ClientService() {
         }
     }
 
-    suspend fun whenSuccess() = io {
+    suspend fun whenSuccess() = onIO {
         var json: JSONObject?
         while (true) {
             json = suspendCoroutine { coroutine ->
@@ -50,7 +51,7 @@ class LoginService: ClientService() {
         }
 
         settingCenter.saveSetting(httpClient.getCookieStore().toCookies())
-        return@io json!!
+        return@onIO json!!
     }
 
     private suspend fun getJson() = suspendCoroutine { coroutine ->

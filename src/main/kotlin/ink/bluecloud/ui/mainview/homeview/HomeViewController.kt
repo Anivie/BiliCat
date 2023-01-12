@@ -9,7 +9,10 @@ import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.node.VideoInformationCard
+import ink.bluecloud.utils.io
 import ink.bluecloud.utils.sceneRoot
+import ink.bluecloud.utils.onUI
+import ink.bluecloud.utils.ui
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
@@ -24,7 +27,7 @@ class HomeViewController: CloudController<HomeView>() {
         io {
             val videoInformationCard = generateVideoInformationCard<HotVideoList>()
 
-            toUI {
+            onUI {
                 rootBox.children += videoInformationCard
             }
         }
@@ -32,7 +35,7 @@ class HomeViewController: CloudController<HomeView>() {
         io {
             val videoInformationCard = generateVideoInformationCard<VideoWeeklyList>()
 
-            toUI {
+            onUI {
                 secondBox.children += videoInformationCard
             }
         }
@@ -63,7 +66,7 @@ class HomeViewController: CloudController<HomeView>() {
                     videoInformationCard.currentCard.cid
                 )
 
-                toUI {
+                onUI {
                     rootBox.sceneRoot.children += get<VideoPlayer> {
                         parametersOf(
                             PlayingData(

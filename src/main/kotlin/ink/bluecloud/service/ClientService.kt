@@ -4,7 +4,6 @@ import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.utils.settingloader.SettingCenter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -25,13 +24,4 @@ abstract class ClientService: KoinComponent {
     protected val httpClient by inject<HttpClient>()
 
     protected val settingCenter by inject<SettingCenter>()
-
-
-    protected suspend fun <T> ui(block: suspend CoroutineScope.() -> T):T = withContext(uiScope.coroutineContext) {
-        block()
-    }
-
-    protected suspend fun <T> io(block: suspend CoroutineScope.() -> T):T = withContext(ioScope.coroutineContext) {
-        block()
-    }
 }

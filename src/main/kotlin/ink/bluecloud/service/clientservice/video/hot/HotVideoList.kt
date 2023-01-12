@@ -3,6 +3,7 @@ package ink.bluecloud.service.clientservice.video.hot
 import ink.bluecloud.exceptions.PojoException
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.VideoHotListJsonRoot
+import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -28,7 +29,7 @@ class HotVideoList: FrontVideo() {
     /**
      * 获取热门视频列表
      */
-    override suspend fun getVideos() = io {
+    override suspend fun getVideos() = onIO {
         flow {
             getJsonPOJO(1, 50).data?.list?.forEach {
                 HomePagePushCard(

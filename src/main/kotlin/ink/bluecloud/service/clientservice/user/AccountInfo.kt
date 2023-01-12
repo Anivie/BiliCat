@@ -4,10 +4,17 @@ import ink.bluecloud.model.data.account.AccountCard
 import ink.bluecloud.model.pojo.user.account.AccountInfoJsonRoot
 import ink.bluecloud.service.clientservice.APIResources
 import ink.bluecloud.utils.getForString
+import ink.bluecloud.utils.io
 import ink.bluecloud.utils.toObjJson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Factory
 import java.io.InputStream
 import java.net.URL
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * 获取账号基本信息
@@ -18,7 +25,7 @@ class AccountInfo : APIResources() {
      * 获取这个账号自己的信息（需要Cookie）
      */
     suspend fun getAccountInfo() = io {
-        return@io getJsonPOJO().data.run {
+        getJsonPOJO().data.run {
             AccountCard(
                 name = uname!!,
                 mid = mid!!,
@@ -46,11 +53,13 @@ class AccountInfo : APIResources() {
         }
     }
 
-    private fun getInputStream(str: String): InputStream? {
-        if (str.trim().isNotEmpty()) {
-            return URL(str).openStream()
+    private fun CoroutineScope.getInputStream(str: String): Deferred<InputStream> = async {
+        suspendCoroutine { coroutine ->
+            httpClient.getFor(str.toHttpUrl()) {
+                coroutine.resume(body.byteStream())
+                logger.info("获取热榜视频封面成功，返回值${code}.")
+            }
         }
-        return null
     }
 
     /**

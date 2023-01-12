@@ -5,6 +5,7 @@ import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyHistoryListJsonRoot
 import ink.bluecloud.model.pojo.video.hot.VideoWeeklyListJsonRoot
 import ink.bluecloud.utils.getForString
+import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.toObjJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -28,7 +29,7 @@ class VideoWeeklyList : FrontVideo() {
     /**
      * 获取某期周榜视频列表 以 Video数据类型
      */
-     override suspend fun getVideos() = io {
+     override suspend fun getVideos() = onIO {
         val (_, data, _, _) = getJsonPojoToVideoWeeklyList(getNewWeeklyNumber().number)
         flow {
             data?.list?.forEach {
