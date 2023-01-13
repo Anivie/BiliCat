@@ -1,9 +1,8 @@
 package ink.bluecloud.model.networkapi.api
 
 import ink.bluecloud.model.networkapi.api.data.HttpApi
-import java.nio.file.Paths
+import org.koin.core.component.KoinComponent
 
-abstract class NetWorkResourcesProvider {
-    protected val apiFilePath = Paths.get("config\\HttpAPI.proto")
+abstract class NetWorkResourcesProvider:KoinComponent {
     abstract val api: HttpApi
 }

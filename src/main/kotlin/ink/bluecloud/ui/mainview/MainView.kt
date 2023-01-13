@@ -1,11 +1,9 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.service.user.AccountInfo
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.HarmonySans
-import ink.bluecloud.utils.io
 import ink.bluecloud.utils.koin
 import javafx.geometry.Pos
 import javafx.scene.layout.BorderPane
@@ -39,12 +37,12 @@ class MainView : KoinComponent,MainViewNodes() {
             left = borderpane leftBox@{
                 top = vbox(20,Pos.CENTER) {
                     hbox(10,Pos.CENTER) {
-                        imageview("ui/homeview/logo.png") {
+                        headView = imageview("ui/homeview/logo.png") {
                             fitWidth = 50.0
                             fitHeight = 50.0
                         }
 
-                        label("BilibiliFX") {
+                        userName = label("BiliCat") {
                             style {
                                 fontSize = 25.px
                                 fontFamily = HarmonySans.BOLD
@@ -52,12 +50,16 @@ class MainView : KoinComponent,MainViewNodes() {
                         }
                     }
 
+/*
                     button("Debug!") {
                         action {
                             io {
                                 val accountCard = get<AccountInfo>().getAccountInfo()
-                                println(accountCard)
-                                println(accountCard.coin)
+                                accountCard.head.await().run {
+                                    onUI {
+                                        headView.image = Image(this@run)
+                                    }
+                                }
                             }
                         }
 
@@ -65,6 +67,7 @@ class MainView : KoinComponent,MainViewNodes() {
                             padding = box(10.px,50.px)
                         }
                     }
+*/
                     paddingRight = 20
                 }
 

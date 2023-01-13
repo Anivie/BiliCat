@@ -5,6 +5,7 @@ import ink.bluecloud.css.themes
 import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.service.init.LoadCookie
 import ink.bluecloud.ui.mainview.MainView
+import ink.bluecloud.utils.io
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
@@ -12,6 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.stopKoin
 import tornadofx.*
+import java.io.File
 import kotlin.reflect.KClass
 
 class MainApp : App(
@@ -31,7 +33,16 @@ class MainApp : App(
             }
         }
 
-        get<LoadCookie>().load()
+        io {
+            get<LoadCookie>().load()
+
+            File("config").run {
+                if (!exists()) mkdir()
+            }
+            File("cache").run {
+                if (!exists()) mkdir()
+            }
+        }
     }
 
     override fun start(stage: Stage) {

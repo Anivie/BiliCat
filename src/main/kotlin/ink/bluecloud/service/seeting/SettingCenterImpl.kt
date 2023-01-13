@@ -35,7 +35,7 @@ class SettingCenterImpl : SettingCenter() {
         }
     }
 
-    override fun <T : Any> chaekSettingIsNull(clazz: Class<T>) = loadSetting(clazz) == null
+    override fun <T : Any> checkSettingIsNull(clazz: Class<T>) = loadSetting(clazz) == null
 
     override fun <T: Any> saveSetting(t: T, clazz: KType) {
         settingCache[clazz.javaClass.simpleName]?.run {
@@ -52,8 +52,8 @@ class SettingCenterImpl : SettingCenter() {
 inline fun <reified T : Any> SettingCenter.loadSetting(): T? {
     return loadSetting(T::class.java)
 }
-inline fun <reified T : Any> SettingCenter.chaekSettingIsNull(): Boolean {
-    return chaekSettingIsNull(T::class.java)
+inline fun <reified T : Any> SettingCenter.checkSettingIsNull(): Boolean {
+    return checkSettingIsNull(T::class.java)
 }
 
 inline fun <reified T : Any> SettingCenter.saveSetting(t: T) {

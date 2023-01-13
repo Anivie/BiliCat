@@ -2,6 +2,7 @@
 
 package ink.bluecloud.utils
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,21 +25,42 @@ internal inline val KoinComponent.uiScope
 internal inline val KoinComponent.uiContext
     get() = get<CoroutineScope>(named("uiScope")).coroutineContext
 
-internal inline fun <T> KoinComponent.io(crossinline block: suspend CoroutineScope.() -> T) {
-    ioScope.launch {
+internal inline fun <T> KoinComponent.io(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+    name?.run {
+        ioScope.launch(CoroutineName(this)) {
+            block()
+        }
+    }?: ioScope.launch {
         block()
     }
 }
 
-internal inline fun <T> KoinComponent.ui(crossinline block: suspend CoroutineScope.() -> T) {
-    uiScope.launch {
+internal inline fun <T> KoinComponent.ui(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+    name?.run {
+        uiScope.launch(CoroutineName(this)) {
+            block()
+        }
+    }?: uiScope.launch {
         block()
     }
 }
 
-internal suspend inline fun <T> KoinComponent.onIO(crossinline block: suspend CoroutineScope.() -> T):T = withContext(ioContext) {
-    block()
+internal suspend inline fun <T> KoinComponent.onIO(name: String? = null, crossinline block: suspend CoroutineScope.() -> T):T {
+    return name?.run {
+        withContext(ioContext + CoroutineName(this)) {
+            block()
+        }
+    } ?: withContext(ioContext) {
+        block()
+    }
 }
-internal suspend inline fun <T> KoinComponent.onUI(crossinline block: suspend CoroutineScope.() -> T):T = withContext(uiContext) {
-    block()
+
+internal suspend inline fun <T> KoinComponent.onUI(name: String? = null, crossinline block: suspend CoroutineScope.() -> T):T {
+    return name?.run {
+        withContext(uiContext + CoroutineName(this)) {
+            block()
+        }
+    } ?: withContext(uiContext) {
+        block()
+    }
 }
