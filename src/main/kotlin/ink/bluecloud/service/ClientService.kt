@@ -2,7 +2,7 @@ package ink.bluecloud.service
 
 import ink.bluecloud.model.networkapi.api.NetWorkResourcesProvider
 import ink.bluecloud.network.http.HttpClient
-import ink.bluecloud.utils.settingloader.SettingCenter
+import ink.bluecloud.service.seeting.SettingCenter
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

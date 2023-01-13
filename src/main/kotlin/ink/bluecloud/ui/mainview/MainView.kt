@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
-import ink.bluecloud.service.clientservice.user.AccountInfo
+import ink.bluecloud.service.user.AccountInfo
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.HarmonySans

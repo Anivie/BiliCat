@@ -1,7 +1,7 @@
 package ink.bluecloud.model.data.cookie
 
 import com.alibaba.fastjson2.annotation.JSONField
-import ink.bluecloud.service.clientservice.account.cookie.CookieUpdate
+import ink.bluecloud.service.account.cookie.CookieUpdate
 import kotlinx.serialization.Serializable
 
 /**

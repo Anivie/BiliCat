@@ -2,9 +2,9 @@
 
 package ink.bluecloud.model.data.video
 
-import ink.bluecloud.service.clientservice.video.stream.VideoStream
-import ink.bluecloud.service.clientservice.video.stream.param.Qn
-import ink.bluecloud.service.clientservice.video.stream.param.toQn
+import ink.bluecloud.service.video.stream.VideoStream
+import ink.bluecloud.service.video.stream.param.Qn
+import ink.bluecloud.service.video.stream.param.toQn
 import org.koin.core.component.KoinComponent
 
 /**

@@ -1,10 +1,10 @@
 package ink.bluecloud.ui.mainview.homeview
 
-import ink.bluecloud.service.clientservice.video.hot.FrontVideo
-import ink.bluecloud.service.clientservice.video.hot.HotVideoList
-import ink.bluecloud.service.clientservice.video.hot.VideoWeeklyList
+import ink.bluecloud.service.video.hot.FrontVideo
+import ink.bluecloud.service.video.hot.HotVideoList
+import ink.bluecloud.service.video.hot.VideoWeeklyList
 import ink.bluecloud.service.clientservice.video.rank.FullRank
-import ink.bluecloud.service.clientservice.video.stream.VideoStream
+import ink.bluecloud.service.video.stream.VideoStream
 import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer

@@ -11,7 +11,10 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.ksp.generated.*
+import org.koin.ksp.generated.ink_bluecloud_model_networkapi_NetWorkApiModule
+import org.koin.ksp.generated.ink_bluecloud_network_NetWorkModel
+import org.koin.ksp.generated.ink_bluecloud_service_ServiceModule
+import org.koin.ksp.generated.ink_bluecloud_ui_UIModule
 import org.koin.logger.slf4jLogger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
@@ -55,8 +58,7 @@ fun main() {
                 ink_bluecloud_ui_UIModule,
                 ink_bluecloud_network_NetWorkModel,
                 ink_bluecloud_service_ServiceModule,
-                ink_bluecloud_model_networkapi_NetWorkApiModule,
-                ink_bluecloud_utils_settingloader_SettingModule
+                ink_bluecloud_model_networkapi_NetWorkApiModule
             )
         }
 

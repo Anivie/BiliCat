@@ -1,8 +1,8 @@
 package build
 
 import ink.bluecloud.network.http.CookieManager
-import ink.bluecloud.utils.settingloader.SettingCenterImpl
-import ink.bluecloud.utils.settingloader.saveSetting
+import ink.bluecloud.service.seeting.SettingCenterImpl
+import ink.bluecloud.service.seeting.saveSetting
 
 fun main() {
     val cookie = CookieManager()

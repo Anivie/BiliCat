@@ -1,6 +1,6 @@
 package ink.bluecloud.ui.fragment.javafxmediaplayer
 
-import ink.bluecloud.service.clientservice.video.player.VideoPlayerBuilder
+import ink.bluecloud.service.video.player.VideoPlayerBuilder
 import ink.bluecloud.ui.fragment.javafxmediaplayer.node.ControlBar
 import ink.bluecloud.utils.getValue
 import ink.bluecloud.utils.setValue

@@ -3,7 +3,7 @@ package ink.bluecloud
 import ink.bluecloud.cloudtools.stageinitializer.initCustomizeStageAndRoot
 import ink.bluecloud.css.themes
 import ink.bluecloud.network.http.HttpClient
-import ink.bluecloud.service.clientservice.init.LoadCookie
+import ink.bluecloud.service.init.LoadCookie
 import ink.bluecloud.ui.mainview.MainView
 import javafx.scene.Scene
 import javafx.scene.image.Image
