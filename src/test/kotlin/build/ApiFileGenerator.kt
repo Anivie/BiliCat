@@ -4,6 +4,7 @@ package build
 
 import ink.bluecloud.model.networkapi.api.data.HttpApi
 import ink.bluecloud.model.networkapi.api.data.OKHttpURLSerializer
+import ink.bluecloud.utils.logger
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.encodeToByteArray
@@ -14,6 +15,10 @@ import java.nio.file.Paths
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
+    buildAPI()
+}
+
+fun buildAPI(){
     ProtoBuf.encodeToByteArray(
         HttpApi(
             //  Login
@@ -31,6 +36,8 @@ fun main() {
             getBvIdInfo = "https://api.bilibili.com/x/player/pagelist".toHttpUrl(),//20230110
             //  User
             getAccountInfo = "https://api.bilibili.com/x/web-interface/nav".toHttpUrl(),
+            getUserAttention = "https://api.bilibili.com/x/relation/followings".toHttpUrl(),//20230113
+            getUserAttentionV2 = "https://app.biliapi.net/x/v2/relation/followings".toHttpUrl(),//20230113
             //  Other
             getBili = "https://www.bilibili.com".toHttpUrl(),
             // Barrage
@@ -48,7 +55,7 @@ fun main() {
             getCommentAreaCount = "http://api.bilibili.com/x/v2/reply/count".toHttpUrl(),//20230108
         )
     ).run {
-        println(contentToString())
+        logger().info("build api")
         Files.write(Paths.get("config\\HttpAPI.proto"), this)
     }
 }

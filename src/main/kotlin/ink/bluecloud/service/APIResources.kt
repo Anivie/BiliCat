@@ -69,7 +69,11 @@ abstract class APIResources : ClientService() {
         val url: HttpUrl,
         val params: HashMap<String, String>,
         val name: String,
-    )
+    ){
+        override fun toString(): String {
+            return url.toString()
+        }
+    }
 
     protected enum class APILevel {
         Post,

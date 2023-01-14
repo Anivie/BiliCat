@@ -1,5 +1,7 @@
 package ink.bluecloud.model.pojo.user.info.vip
 
+import ink.bluecloud.model.pojo.user.relationship.UserAttentionPOJO
+
 data class UserVip(
 //        val accessStatus: Int,
 //        val avatar_subscript: Int,
@@ -7,11 +9,11 @@ data class UserVip(
         /**
          * 会员铭牌样式
          */
-        val label: UserVipLabel,
+        val label: UserVipLabel?,
         /**
          * 昵称颜色
          */
-        val nickname_color: String,
+        val nickname_color: String?,
         /**
          * 会员样式 id
          */

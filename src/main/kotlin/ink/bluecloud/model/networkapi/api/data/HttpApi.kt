@@ -30,6 +30,8 @@ data class HttpApi(
     val getBvIdInfo: HttpUrl,
 //    User
     val getAccountInfo: HttpUrl,
+    val getUserAttention: HttpUrl,
+    val getUserAttentionV2: HttpUrl,
 //    Other
     val getBili: HttpUrl,
 //    Barrage

@@ -1,7 +1,12 @@
 package main
 
+import build.buildAPI
+import ink.bluecloud.model.data.cookie.CookieJson
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.service.account.cookie.CookieUpdate
+import ink.bluecloud.service.seeting.SettingCenterImpl
+import ink.bluecloud.service.user.AccountInfo
+import ink.bluecloud.service.user.relationship.UserAttention
 import ink.bluecloud.service.video.hot.VideoWeeklyList
 import ink.bluecloud.service.video.portal.PortalVideoList
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -24,8 +29,8 @@ import kotlin.system.exitProcess
 
 class TestRun {
     suspend fun run() {
-        VideoWeeklyList().getVideos().collect {
-            println(it.title)
+        UserAttention().getAttentionV2(204700919).data!!.list.forEach {
+            println("${it.uname}: ${it.special}")
         }
     }
 }
@@ -38,13 +43,15 @@ suspend fun getBvId(): HomePagePushCard {
 }
 
 suspend fun main() {
+    buildAPI()
     init()
     CookieUpdate().loadCookie(
         "bili_jct=86bf89d899dd4aab29aa5e5c5d81292c;DedeUserID=204700919;gourl=http%3A%2F%2Fwww.bilibili.com;DedeUserID__ckMd5=427a3d38a2f2f73b;SESSDATA=aedc3fd4%2C1688885033%2C42a5c%2A11;"
     )
     println(CookieUpdate().getCookieStore().toCookies())
-//    val cookieJson = SettingCenterImpl().readSettingOnly(CookieJson::class.java)
+//    val cookieJson = SettingCenterImpl().loadSetting(CookieJson::class.java)
 //    cookieJson?.update()
+
     runCatching { TestRun().run() }.onFailure { it.printStackTrace() }
 
     withContext(Dispatchers.IO) {
