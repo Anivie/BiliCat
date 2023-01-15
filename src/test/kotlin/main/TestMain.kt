@@ -1,13 +1,9 @@
 package main
 
 import build.buildAPI
-import ink.bluecloud.model.data.cookie.CookieJson
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.service.account.cookie.CookieUpdate
-import ink.bluecloud.service.seeting.SettingCenterImpl
-import ink.bluecloud.service.user.AccountInfo
 import ink.bluecloud.service.user.relationship.UserAttention
-import ink.bluecloud.service.video.hot.VideoWeeklyList
 import ink.bluecloud.service.video.portal.PortalVideoList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope

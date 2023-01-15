@@ -2,7 +2,8 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.ui.mainview.homeview.HomeView
-import ink.bluecloud.ui.mainview.node.ProFileCard
+import ink.bluecloud.ui.mainview.node.ExperienceBar
+import ink.bluecloud.ui.mainview.node.SuspensionProFileCard
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.HarmonySans
 import ink.bluecloud.utils.koin
@@ -54,7 +55,7 @@ class MainView : KoinComponent,MainViewNodes() {
                         fitHeight = 50.0
                     }
 
-                    vbox {
+                    vbox(3) {
                         userName = label("BiliCat") {
                             style {
                                 textFill = c("gray")
@@ -63,16 +64,10 @@ class MainView : KoinComponent,MainViewNodes() {
                             }
                         }
 
-                        vbox {
-                            levelLabel = label {
-                                style {
-                                    fontFamily = HarmonySans.Medium
-                                }
-                            }
-                            coinLabel = label {
-                                style {
-                                    fontFamily = HarmonySans.Medium
-                                }
+                        vbox(1) showBox@{
+                            label("Lv: 6")
+                            levelBar = ExperienceBar(6).apply {
+                                this@showBox.children += this
                             }
                         }
                     }
@@ -84,9 +79,9 @@ class MainView : KoinComponent,MainViewNodes() {
                         open.value = ((it.x in 0.0.. 190.0) && (it.y in 0.0..100.0)) || ((it.x in 0.0..190.0) && (it.y >= 0))
                     }
 
-                    var proFileCard: ProFileCard? = null
+                    var suspensionProFileCard: SuspensionProFileCard? = null
                     primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN) {
-                        proFileCard = get {
+                        suspensionProFileCard = get {
                             parametersOf(this@profileCard, open)
                         }
                     }
@@ -95,7 +90,7 @@ class MainView : KoinComponent,MainViewNodes() {
                         if (!newValue) return@addListener
                         val rootChildren = (scene.root as Pane).children
 
-                        if (!rootChildren.contains(proFileCard)) rootChildren += proFileCard
+                        if (!rootChildren.contains(suspensionProFileCard)) rootChildren += suspensionProFileCard
                     }
 
                     style {

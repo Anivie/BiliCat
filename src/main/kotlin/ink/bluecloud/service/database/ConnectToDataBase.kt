@@ -2,11 +2,7 @@
 
 package ink.bluecloud.service.database
 
-import ink.bluecloud.service.ClientService
-import ink.bluecloud.utils.onIO
-import org.koin.core.annotation.Factory
-import org.ktorm.database.Database
-
+/*
 @Factory
 class ConnectToDataBase: ClientService() {
 
@@ -41,4 +37,4 @@ class ConnectToDataBase: ClientService() {
                         head varbinary(500) not null
                     )
                 """.trimIndent()
-}
+}*/

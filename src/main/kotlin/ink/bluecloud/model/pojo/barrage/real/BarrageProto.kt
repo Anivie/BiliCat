@@ -75,6 +75,7 @@ data class BarrageSource(
 )
 
 
+@Suppress("NOTHING_TO_INLINE")
 inline fun BarrageSource.toBarrage(cid:Long): Barrage = Barrage(
     cid,
     dmid,

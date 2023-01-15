@@ -15,7 +15,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Single
-class PushServiceimpl: PushService() {
+class PushServiceImpl: PushService() {
     private val noticeChannel = Channel<CloudNotice>().apply channel@{
         ioScope.launch {
             while (isActive) {
@@ -24,7 +24,7 @@ class PushServiceimpl: PushService() {
                 notice.showNotice()
 
                 suspendCoroutine {
-                    notice.popup.setOnHiding { e ->
+                    notice.popup.setOnHiding { _ ->
                         it.resume(Unit)
                     }
                 }

@@ -1,7 +1,6 @@
 package ink.bluecloud.model.data.account
 
-import org.ktorm.ksp.api.Table
-
+/*
 @Table("user_info")
 data class UserInfo(
     val name:String,
@@ -11,4 +10,4 @@ data class UserInfo(
     val followers: Int,
     val signature: Int,
     val head: ByteArray
-)
+)*/

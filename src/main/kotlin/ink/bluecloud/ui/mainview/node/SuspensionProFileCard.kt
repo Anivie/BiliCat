@@ -19,7 +19,7 @@ import org.koin.core.component.KoinComponent
 import tornadofx.*
 
 @Single
-class ProFileCard(
+class SuspensionProFileCard(
     open: SimpleBooleanProperty,
     box: Pane
 ): StackPane(), KoinComponent {
@@ -56,7 +56,7 @@ class ProFileCard(
                     ui {
                         outAnimation.play()
                         delay(150)
-                        rootChildren -= this@ProFileCard
+                        rootChildren -= this@SuspensionProFileCard
                     }
                 }
             }

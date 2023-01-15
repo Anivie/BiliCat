@@ -2,7 +2,7 @@ package ink.bluecloud.ui.loginview
 
 import ink.bluecloud.cloudtools.cloudnotice.Property.NoticeType
 import ink.bluecloud.service.account.login.LoginService
-import ink.bluecloud.service.push.PushServiceimpl
+import ink.bluecloud.service.push.PushServiceImpl
 import ink.bluecloud.service.push.makeNotice
 import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.mainview.MainView
@@ -26,7 +26,7 @@ class LoginViewController: CloudController<LoginView>() {
 
             loginService.whenSuccess()
             onUI {
-                get<PushServiceimpl>().makeNotice(NoticeType.Right,"登录成功！")
+                get<PushServiceImpl>().makeNotice(NoticeType.Right,"登录成功！")
                 (primaryStage.scene.root as StackPane).children[0] = tornadofx.find<MainView>().root
             }
         }

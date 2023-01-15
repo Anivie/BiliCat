@@ -39,8 +39,8 @@ class MainViewController : CloudController<MainView>() {
                 /*if (accountCard.vip) userName.style(true) {
                     textFill = Color.RED
                 }*/
-                levelLabel.text = "level:${accountCard.level}"
-                coinLabel.text = "coin:${accountCard.coin}"
+//                levelLabel.text = "level:${accountCard.level}"
+//                coinLabel.text = "coin:${accountCard.coin}"
             }
 
             println(accountCard)
