@@ -2,15 +2,25 @@ package ink.bluecloud.ui.mainview
 
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.ui.mainview.homeview.HomeView
+import ink.bluecloud.ui.mainview.node.ProFileCard
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.HarmonySans
 import ink.bluecloud.utils.koin
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Pos
+import javafx.scene.Cursor
+import javafx.scene.effect.BlurType
+import javafx.scene.effect.DropShadow
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
+import javafx.scene.shape.Circle
+import javafx.stage.WindowEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
 import tornadofx.*
 
 class MainView : KoinComponent,MainViewNodes() {
@@ -35,40 +45,67 @@ class MainView : KoinComponent,MainViewNodes() {
             }
 
             left = borderpane leftBox@{
-                top = vbox(20,Pos.CENTER) {
-                    hbox(10,Pos.CENTER) {
-                        headView = imageview("ui/homeview/logo.png") {
-                            fitWidth = 50.0
-                            fitHeight = 50.0
-                        }
 
+                top = hbox(10,Pos.CENTER) profileCard@{
+                    headView = imageview("ui/homeview/logo.png") view@{
+                        clip = Circle(25.0, 25.0,25.0)
+
+                        fitWidth = 50.0
+                        fitHeight = 50.0
+                    }
+
+                    vbox {
                         userName = label("BiliCat") {
                             style {
+                                textFill = c("gray")
                                 fontSize = 25.px
                                 fontFamily = HarmonySans.BOLD
                             }
                         }
-                    }
 
-/*
-                    button("Debug!") {
-                        action {
-                            io {
-                                val accountCard = get<AccountInfo>().getAccountInfo()
-                                accountCard.head.await().run {
-                                    onUI {
-                                        headView.image = Image(this@run)
-                                    }
+                        vbox {
+                            levelLabel = label {
+                                style {
+                                    fontFamily = HarmonySans.Medium
+                                }
+                            }
+                            coinLabel = label {
+                                style {
+                                    fontFamily = HarmonySans.Medium
                                 }
                             }
                         }
+                    }
 
-                        style {
-                            padding = box(10.px,50.px)
+                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.1), 20.0,0.0,7.0,10.0)
+
+                    val open = SimpleBooleanProperty()
+                    addEventHandler(MouseEvent.MOUSE_MOVED) {
+                        open.value = ((it.x in 0.0.. 190.0) && (it.y in 0.0..100.0)) || ((it.x in 0.0..190.0) && (it.y >= 0))
+                    }
+
+                    var proFileCard: ProFileCard? = null
+                    primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN) {
+                        proFileCard = get {
+                            parametersOf(this@profileCard, open)
                         }
                     }
-*/
-                    paddingRight = 20
+
+                    open.addListener { _, _, newValue ->
+                        if (!newValue) return@addListener
+                        val rootChildren = (scene.root as Pane).children
+
+                        if (!rootChildren.contains(proFileCard)) rootChildren += proFileCard
+                    }
+
+                    style {
+                        backgroundColor += Color.WHITE
+                        backgroundRadius += box(20.px)
+                    }
+
+                    paddingAll = 20
+                    cursor = Cursor.HAND
+                    BorderPane.setMargin(this, insets(0, 20, 0, 0))
                 }
 
                 center = CloudSlideBar(mapOf(
@@ -91,6 +128,7 @@ class MainView : KoinComponent,MainViewNodes() {
 
                 padding = insets(20.0, 0.0, 20.0, 20.0)
             }
+
             /*
                     right {
                         rightBox = borderpane {

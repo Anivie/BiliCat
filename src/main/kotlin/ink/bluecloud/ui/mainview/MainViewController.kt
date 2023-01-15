@@ -17,7 +17,7 @@ import org.koin.core.component.get
 
 @Single
 class MainViewController : CloudController<MainView>() {
-    lateinit var accountCard: AccountCard
+    private lateinit var accountCard: AccountCard
 
 //    @Suppress("BlockingMethodInNonBlockingContext")
     override fun initUi(view: MainView): Unit = view.run {
@@ -36,7 +36,14 @@ class MainViewController : CloudController<MainView>() {
 
             onUI {
                 userName.text = accountCard.name
+                /*if (accountCard.vip) userName.style(true) {
+                    textFill = Color.RED
+                }*/
+                levelLabel.text = "level:${accountCard.level}"
+                coinLabel.text = "coin:${accountCard.coin}"
             }
+
+            println(accountCard)
         }
     }
 }
