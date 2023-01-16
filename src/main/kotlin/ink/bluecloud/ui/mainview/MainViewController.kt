@@ -8,12 +8,13 @@ import ink.bluecloud.service.seeting.checkSettingIsNull
 import ink.bluecloud.service.user.AccountInfo
 import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.loginview.LoginView
-import ink.bluecloud.utils.io
+import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onIO
 import ink.bluecloud.utils.onUI
 import javafx.scene.image.Image
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
+import tornadofx.*
 
 @Single
 class MainViewController : CloudController<MainView>() {
@@ -23,7 +24,7 @@ class MainViewController : CloudController<MainView>() {
     override fun initUi(view: MainView): Unit = view.run {
         if (get<SettingCenter>().checkSettingIsNull<CookieJson>()) openInternalWindow<LoginView>(closeButton = false)
 
-        io("UserCardInitializer") {
+        newIO("UserCardInitializer") {
             accountCard = get<AccountInfo>().getAccountInfo()
 
             get<CacheCenter>().loadCache("head") {
@@ -36,11 +37,17 @@ class MainViewController : CloudController<MainView>() {
 
             onUI {
                 userName.text = accountCard.name
-                /*if (accountCard.vip) userName.style(true) {
-                    textFill = Color.RED
-                }*/
-//                levelLabel.text = "level:${accountCard.level}"
-//                coinLabel.text = "coin:${accountCard.coin}"
+                userName.style(true) {
+                    textFill = if (accountCard.vip) {
+                        c(251,114,153)
+                    } else {
+                        c(0,174,236)
+                    }
+                }
+
+                levelBar.level.value = accountCard.level
+                levelLabel.text = "Lv:${accountCard.level}"
+                coinLabel.text = "\uE7AC:${accountCard.coin}"
             }
 
             println(accountCard)

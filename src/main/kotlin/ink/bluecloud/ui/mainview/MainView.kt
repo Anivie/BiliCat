@@ -65,14 +65,21 @@ class MainView : KoinComponent,MainViewNodes() {
                         }
 
                         vbox(1) showBox@{
-                            label("Lv: 6")
-                            levelBar = ExperienceBar(6).apply {
+                            levelLabel = label()
+                            levelBar = get<ExperienceBar>().apply {
                                 this@showBox.children += this
                             }
                         }
+
+                        coinLabel = label {
+                            style {
+                                fontFamily = "bilibilifx-home"
+                            }
+                            stylesheets += "ui/homeview/font/icon_home.css"
+                        }
                     }
 
-                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.1), 20.0,0.0,7.0,10.0)
+                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.1), 20.0,0.0,5.0,8.0)
 
                     val open = SimpleBooleanProperty()
                     addEventHandler(MouseEvent.MOUSE_MOVED) {
@@ -98,9 +105,10 @@ class MainView : KoinComponent,MainViewNodes() {
                         backgroundRadius += box(20.px)
                     }
 
-                    paddingAll = 20
+                    padding = insets(15, 15, 10, 15)
                     cursor = Cursor.HAND
-                    BorderPane.setMargin(this, insets(0, 20, 0, 0))
+                    BorderPane.setMargin(this, insets(0, 25, 0, 0))
+                    BorderPane.setAlignment(this,Pos.CENTER)
                 }
 
                 center = CloudSlideBar(mapOf(

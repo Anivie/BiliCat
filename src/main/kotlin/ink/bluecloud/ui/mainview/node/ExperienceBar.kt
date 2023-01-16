@@ -1,13 +1,15 @@
 package ink.bluecloud.ui.mainview.node
 
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import tornadofx.*
 
-class ExperienceBar(
-    level: Int
-): HBox(), KoinComponent {
+@Factory
+class ExperienceBar: HBox(), KoinComponent {
+    val level = SimpleIntegerProperty()
     init {
         val color = c(0,174,236)
         val actionColor = c(251,114,153)
@@ -43,9 +45,17 @@ class ExperienceBar(
             hgrow = Priority.ALWAYS
         }
 
-        repeat(level) {
-            children[it].style(true) {
-                backgroundColor += actionColor
+        level.addListener { _, _, newValue ->
+            repeat(newValue.toInt()) {
+                children[it].style(true) {
+                    backgroundColor += actionColor
+                }
+            }
+
+            repeat(6 - newValue.toInt()) {
+                children[newValue.toInt() + it].style(true) {
+                    backgroundColor += color
+                }
             }
         }
 

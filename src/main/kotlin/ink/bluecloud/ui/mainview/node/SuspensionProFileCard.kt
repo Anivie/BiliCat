@@ -1,7 +1,7 @@
 package ink.bluecloud.ui.mainview.node
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
-import ink.bluecloud.utils.ui
+import ink.bluecloud.utils.newUI
 import ink.bluecloud.utils.uiutil.cloudTimeline
 import ink.bluecloud.utils.uiutil.nodeToScene
 import javafx.beans.property.SimpleBooleanProperty
@@ -35,6 +35,9 @@ class SuspensionProFileCard(
         val inAnimation = cloudTimeline {
             keyframe(Duration.millis(150.0)) {
                 keyvalue((box.effect as DropShadow).colorProperty(),c(0,0,0,0.25), CLOUD_INTERPOLATOR)
+                keyvalue(box.translateXProperty(),-5, CLOUD_INTERPOLATOR)
+                keyvalue(box.translateYProperty(),-2, CLOUD_INTERPOLATOR)
+
                 keyvalue(opacityProperty(),1.0, CLOUD_INTERPOLATOR)
                 keyvalue(scale.yProperty(),1.0, CLOUD_INTERPOLATOR)
             }
@@ -43,6 +46,9 @@ class SuspensionProFileCard(
         val outAnimation = cloudTimeline {
             keyframe(Duration.millis(150.0)) {
                 keyvalue((box.effect as DropShadow).colorProperty(),c(0,0,0,0.1), CLOUD_INTERPOLATOR)
+                keyvalue(box.translateXProperty(),0, CLOUD_INTERPOLATOR)
+                keyvalue(box.translateYProperty(),0, CLOUD_INTERPOLATOR)
+
                 keyvalue(opacityProperty(),0.0, CLOUD_INTERPOLATOR)
                 keyvalue(scale.yProperty(),0.5, CLOUD_INTERPOLATOR)
             }
@@ -53,7 +59,7 @@ class SuspensionProFileCard(
                 inAnimation.play()
             }else {
                 if (rootChildren.contains(this)) {
-                    ui {
+                    newUI {
                         outAnimation.play()
                         delay(150)
                         rootChildren -= this@SuspensionProFileCard
@@ -64,7 +70,7 @@ class SuspensionProFileCard(
 
         val distance = box.nodeToScene()
         setAlignment(this, Pos.TOP_LEFT)
-        setMargin(this, insets(distance.y + box.height, 0, 0, distance.x - 10))
+        setMargin(this, insets(distance.y + box.height, 0, 0, distance.x - 25))
 
         style {
             backgroundColor += Color.WHITE
