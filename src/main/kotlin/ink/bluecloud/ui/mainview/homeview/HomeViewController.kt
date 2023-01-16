@@ -9,10 +9,10 @@ import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.ui.mainview.homeview.node.VideoInformationCard
-import ink.bluecloud.utils.io
+import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onUI
 import ink.bluecloud.utils.sceneRoot
-import ink.bluecloud.utils.ui
+import ink.bluecloud.utils.newUI
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
@@ -24,7 +24,7 @@ import tornadofx.*
 class HomeViewController: CloudController<HomeView>() {
     private val videoStream by inject<VideoStream>()
     override fun initUi(view: HomeView) = view.run {
-        io {
+        newIO {
             val videoInformationCard = generateVideoInformationCard<HotVideoList>()
 
             onUI {
@@ -32,7 +32,7 @@ class HomeViewController: CloudController<HomeView>() {
             }
         }
 
-        io {
+        newIO {
             val videoInformationCard = generateVideoInformationCard<VideoWeeklyList>()
 
             onUI {
@@ -41,7 +41,7 @@ class HomeViewController: CloudController<HomeView>() {
         }
 
         //Bug if using io block,can't fix.
-        ui {
+        newUI {
             val videoInformationCard = generateVideoInformationCard<FullRank>()
 
             secondBox.children += videoInformationCard
@@ -60,7 +60,7 @@ class HomeViewController: CloudController<HomeView>() {
         }
 
         videoInformationCard.setOnMouseClicked {
-            io {
+            newIO {
                 val (video, audio) = videoStream.getVideoStream(
                     videoInformationCard.currentCard.id,
                     videoInformationCard.currentCard.cid

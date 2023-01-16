@@ -6,7 +6,7 @@ import ink.bluecloud.service.push.PushServiceImpl
 import ink.bluecloud.service.push.makeNotice
 import ink.bluecloud.ui.CloudController
 import ink.bluecloud.ui.mainview.MainView
-import ink.bluecloud.utils.io
+import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onUI
 import javafx.scene.image.Image
 import javafx.scene.layout.StackPane
@@ -19,7 +19,7 @@ class LoginViewController: CloudController<LoginView>() {
     private val loginService by inject<LoginService>()
 
     override fun initUi(view: LoginView) = view.run {
-        io {
+        newIO {
             onUI {
                 qrCodeBox.image = Image(loginService.getCode())
             }

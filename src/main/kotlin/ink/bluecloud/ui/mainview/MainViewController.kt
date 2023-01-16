@@ -21,6 +21,7 @@ class MainViewController : CloudController<MainView>() {
     private lateinit var accountCard: AccountCard
 
 //    @Suppress("BlockingMethodInNonBlockingContext")
+    @Suppress("BlockingMethodInNonBlockingContext")
     override fun initUi(view: MainView): Unit = view.run {
         if (get<SettingCenter>().checkSettingIsNull<CookieJson>()) openInternalWindow<LoginView>(closeButton = false)
 

@@ -5,7 +5,7 @@ import ink.bluecloud.css.themes
 import ink.bluecloud.network.http.HttpClient
 import ink.bluecloud.service.init.LoadCookie
 import ink.bluecloud.ui.mainview.MainView
-import ink.bluecloud.utils.io
+import ink.bluecloud.utils.newIO
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
@@ -33,7 +33,7 @@ class MainApp : App(
             }
         }
 
-        io {
+        newIO {
             get<LoadCookie>().load()
 
             File("config").run {

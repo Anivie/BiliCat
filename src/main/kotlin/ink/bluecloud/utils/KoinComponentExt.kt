@@ -25,7 +25,7 @@ internal inline val KoinComponent.uiScope
 internal inline val KoinComponent.uiContext
     get() = get<CoroutineScope>(named("uiScope")).coroutineContext
 
-internal inline fun <T> KoinComponent.io(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+internal inline fun <T> KoinComponent.newIO(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
     name?.run {
         ioScope.launch(CoroutineName(this)) {
             block()
@@ -35,7 +35,7 @@ internal inline fun <T> KoinComponent.io(name: String? = null, crossinline block
     }
 }
 
-internal inline fun <T> KoinComponent.ui(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+internal inline fun <T> KoinComponent.newUI(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
     name?.run {
         uiScope.launch(CoroutineName(this)) {
             block()
