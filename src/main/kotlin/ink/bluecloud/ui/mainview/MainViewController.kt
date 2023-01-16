@@ -20,7 +20,6 @@ import tornadofx.*
 class MainViewController : CloudController<MainView>() {
     private lateinit var accountCard: AccountCard
 
-//    @Suppress("BlockingMethodInNonBlockingContext")
     @Suppress("BlockingMethodInNonBlockingContext")
     override fun initUi(view: MainView): Unit = view.run {
         if (get<SettingCenter>().checkSettingIsNull<CookieJson>()) openInternalWindow<LoginView>(closeButton = false)
@@ -49,6 +48,8 @@ class MainViewController : CloudController<MainView>() {
                 levelBar.level.value = accountCard.level
                 levelLabel.text = "Lv:${accountCard.level}"
                 coinLabel.text = "\uE7AC:${accountCard.coin}"
+
+                suspensionProFileCard.accountInfo.value = accountCard
             }
 
             println(accountCard)
