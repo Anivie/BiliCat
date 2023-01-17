@@ -78,7 +78,7 @@ class MainView : KoinComponent,MainViewNodes() {
                         }
                     }
 
-                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.1), 20.0,0.0,5.0,8.0)
+                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.05), 20.0,0.0,5.0,8.0)
 
                     val open = SimpleBooleanProperty()
                     addEventHandler(MouseEvent.MOUSE_MOVED) {
