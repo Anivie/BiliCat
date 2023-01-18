@@ -3,7 +3,6 @@ package ink.bluecloud.ui.mainview
 import ink.bluecloud.cloudtools.stageinitializer.TitleBar
 import ink.bluecloud.ui.mainview.homeview.HomeView
 import ink.bluecloud.ui.mainview.node.ExperienceBar
-import ink.bluecloud.ui.mainview.node.SuspensionProFileCard
 import ink.bluecloud.ui.mainview.node.sliderbar.CloudSlideBar
 import ink.bluecloud.utils.HarmonySans
 import ink.bluecloud.utils.koin
@@ -79,14 +78,13 @@ class MainView : KoinComponent,MainViewNodes() {
                         }
                     }
 
-                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.1), 20.0,0.0,5.0,8.0)
+                    effect = DropShadow(BlurType.GAUSSIAN, c(0,0,0,0.05), 20.0,0.0,5.0,8.0)
 
                     val open = SimpleBooleanProperty()
                     addEventHandler(MouseEvent.MOUSE_MOVED) {
                         open.value = ((it.x in 0.0.. 190.0) && (it.y in 0.0..100.0)) || ((it.x in 0.0..190.0) && (it.y >= 0))
                     }
 
-                    var suspensionProFileCard: SuspensionProFileCard? = null
                     primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN) {
                         suspensionProFileCard = get {
                             parametersOf(this@profileCard, open)
