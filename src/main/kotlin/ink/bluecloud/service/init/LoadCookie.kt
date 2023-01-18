@@ -2,7 +2,7 @@ package ink.bluecloud.service.init
 
 import ink.bluecloud.model.data.cookie.CookieJson
 import ink.bluecloud.service.ClientService
-import ink.bluecloud.service.account.cookie.CookieUpdate
+import ink.bluecloud.service.cookie.CookieUpdate
 import ink.bluecloud.service.seeting.loadSetting
 import org.koin.core.annotation.Factory
 

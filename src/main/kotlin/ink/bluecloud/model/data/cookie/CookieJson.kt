@@ -1,7 +1,7 @@
 package ink.bluecloud.model.data.cookie
 
 import com.alibaba.fastjson2.annotation.JSONField
-import ink.bluecloud.service.account.cookie.CookieUpdate
+import ink.bluecloud.service.cookie.CookieUpdate
 import kotlinx.serialization.Serializable
 
 /**
@@ -10,20 +10,14 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class CookieJson(
-    @JSONField(name = "bili_jct")
-    val csrf:String,
-    @JSONField(name = "DedeUserID")
-    val id:String,
-
-    @JSONField(name = "gourl")
-    val url:String="http%3A%2F%2Fwww.bilibili.com",
-//    @JSONField(name = "Expires")
-//    val expires:String,
-    @JSONField(name ="DedeUserID__ckMd5")
-    val hashCode:String,
-    @JSONField(name = "SESSDATA")
-    val session:String
-){
+    @JSONField(name = "bili_jct")       val csrf: String,
+    @JSONField(name = "DedeUserID")     val id: String,
+    @JSONField(name = "gourl")          val url: String = "http%3A%2F%2Fwww.bilibili.com",
+    @JSONField(name = "DedeUserID__ckMd5") val hashCode: String,
+    @JSONField(name = "SESSDATA")       val session: String,
+    @JSONField(name = "refresh_token")  var refreshToken:String? = null,
+    @JSONField(name = "timestamp")      var timestamp:Long? = 0,
+) {
     override fun toString(): String {
         return """
              bili_jct=${csrf};
@@ -31,10 +25,16 @@ data class CookieJson(
              gourl=${url};
              DedeUserID__ckMd5=${hashCode};
              SESSDATA=${session};
+             refresh_token=${refreshToken};
+             timestamp=${timestamp};
         """.trimIndent()
     }
 
-    fun update(){
+    fun toWebCookie(): String {
+        return "bili_jct=${csrf};DedeUserID=${id};gourl=${url};DedeUserID__ckMd5=${hashCode};SESSDATA=${session};"
+    }
+
+    fun update() {
         CookieUpdate().loadCookie(this)
     }
 }

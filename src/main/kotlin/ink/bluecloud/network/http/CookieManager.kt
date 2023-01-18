@@ -15,7 +15,7 @@ class CookieManager : CookieJar {
     //    private val cookieStore: HashMap<String, List<Cookie>> = HashMap()
     private val cookieStore: HashMap<String, HashMap<String, Cookie>> = HashMap()
 
-    private val apiHost: HttpUrl = "https://api.bilibili.com".toHttpUrl()
+    val apiHost: HttpUrl = "https://api.bilibili.com".toHttpUrl()
 
     //是否共享B站下的 Cookie 使其子域也能使用主域下的 Cookie
     private val shareCookie: Boolean = true
@@ -26,8 +26,12 @@ class CookieManager : CookieJar {
      * 不推荐直接调用，这是为okhttp提供的方法
      */
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
+        var host = url.host
+        //共享所有b站域名下的 Cookie；以变量 apiHost 定义的域名为主进行管理
+        if (shareCookie and host.contains("bilibili.com")) host = apiHost.host
+
         val cookies: ArrayList<Cookie> = ArrayList()
-        cookieStore[url.host]?.values?.forEach {
+        cookieStore[host]?.values?.forEach {
             cookies.add(it)
         }
         return cookies
@@ -45,8 +49,10 @@ class CookieManager : CookieJar {
         //封装进Map
         val map: HashMap<String, Cookie> = cookieStore.get(host) ?: HashMap()
         cookies.forEach {
+            //Cookie 名称 = Cookie 对象。名称只起到程序内标识作用
             map["${it.name}$"] = it
         }
+
         //添加到集合中
         cookieStore[host] = map
     }
@@ -105,9 +111,11 @@ class CookieManager : CookieJar {
                 csrf = json.getString("bili_jct"),
                 id = json.getString("DedeUserID"),
                 hashCode = json.getString("DedeUserID__ckMd5"),
-                session = json.getString("SESSDATA")
+                session = json.getString("SESSDATA"),
+                refreshToken = json.getString("refresh_token"),
+                timestamp = json.getLong("timestamp") ?: 0,
             )
-        }catch (e:NullPointerException){
+        } catch (e: NullPointerException) {
             throw NullPointerException("cookie is null")
         }
 

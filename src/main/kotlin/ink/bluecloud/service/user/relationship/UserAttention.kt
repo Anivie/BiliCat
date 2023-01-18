@@ -6,6 +6,9 @@ import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.toObjJson
 import org.koin.core.annotation.Factory
 
+/**
+ * 查询用户关注明细
+ */
 @Factory
 class UserAttention : APIResources() {
 
@@ -26,6 +29,9 @@ class UserAttention : APIResources() {
     }
 
 
+    /**
+     * 登录可看自己全部，其他用户仅可查看前5页，可以获取已设置可见性隐私的关注列表
+     */
     suspend fun getAttentionV2(
         mid: Long,
         timeSort: Boolean = true,

@@ -1,0 +1,2 @@
+GET  https://passport.bilibili.com/x/passport-login/web/cookie/info
+cookie: bili_jct=42841c7805f9ab526b7b99eabb1722bd;DedeUserID=204700919;gourl=http%3A%2F%2Fwww.bilibili.com;DedeUserID__ckMd5=427a3d38a2f2f73b;SESSDATA=5efd17ff,1689590560,ee4c1*11;

@@ -23,7 +23,9 @@ fun buildAPI(){
         HttpApi(
             //  Login
             getLoginQRCode = "https://passport.bilibili.com/qrcode/getLoginUrl".toHttpUrl(),
+            getLoginQRCodeV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate".toHttpUrl(),
             getLoginStatus = "https://passport.bilibili.com/qrcode/getLoginInfo".toHttpUrl(),
+            getLoginStatusV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll".toHttpUrl(),
             //  Video
             getPortalVideos = "https://api.bilibili.com/x/web-interface/index/top/feed/rcmd".toHttpUrl(),
             getVideoINFO = "http://api.bilibili.com/x/web-interface/view".toHttpUrl(),
@@ -53,6 +55,8 @@ fun buildAPI(){
             getCommentReplyTree = "http://api.bilibili.com/x/v2/reply/dialog/cursor".toHttpUrl(),//20230108
             getCommentAreaHot = "http://api.bilibili.com/x/v2/reply/hot".toHttpUrl(),//20230108
             getCommentAreaCount = "http://api.bilibili.com/x/v2/reply/count".toHttpUrl(),//20230108
+            //Cookie
+            getIsUpdateCookie="https://passport.bilibili.com/x/passport-login/web/cookie/info".toHttpUrl(),//20230116
         )
     ).run {
         logger().info("build api")

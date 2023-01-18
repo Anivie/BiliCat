@@ -20,6 +20,7 @@ class LoginViewController: CloudController<LoginView>() {
 
     override fun initUi(view: LoginView) = view.run {
         newIO {
+
             onUI {
                 qrCodeBox.image = Image(loginService.getCode())
             }

@@ -9,6 +9,14 @@ abstract class APIResources : ClientService() {
         return httpClient.getCookieStore().toCookies().csrf
     }
 
+    protected fun getSession(): String {
+        return httpClient.getCookieStore().toCookies().session
+    }
+
+    protected fun getRefreshToken(): String? {
+        return httpClient.getCookieStore().toCookies().refreshToken
+    }
+
     /**
      * 构建参数
      */
@@ -18,7 +26,8 @@ abstract class APIResources : ClientService() {
      * 构建URL请求
      */
     protected inline fun HttpUrl.param(params: String = "", handle: (HashMap<String, String>) -> Unit): HttpUrl {
-        val builder = StringBuilder().append("?").append("${params}&")
+        val builder = StringBuilder().append("?")
+        if (params.isNotEmpty()) builder.append("${params}&")
         HashMap<String, String>().apply(handle)
             .forEach { builder.append(it.key).append("=").append(it.value).append("&") }
         return newBuilder(builder.deleteCharAt(builder.length - 1).toString())?.build() ?: this

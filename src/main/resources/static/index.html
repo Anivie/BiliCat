@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://s1.hdslb.com/bfs/static/jinkela/long/wasm/wasm_ras_umd.js"></script>
+</head>
+<body>
+<p id="aw">页面打开成功</p>
+
+</body>
+<script>
+    document.getElementById("aw").innerHTML = "初始化完成"
+
+    // 加密数据
+    async function a(timestamp) {
+        document.getElementById("aw").innerHTML = "调用加密算法"
+        await wasmInit.default();
+        document.getElementById("aw").innerHTML = "加密器初始成功"
+        const correspondPath = wasmInit.encrypt({
+            // data: convertToHex(`refresh_${timestamp}`),
+            data: convertToHex(`refresh_` + timestamp),
+            digest: 'SHA256',
+        });
+        document.getElementById("aw").innerHTML = "加密成功"
+        const url = 'https://www.bilibili.com/correspond/1/' + correspondPath;
+
+        function convertToHex(str) {
+            return str.split('').reduce((i, t) => i + t.charCodeAt(0).toString(16), '');
+        }
+
+        document.getElementById("aw").innerHTML = "加密结果： " + url
+        console.log("url => " + url)
+        sendURL(url);
+        return url
+    }
+
+    //上传测井数据表到服务器数据库
+    function sendURL(url) {
+        document.getElementById("aw").innerHTML = "结果正在发送到服务器中"
+        const httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+        httpRequest.open("POST", "/test", true);  //调用AddDataToServer
+        httpRequest.setRequestHeader("Content-Type", "application/json");   //设置请求头信息
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                document.getElementById("aw").innerHTML = "服务器接收到加密结果"
+            } else {
+                document.getElementById("aw").innerHTML = "error: 服务器没有接收到加密结果"
+            }
+        }
+        let data = {'time': Date.now(), 'url': url}
+        httpRequest.send(JSON.stringify(data)); //设置为发送给服务器数据
+    }
+
+    //获取秘钥
+    function run() {
+        const httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+        httpRequest.open("GET", "/test", true);  //调用AddDataToServer
+        httpRequest.setRequestHeader("Content-Type", "application/json");   //设置请求头信息
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                document.getElementById("aw").innerHTML = "接收到服务器秘钥"
+                a(httpRequest.responseText)
+            } else {
+                document.getElementById("aw").innerHTML = "error: 未能接收到服务器的秘钥"
+            }
+        }
+        httpRequest.send()
+        // let data = {'time': Date.now(), 'url': url}
+        // httpRequest.send(JSON.stringify(data)); //设置为发送给服务器数据
+    }
+
+    run()
+</script>
+</html>
