@@ -9,11 +9,10 @@ import javafx.scene.control.skin.TabPaneSkin
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.StackPane
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import tornadofx.*
 
-class HomeView: KoinComponent,HomeViewNodes() {
+class HomeView: HomeViewNodes() {
 
     override fun onDock() {
         get<HomeViewController>().initUi(this)
