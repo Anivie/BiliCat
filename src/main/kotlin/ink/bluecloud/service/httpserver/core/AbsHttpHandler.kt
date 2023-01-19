@@ -17,7 +17,7 @@ abstract class AbsHttpHandler(route: String) : HttpHandler, ClientService() {
 
     @Throws(IOException::class)
     override fun handle(exchange: HttpExchange) {
-        logger.debug("Method: ${exchange.requestMethod}  Path: ${exchange.requestURI.path}")
+        logger.debug("Http Server${exchange.localAddress} <= ${exchange.requestMethod} ${exchange.requestURI.schemeSpecificPart}")
         this.exchange = exchange
         //根据根据请求方法来分发请求
         doMethod(exchange.requestMethod)

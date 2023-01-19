@@ -7,9 +7,9 @@ import java.io.InputStream
 /**
  * 全局静态资源路由
  */
-class StaticResourcesRoute(private val Routes: HashSet<AbsHttpHandler>) : AbsHttpHandler(BiliCatHttpServer.RootPath) {
+class StaticResourcesRoute(private val routes: HashSet<AbsHttpHandler>, rootPath:String) : AbsHttpHandler(rootPath) {
     init {
-        require(BiliCatHttpServer.RootPath.endsWith("/")) { "The RootPath must end with '/'" }
+        require(rootPath.endsWith("/")) { "The RootPath must end with '/'" }
     }
 
     @Throws(IOException::class)
@@ -20,7 +20,7 @@ class StaticResourcesRoute(private val Routes: HashSet<AbsHttpHandler>) : AbsHtt
         if (path == "/") path = StaticResources.indexPath
         //判断是不是一个已经注册的路由
         val finalPath = path
-        val isRoute = Routes.stream().anyMatch { absHttpHandler: AbsHttpHandler -> absHttpHandler.route == finalPath }
+        val isRoute = routes.stream().anyMatch { absHttpHandler: AbsHttpHandler -> absHttpHandler.route == finalPath }
         if (isRoute) logger.info("Error： 静态资源与注册路由路径一致")
         //是否存在静态资源,存在和获取，不存在则 404
         val stream = StaticResources.getStaticResourceAsStream(path)

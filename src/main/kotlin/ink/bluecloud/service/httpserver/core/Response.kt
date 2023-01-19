@@ -2,6 +2,7 @@ package ink.bluecloud.service.httpserver.core
 
 import com.sun.net.httpserver.Headers
 import com.sun.net.httpserver.HttpExchange
+import ink.bluecloud.utils.logger
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -88,6 +89,7 @@ class Response(private val exchange: HttpExchange?) {
         isClosed = true
         exchange!!.sendResponseHeaders(code, ByteArray.size().toLong())
         responseBody.write(ByteArray.toByteArray())
+        logger().debug("Http Server${exchange.localAddress} => code:$code")
         ByteArray.close()
     }
 

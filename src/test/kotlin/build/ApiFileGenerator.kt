@@ -23,9 +23,10 @@ fun buildAPI(){
         HttpApi(
             //  Login
             getLoginQRCode = "https://passport.bilibili.com/qrcode/getLoginUrl".toHttpUrl(),
-            getLoginQRCodeV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate".toHttpUrl(),
+            getLoginQRCodeV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate".toHttpUrl(),//20230119
             getLoginStatus = "https://passport.bilibili.com/qrcode/getLoginInfo".toHttpUrl(),
-            getLoginStatusV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll".toHttpUrl(),
+            getLoginStatusV2 = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll".toHttpUrl(),//20230119
+            postOutLogin = "https://passport.bilibili.com/login/exit/v2".toHttpUrl(),//20230119
             //  Video
             getPortalVideos = "https://api.bilibili.com/x/web-interface/index/top/feed/rcmd".toHttpUrl(),
             getVideoINFO = "http://api.bilibili.com/x/web-interface/view".toHttpUrl(),

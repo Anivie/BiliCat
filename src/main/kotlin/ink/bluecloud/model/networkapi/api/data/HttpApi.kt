@@ -20,6 +20,7 @@ data class HttpApi(
     val getLoginQRCodeV2: HttpUrl,
     val getLoginStatus: HttpUrl,
     val getLoginStatusV2: HttpUrl,
+    val postOutLogin: HttpUrl,
 //    Video
     val getPortalVideos: HttpUrl,
     val getVideoINFO: HttpUrl,
