@@ -2,6 +2,7 @@ package ink.bluecloud.ui.mainview.node.sliderbar
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.utils.HarmonySans
+import ink.bluecloud.utils.newUI
 import javafx.animation.Animation.Status.*
 import javafx.animation.TranslateTransition
 import javafx.beans.property.SimpleIntegerProperty
@@ -13,15 +14,12 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.javafx.JavaFx
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 import tornadofx.*
 
-class CloudSlideBar(items: Map<String, String>, onChange: (Pair<Int, Int>) -> Unit): StackPane() {
+class CloudSlideBar(items: Map<String, String>, onChange: (Pair<Int, Int>) -> Unit): StackPane(),KoinComponent {
     private val selectIndex = SimpleIntegerProperty()
-//    private val icon = Font.loadFont(Thread.currentThread().contextClassLoader.getResourceAsStream("css/icon_home.ttf"), 12.0)
 
     private var disableSlider = false
 
@@ -68,9 +66,8 @@ class CloudSlideBar(items: Map<String, String>, onChange: (Pair<Int, Int>) -> Un
             }
         }
 
-        val coroutineScope = CoroutineScope(Dispatchers.JavaFx)
         selectIndex.addListener { _, oldValue, newValue ->
-            coroutineScope.launch {
+            newUI {
                 launch {
                     onChange(Pair(oldValue.toInt(),newValue.toInt()))
                 }
@@ -118,7 +115,7 @@ class CloudSlideBar(items: Map<String, String>, onChange: (Pair<Int, Int>) -> Un
     private fun getItem(title: Map.Entry<String, String>, index: Int, myClickHandler: MyClickHandler, myEnterHandler: MyEnterHandler, myLeaveHandler: MyLeaveHandler):HBox {
         return HBox(20.0).apply {
             label(title.key) {
-                style {
+                style(dynamic = true) {
                     textFill = if (index == 0) {
                         c(24,144,255)
                     } else {
@@ -131,7 +128,7 @@ class CloudSlideBar(items: Map<String, String>, onChange: (Pair<Int, Int>) -> Un
             }
 
             label(title.value) {
-                style {
+                style(dynamic = true) {
                     textFill = if (index == 0) {
                         c(95,95,95)
                     } else {

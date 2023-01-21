@@ -74,6 +74,8 @@ class SuspensionProFileCard(
                 keyvalue((box.effect as DropShadow).colorProperty(), c(0, 0, 0, 0.25), CLOUD_INTERPOLATOR)
                 keyvalue(box.translateXProperty(), -5, CLOUD_INTERPOLATOR)
                 keyvalue(box.translateYProperty(), -2, CLOUD_INTERPOLATOR)
+                keyvalue(translateXProperty(), -5, CLOUD_INTERPOLATOR)
+                keyvalue(translateYProperty(), -2, CLOUD_INTERPOLATOR)
 
                 keyvalue(opacityProperty(), 1.0, CLOUD_INTERPOLATOR)
                 keyvalue(scale.yProperty(), 1.0, CLOUD_INTERPOLATOR)
@@ -85,6 +87,8 @@ class SuspensionProFileCard(
                 keyvalue((box.effect as DropShadow).colorProperty(), c(0, 0, 0, 0.1), CLOUD_INTERPOLATOR)
                 keyvalue(box.translateXProperty(), 0, CLOUD_INTERPOLATOR)
                 keyvalue(box.translateYProperty(), 0, CLOUD_INTERPOLATOR)
+                keyvalue(translateXProperty(), 0, CLOUD_INTERPOLATOR)
+                keyvalue(translateYProperty(), 0, CLOUD_INTERPOLATOR)
 
                 keyvalue(opacityProperty(), 0.0, CLOUD_INTERPOLATOR)
                 keyvalue(scale.yProperty(), 0.5, CLOUD_INTERPOLATOR)

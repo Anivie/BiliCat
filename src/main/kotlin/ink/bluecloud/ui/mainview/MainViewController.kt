@@ -14,11 +14,13 @@ import ink.bluecloud.utils.onUI
 import javafx.scene.image.Image
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import tornadofx.*
 
 @Single
 class MainViewController : CloudController<MainView>() {
     private lateinit var accountCard: AccountCard
+    private val cacheCenter: CacheCenter by inject()
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override fun initUi(view: MainView): Unit = view.run {
@@ -27,7 +29,7 @@ class MainViewController : CloudController<MainView>() {
         newIO("UserCardInitializer") {
             accountCard = get<AccountInfo>().getAccountInfo()
 
-            get<CacheCenter>().loadCache("head") {
+            cacheCenter.loadCache("head") {
                 onIO {
                     accountCard.head.await().readAllBytes()
                 }
@@ -51,8 +53,6 @@ class MainViewController : CloudController<MainView>() {
 
                 suspensionProFileCard.accountInfo.value = accountCard
             }
-
-            println(accountCard)
         }
     }
 }
