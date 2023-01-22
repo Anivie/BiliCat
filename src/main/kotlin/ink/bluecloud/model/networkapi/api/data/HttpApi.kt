@@ -52,6 +52,9 @@ data class HttpApi(
     val getCommentAreaCount: HttpUrl,
     //Cookie
     val getIsUpdateCookie: HttpUrl,
+    val postUpdateCookie: HttpUrl,
+    val postConfirmUpdateCookie: HttpUrl,
+    val postSSOCookie: HttpUrl,
 )
 
 object OKHttpURLSerializer : KSerializer<HttpUrl> {

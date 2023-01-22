@@ -58,6 +58,9 @@ fun buildAPI(){
             getCommentAreaCount = "http://api.bilibili.com/x/v2/reply/count".toHttpUrl(),//20230108
             //Cookie
             getIsUpdateCookie="https://passport.bilibili.com/x/passport-login/web/cookie/info".toHttpUrl(),//20230116
+            postUpdateCookie="https://passport.bilibili.com/x/passport-login/web/cookie/refresh".toHttpUrl(),//20230122
+            postConfirmUpdateCookie="https://passport.bilibili.com/x/passport-login/web/confirm/refresh".toHttpUrl(),//20230122
+            postSSOCookie="https://passport.bilibili.com/web/sso/list".toHttpUrl(),//20230122
         )
     ).run {
         logger().info("build api")

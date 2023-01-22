@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
+ * 时间戳转为日期
+ */
+inline fun Long.toDate(): Date = Date(this)
+/**
  * 格式化如期
  */
 inline fun Date.format(pattern: String = "yyyy-MM-dd"): String = SimpleDateFormat(pattern).format(this)

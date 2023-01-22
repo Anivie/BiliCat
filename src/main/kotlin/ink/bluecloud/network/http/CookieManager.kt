@@ -113,7 +113,7 @@ class CookieManager : CookieJar {
                 hashCode = json.getString("DedeUserID__ckMd5"),
                 session = json.getString("SESSDATA"),
                 refreshToken = json.getString("refresh_token"),
-                timestamp = json.getLong("timestamp") ?: 0,
+                timestamp = json.getLong("timestamp"),
             )
         } catch (e: NullPointerException) {
             throw NullPointerException("cookie is null")

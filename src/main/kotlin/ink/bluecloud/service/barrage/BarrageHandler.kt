@@ -13,6 +13,7 @@ import org.koin.core.annotation.Single
 class BarrageHandler(private val cid: Long):ClientService() {
     @OptIn(ExperimentalSerializationApi::class)
    fun handle(bytes: ByteArray): List<Barrage> {
+        logger.info("视频弹幕包长度(byte): ${bytes.size}")
         kotlin.runCatching { ProtoBuf.decodeFromByteArray<Barrages>(bytes).barrages.map { it.toBarrage(cid) } }
             .onFailure {
                 logger.error(

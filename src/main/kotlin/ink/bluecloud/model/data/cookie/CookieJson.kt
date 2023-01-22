@@ -15,8 +15,8 @@ data class CookieJson(
     @JSONField(name = "gourl")          val url: String = "http%3A%2F%2Fwww.bilibili.com",
     @JSONField(name = "DedeUserID__ckMd5") val hashCode: String,
     @JSONField(name = "SESSDATA")       val session: String,
-    @JSONField(name = "refresh_token")  var refreshToken:String? = null,
-    @JSONField(name = "timestamp")      var timestamp:Long? = 0,
+    @JSONField(name = "refresh_token")  var refreshToken:String,
+    @JSONField(name = "timestamp")      var timestamp:Long,
 ) {
     override fun toString(): String {
         return """

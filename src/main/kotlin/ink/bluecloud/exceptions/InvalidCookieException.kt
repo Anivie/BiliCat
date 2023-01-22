@@ -1,4 +1,4 @@
 package ink.bluecloud.exceptions
 
-class InvalidCookieException:Exception("This cookie is invalid. Please log in again") {
+class InvalidCookieException(override val message:String= "This cookie is invalid. Please login again"):Exception(message) {
 }

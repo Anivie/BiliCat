@@ -11,8 +11,8 @@ class LoginV2Pojo {
     data class Data(
         val code: Int,
         val message: String?,
-        val refresh_token: String?,
-        val timestamp: Long?,
+        val refresh_token: String,
+        val timestamp: Long,
         val url: String?,
     )
 }

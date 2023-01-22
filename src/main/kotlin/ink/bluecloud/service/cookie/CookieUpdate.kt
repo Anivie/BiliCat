@@ -1,14 +1,21 @@
 package ink.bluecloud.service.cookie
 
 import com.alibaba.fastjson2.JSONObject
+import com.alibaba.fastjson2.parseObject
 import ink.bluecloud.exceptions.CodeException
+import ink.bluecloud.exceptions.InvalidCookieException
 import ink.bluecloud.model.data.cookie.CookieJson
+import ink.bluecloud.model.pojo.CodePojo
 import ink.bluecloud.network.http.CookieManager
 import ink.bluecloud.service.APIResources
 import ink.bluecloud.service.httpserver.ParameterReceiver
 import ink.bluecloud.service.httpserver.core.BiliCatHttpServer
+import ink.bluecloud.service.seeting.SettingCenterImpl
+import ink.bluecloud.service.seeting.saveSetting
 import ink.bluecloud.utils.getForCodePojo
 import ink.bluecloud.utils.getForString
+import ink.bluecloud.utils.postForString
+import ink.bluecloud.utils.toObjJson
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.HttpStatusException
 import org.koin.core.annotation.Factory
@@ -46,8 +53,15 @@ class CookieUpdate : APIResources() {
     }
 
     /**
+     * 注：客户端的 Cookie 不需要主动频繁更新，请保持周期在 90 天左右
      * 是否需要更新Cookie
      * https://github.com/SocialSisterYi/bilibili-API-collect/issues/524
+     * 更新流程：
+     * 1. 获取是否需要更新
+     * 2. 计算更新路径，将打开一个网页由浏览器的js计算
+     * 3. 获取新Cookie 与 新token
+     * 4. 确认使用此次更新
+     * 5. sso 刷新: 访问刷新cookie的url列表
      */
     suspend fun doUpdateCookie() {
         //是否需要更新
@@ -59,34 +73,56 @@ class CookieUpdate : APIResources() {
         )
         val timestamp = json.getString("timestamp")
         val refresh = json.getBoolean("refresh")
-        logger.info("${if (refresh) "需" else "不需"}要更新 Cookie")
+        logger.info("${if (refresh) "需" else "不需"}要更新 Cookie; timestamp: $timestamp")
         if (!json.getBoolean("refresh")) return;
 
 
         //开始更新: 计算路径
         var server: BiliCatHttpServer? = null
-        server = BiliCatHttpServer().addRoute(ParameterReceiver(timestamp) {
+        server = BiliCatHttpServer().addRoute(ParameterReceiver(timestamp) { urlHashPath ->
             //关闭服务器
             server!!.stop(0)
-            //更新 Cookie
-            httpClient.getFor(api(it).url) {
-                val updateAPI = api(
-                    //等待将URL写入api文件中
-                    "https://passport.bilibili.com/x/passport-login/web/cookie/refresh".toHttpUrl(),
-                    APILevel.Post
-                ) {
+            //访问计算出的 URL 路径
+            httpClient.getFor(api(urlHashPath).url) {
+                //获取最新 Cookie(将以header set-cookie 形式返回,okhttp 会自动维护) 与 token
+                val updateAPI = api(API.postUpdateCookie, APILevel.Post) {
                     it["csrf"] = getCsrf()
-                    it["refresh_csrf"] = getValue(body.string())
-                    it["refresh_token"] = getRefreshToken() ?: getCsrf()
+                    it["refresh_csrf"] = getValue(body.string()) ?: return@api
+                    it["refresh_token"] = getRefreshToken() ?: throw InvalidCookieException()
                     it["source"] = "main_web"
                 }
-
                 httpClient.postFor(updateAPI.url, updateAPI.params) {
-                    println(body.string())
+                    val newToken =
+                        body.string().toObjJson(CodePojo::class.java).data!!.parseObject().getString("refresh_token")
+                    //确认更新(老cookie将失效)
+                    val confirmUpdateAPI = api(API.postConfirmUpdateCookie, APILevel.Post) {
+                        it["csrf"] = getCsrf()
+                        it["refresh_token"] = getRefreshToken() ?: throw InvalidCookieException()
+                    }
+                    httpClient.postFor(confirmUpdateAPI.url, confirmUpdateAPI.params) {
+                        //SSO 刷新
+                        val ssoAPI = api(API.postSSOCookie) {
+                            it["biliCSRF"] = getCsrf()
+                        }
+                        httpClient.getFor(ssoAPI.url) {
+                            val urlCookieList =
+                                body.string().toObjJson(CodePojo::class.java).data!!.parseObject().getJSONArray("sso")
+                            urlCookieList.forEach {
+                                val urlCookie = it.toString().toHttpUrl()
+                                httpClient.getFor(it.toString().toHttpUrl()) {
+                                    logger.info("success updating cookie :${urlCookie.host}")
+                                }
+                            }
+                            //构建最终的 新Cookie
+                            val newCookie = httpClient.getCookieStore().toCookies()
+                            newCookie.refreshToken = newToken
+                            newCookie.timestamp = System.currentTimeMillis()
+                            settingCenter.saveSetting(newCookie)
+                            logger.info("cookie 已本地序列化")
+                        }
+                    }
                 }
             }
-            //确认更新
-            //SSO 刷新
         }).start()
         Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler http://127.0.0.1:8080");//使用默认浏览器打开url
 
@@ -95,9 +131,16 @@ class CookieUpdate : APIResources() {
     /**
      * 获取路径中的值
      */
-    private fun getValue(page: String): String {
+    private fun getValue(page: String): String? {
         val start = page.indexOf("<div id=\"1-name\">")
         val end = page.indexOf("<div id=\"1-value\">")
-        return page.substring(start + "<div id=\"1-name\">".length, end).replace("</div>", "").trim()
+        try {
+            return page.substring(start + "<div id=\"1-name\">".length, end).replace("</div>", "").trim()
+        } catch (e: Exception) {
+            logger.error(
+                "解析html的标签路径中存在的值失败\n\n${page}\n---------------------------------------------------\n", e
+            )
+        }
+        return null
     }
 }

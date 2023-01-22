@@ -7,10 +7,30 @@
 </head>
 <body>
 <p id="aw">页面打开成功</p>
+<br/>
+<p id="close"></p>
 
 </body>
 <script>
     document.getElementById("aw").innerHTML = "初始化完成"
+    let i = 10
+
+    //使用匿名函数方法
+    function countDown() {
+        console.log("窗体将在 " + i + "s 后关闭")
+        document.getElementById("close").innerHTML = "窗体将在 " + i + "s 后关闭";
+        if (i <= 0) {
+            console.log("close")
+            window.opener = null;
+            window.close()
+        }
+        i--;
+    }
+
+    function closeTap() {
+        //1000毫秒调用一次
+        if (i === 10){ window.setInterval("countDown()", 1500);}
+    }
 
     // 加密数据
     async function a(timestamp) {
@@ -43,9 +63,11 @@
         httpRequest.setRequestHeader("Content-Type", "application/json");   //设置请求头信息
         httpRequest.onreadystatechange = function () {
             if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-                document.getElementById("aw").innerHTML = "服务器接收到加密结果"
+                document.getElementById("aw").innerHTML = "Success: 服务器接收到加密结果";
+                closeTap()
             } else {
-                document.getElementById("aw").innerHTML = "error: 服务器没有接收到加密结果"
+                document.getElementById("aw").innerHTML = "error: 服务器没有接收到加密结果";
+                closeTap()
             }
         }
         let data = {'time': Date.now(), 'url': url}
@@ -63,6 +85,7 @@
                 a(httpRequest.responseText)
             } else {
                 document.getElementById("aw").innerHTML = "error: 未能接收到服务器的秘钥"
+                closeTap()
             }
         }
         httpRequest.send()

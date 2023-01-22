@@ -50,7 +50,7 @@ class LoginService : APIResources() {
         cookie.timestamp = root.data!!.timestamp
         settingCenter.saveSetting(cookie)
 
-        logger.info("序列化 Cookie : $cookie")
+        logger.info("序列化 Cookie : refreshToken=${cookie.refreshToken.substring(0,cookie.refreshToken.length/2)}******************")
     }
 
     private fun String.genericQRCode(size: Int) = ByteArrayOutputStream(500).apply {
