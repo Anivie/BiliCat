@@ -30,7 +30,7 @@ internal inline fun <T> KoinComponent.newIO(name: String? = null, crossinline bl
         ioScope.launch(CoroutineName(this)) {
             block()
         }
-    }?: ioScope.launch {
+    }?: ioScope.launch(CoroutineName(this::class.simpleName ?: "UnknownName")) {
         block()
     }
 }
@@ -40,7 +40,7 @@ internal inline fun <T> KoinComponent.newUI(name: String? = null, crossinline bl
         uiScope.launch(CoroutineName(this)) {
             block()
         }
-    }?: uiScope.launch {
+    }?: uiScope.launch(CoroutineName(this::class.simpleName ?: "UnknownName")) {
         block()
     }
 }

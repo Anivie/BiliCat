@@ -2,15 +2,18 @@ package ink.bluecloud.ui.mainview.homeview.node
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.utils.ioScope
-import ink.bluecloud.utils.uiContext
-import ink.bluecloud.utils.uiScope
+import ink.bluecloud.utils.newIO
+import ink.bluecloud.utils.newUI
+import ink.bluecloud.utils.onUI
 import ink.bluecloud.utils.uiutil.cloudTimeline
+import ink.bluecloud.utils.uiutil.regSuspendHandler
+import javafx.beans.binding.Bindings
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.image.Image
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.paint.CycleMethod
@@ -19,16 +22,13 @@ import javafx.scene.paint.Stop
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import tornadofx.*
+import kotlin.coroutines.suspendCoroutine
 
-@Factory
+@Factory([VideoInformationCard::class])
 class VideoInformationCard(
-//    private val name: String,
     private val card: Flow<HomePagePushCard>,
     private val widthProperty: ReadOnlyDoubleProperty?,
     private val spacing: Double?
@@ -40,98 +40,139 @@ class VideoInformationCard(
     }
 
     init {
-        uiScope.launch {
-            pane {
-                currentCardProperty.addListener { _, _, newValue ->
-                    ioScope.launch {
-                        val stream = newValue.cover.await()
-                        withContext(uiContext) {
-                            background = Background(
-                                BackgroundImage(
-                                    Image(stream),
-                                    BackgroundRepeat.NO_REPEAT,
-                                    BackgroundRepeat.NO_REPEAT,
-                                    BackgroundPosition.CENTER,
-                                    BackgroundSize(1.0,1.0,true,true,true,true)
-                                )
+        pane {
+            currentCardProperty.addListener { _, _, newValue ->
+                newIO {
+                    val stream = newValue.cover.await()
+                    onUI {
+                        background = Background(
+                            BackgroundImage(
+                                Image(stream),
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundPosition.CENTER,
+                                BackgroundSize(1.0,1.0,true,true,true,true)
                             )
+                        )
+                    }
+                }
+            }
+        }
+
+        stackpane {
+            label {
+                style {
+                    textFill = Color.WHITE
+                }
+
+                textProperty().bind(currentCardProperty.map { it.title })
+
+                paddingBottom = 5
+                paddingLeft = 5
+            }
+
+            background = Background(BackgroundFill(
+                LinearGradient(
+                    1.0, 0.0, 1.0, 1.0, true, CycleMethod.NO_CYCLE,
+                    Stop(0.0, Color(0.0, 0.0, 0.0, 0.0)),
+                    Stop(1.0, Color(0.0, 0.0, 0.0, 1.0))
+                ),
+                CornerRadii.EMPTY,
+                null
+            ))
+
+            prefHeight = 30.0
+            maxHeight = 30.0
+            alignment = Pos.BOTTOM_LEFT
+            setAlignment(this, Pos.BOTTOM_LEFT)
+        }
+
+        hbox {
+            val leftButton = button("<") {
+                stylesheets += "css/node/suspended-button.css"
+                style(true) {
+                    textFill = Color.WHITE
+                }
+                hgrow = Priority.ALWAYS
+            }
+
+            val rightButton = button(">") {
+                newUI {
+                    val handler = regSuspendHandler(MouseEvent.MOUSE_CLICKED)
+                    card.collect {
+                        currentCard = it
+                        suspendCoroutine<MouseEvent> { c ->
+                            handler.continuation = c
                         }
                     }
                 }
-            }
 
-            stackpane {
-                label {
-                    style {
-                        textFill = Color.WHITE
-                    }
-
-                    textProperty().bind(currentCardProperty.map { it.title })
-
-                    paddingBottom = 5
-                    paddingLeft = 5
+                stylesheets += "css/node/suspended-button.css"
+                style(true) {
+                    textFill = Color.WHITE
                 }
-
-                background = Background(BackgroundFill(
-                    LinearGradient(
-                        1.0, 0.0, 1.0, 1.0, true, CycleMethod.NO_CYCLE,
-                        Stop(0.0, Color(0.0, 0.0, 0.0, 0.0)),
-                        Stop(1.0, Color(0.0, 0.0, 0.0, 1.0))
-                    ),
-                    CornerRadii.EMPTY,
-                    null
-                ))
-
-                prefHeight = 30.0
-                maxHeight = 30.0
-                alignment = Pos.BOTTOM_LEFT
-                setAlignment(this,Pos.BOTTOM_LEFT)
+                hgrow = Priority.ALWAYS
             }
 
-            currentCard = card.first()
-//            card.collect {
-//                println("running on ${Thread.currentThread().name} get ${it}")
-//            }
-
-            val zoomAnimation = cloudTimeline {
-                keyframe(Duration.millis(300.0)) {
-                    keyvalue(scaleXProperty(), 1.05, CLOUD_INTERPOLATOR)
-                    keyvalue(scaleYProperty(), 1.05, CLOUD_INTERPOLATOR)
-                }
-            }
-            setOnMouseEntered {
-                zoomAnimation.play()
+            Bindings.createDoubleBinding({
+                leftButton.width + rightButton.width
+            },leftButton.widthProperty(), rightButton.widthProperty()).run {
+                maxWidthProperty().bind(this)
             }
 
-            val outAnimation = cloudTimeline {
-                keyframe(Duration.millis(300.0)) {
-                    keyvalue(scaleXProperty(), 1.0, CLOUD_INTERPOLATOR)
-                    keyvalue(scaleYProperty(), 1.0, CLOUD_INTERPOLATOR)
-                }
-            }
-            setOnMouseExited {
-                outAnimation.play()
+            Bindings.createDoubleBinding({
+                Math.max(leftButton.height, rightButton.height)
+            },leftButton.heightProperty(), rightButton.heightProperty()).run {
+                maxHeightProperty().bind(this)
             }
 
-            clip = Rectangle().apply {
-                widthProperty().bind(this@VideoInformationCard.widthProperty())
-                heightProperty().bind(this@VideoInformationCard.heightProperty())
-
-                arcWidth = 20.0
-                arcHeight = 20.0
+            style {
+                backgroundColor += c("black",0.5)
+                backgroundRadius += box(5.px)
             }
 
-            widthProperty?.run {
-                spacing?.run {
-                    if (value != 0.0) maxWidth = (value - spacing) / 2
-
-                    widthProperty.addListener { _, _, newValue ->
-                        maxWidth = (newValue.toDouble() - spacing) / 2
-                    }
-                }
-            }
-
-            cursor = Cursor.HAND
+            setAlignment(this, Pos.BOTTOM_LEFT)
+            setMargin(this, insets(0, 0, 50, 50))
         }
+
+        val zoomAnimation = cloudTimeline {
+            keyframe(Duration.millis(300.0)) {
+                keyvalue(scaleXProperty(), 1.05, CLOUD_INTERPOLATOR)
+                keyvalue(scaleYProperty(), 1.05, CLOUD_INTERPOLATOR)
+            }
+        }
+        setOnMouseEntered {
+            zoomAnimation.play()
+        }
+
+        val outAnimation = cloudTimeline {
+            keyframe(Duration.millis(300.0)) {
+                keyvalue(scaleXProperty(), 1.0, CLOUD_INTERPOLATOR)
+                keyvalue(scaleYProperty(), 1.0, CLOUD_INTERPOLATOR)
+            }
+        }
+        setOnMouseExited {
+            outAnimation.play()
+        }
+
+        clip = Rectangle().apply {
+            widthProperty().bind(this@VideoInformationCard.widthProperty())
+            heightProperty().bind(this@VideoInformationCard.heightProperty())
+
+            arcWidth = 20.0
+            arcHeight = 20.0
+        }
+
+        widthProperty?.run {
+            spacing?.run {
+                if (value != 0.0) maxWidth = (value - spacing) / 2
+
+                widthProperty.addListener { _, _, newValue ->
+                    maxWidth = (newValue.toDouble() - spacing) / 2
+                }
+            }
+        }
+
+        cursor = Cursor.HAND
     }
 }
