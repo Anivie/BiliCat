@@ -5,6 +5,7 @@ import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.newUI
 import ink.bluecloud.utils.onUI
+import ink.bluecloud.utils.uiutil.CoroutineEvent
 import ink.bluecloud.utils.uiutil.cloudTimeline
 import ink.bluecloud.utils.uiutil.regSuspendHandler
 import javafx.beans.binding.Bindings
@@ -39,15 +40,22 @@ class VideoInformationCard(
         currentCardProperty = this
     }
 
+    private val cardCache = ArrayList<HomePagePushCard>()
+    private val coverCache = ArrayList<Image>()
+    private var cacheIndex = -1
+
     init {
         pane {
             currentCardProperty.addListener { _, _, newValue ->
                 newIO {
                     val stream = newValue.cover.await()
+
                     onUI {
                         background = Background(
                             BackgroundImage(
-                                Image(stream),
+                                Image(stream).apply {
+                                    coverCache += this
+                                },
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundPosition.CENTER,
@@ -89,19 +97,36 @@ class VideoInformationCard(
 
         hbox {
             val leftButton = button("<") {
+                action {
+                    println(cacheIndex)
+                    if (cacheIndex == 0) return@action
+
+                    currentCard = cardCache[--cacheIndex]
+                }
+
                 stylesheets += "css/node/suspended-button.css"
                 style(true) {
                     textFill = Color.WHITE
                 }
+
                 hgrow = Priority.ALWAYS
             }
 
             val rightButton = button(">") {
                 newUI {
                     val handler = regSuspendHandler(MouseEvent.MOUSE_CLICKED)
+
                     card.collect {
-                        currentCard = it
-                        suspendCoroutine<MouseEvent> { c ->
+                        if (cacheIndex !in cardCache.indices || cacheIndex < cardCache.size) {
+                            currentCard = it.apply {
+                                cardCache += this
+                                ++cacheIndex
+                            }
+                        } else {
+                            currentCard = cardCache[++cacheIndex]
+                        }
+
+                        suspendCoroutine<CoroutineEvent<MouseEvent>> { c ->
                             handler.continuation = c
                         }
                     }

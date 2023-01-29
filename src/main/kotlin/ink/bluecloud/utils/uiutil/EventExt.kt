@@ -1,4 +1,4 @@
-@file:Suppress("DuplicatedCode", "NOTHING_TO_INLINE")
+@file:Suppress("DuplicatedCode", "NOTHING_TO_INLINE", "unused")
 
 package ink.bluecloud.utils.uiutil
 
@@ -16,19 +16,23 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 abstract class SuspendEventHandler<T: Event> : EventHandler<T> {
-    lateinit var continuation: Continuation<T>
+    lateinit var continuation: Continuation<CoroutineEvent<T>>
 }
 
-data class EventExit(var cancel: Boolean = false) {
+data class CoroutineEvent <T: Event>(
+    val event: T,
+    var cancel: Boolean = false
+) {
     @Suppress("NOTHING_TO_INLINE")
     inline fun cancel() {
+        event
         cancel = true
     }
 }
 
 inline fun <T: Event> getSuspendHandler() = object : SuspendEventHandler<T>() {
     override fun handle(event: T) {
-        continuation.resume(event)
+        continuation.resume(CoroutineEvent(event))
     }
 }
 
@@ -37,37 +41,34 @@ inline fun <T: Event> Node.regSuspendHandler(eventType: EventType<T>) = getSuspe
 }
 
 context(KoinComponent)
-fun <T: Event> Node.newCoroutineEventHandler(eventType: EventType<T>, block: suspend EventExit.() -> Unit) = newIO {
+fun <T: Event> Node.newCoroutineEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = newIO {
     val handler = regSuspendHandler(eventType)
-    val eventExit = EventExit()
 
     while (isActive) {
-        suspendCoroutine {
+        val event = suspendCoroutine {
             handler.continuation = it
         }
 
-        onUI { block(eventExit) }
+        onUI { block(event) }
 
-        if (eventExit.cancel) {
+        if (event.cancel) {
             removeEventHandler(eventType, handler)
             cancel()
         }
     }
 }
 context(KoinComponent, CoroutineScope)
-suspend fun <T: Event> Node.coroutineEventHandler(eventType: EventType<T>, block: suspend EventExit.() -> Unit) = launch (ioContext) {
-    val handler = getSuspendHandler<T>()
-    addEventHandler(eventType, handler)
+suspend fun <T: Event> Node.coroutineEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = launch (ioContext) {
+    val handler = regSuspendHandler(eventType)
 
-    val eventExit = EventExit()
     while (isActive) {
-        suspendCoroutine {
+        val event = suspendCoroutine {
             handler.continuation = it
         }
 
-        onUI { block(eventExit) }
+        onUI { block(event) }
 
-        if (eventExit.cancel) {
+        if (event.cancel) {
             removeEventHandler(eventType, handler)
             cancel()
         }
