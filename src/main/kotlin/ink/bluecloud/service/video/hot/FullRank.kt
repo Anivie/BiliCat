@@ -1,8 +1,7 @@
-package ink.bluecloud.service.clientservice.video.rank
+package ink.bluecloud.service.video.hot
 
 import ink.bluecloud.model.data.video.HomePagePushCard
 import ink.bluecloud.model.pojo.video.hot.RankListJsonRoot
-import ink.bluecloud.service.video.hot.FrontVideo
 import ink.bluecloud.utils.getForStream
 import ink.bluecloud.utils.getForString
 import ink.bluecloud.utils.onIO
