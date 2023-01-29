@@ -43,7 +43,7 @@ inline fun <T> ObservableValue<T>.regSuspendObservableHandler() = getSuspendObse
 }
 
 context(KoinComponent)
-fun <T> ObservableValue<T>.newCoroutineObservableEventHandler(block: suspend ObservableChangeEvent<T>.() -> Unit) = newIO {
+fun <T> ObservableValue<T>.newSuspendEventHandler(block: suspend ObservableChangeEvent<T>.() -> Unit) = newIO {
     val handler = regSuspendObservableHandler()
 
     while (isActive) {
@@ -60,7 +60,7 @@ fun <T> ObservableValue<T>.newCoroutineObservableEventHandler(block: suspend Obs
     }
 }
 context(KoinComponent, CoroutineScope)
-suspend fun <T> ObservableValue<T>.coroutineObservableEventHandler(block: suspend ObservableChangeEvent<T>.() -> Unit) = launch (ioContext) {
+suspend fun <T> ObservableValue<T>.suspendEventHandler(block: suspend ObservableChangeEvent<T>.() -> Unit) = launch (ioContext) {
     val handler = regSuspendObservableHandler()
 
     while (isActive) {

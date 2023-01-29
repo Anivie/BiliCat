@@ -2,12 +2,9 @@ package ink.bluecloud.ui.mainview.homeview.node
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.newUI
 import ink.bluecloud.utils.onUI
-import ink.bluecloud.utils.uiutil.CoroutineEvent
-import ink.bluecloud.utils.uiutil.cloudTimeline
-import ink.bluecloud.utils.uiutil.regSuspendHandler
+import ink.bluecloud.utils.uiutil.*
 import javafx.beans.binding.Bindings
 import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -46,23 +43,21 @@ class VideoInformationCard(
 
     init {
         pane {
-            currentCardProperty.addListener { _, _, newValue ->
-                newIO {
-                    val stream = newValue.cover.await()
+            currentCardProperty.newSuspendEventHandler {
+                val stream = newValue.cover.await()
 
-                    onUI {
-                        background = Background(
-                            BackgroundImage(
-                                Image(stream).apply {
-                                    coverCache += this
-                                },
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundPosition.CENTER,
-                                BackgroundSize(1.0,1.0,true,true,true,true)
-                            )
+                onUI {
+                    background = Background(
+                        BackgroundImage(
+                            Image(stream).apply {
+                                coverCache += this
+                            },
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.CENTER,
+                            BackgroundSize(1.0,1.0,true,true,true,true)
                         )
-                    }
+                    )
                 }
             }
         }
