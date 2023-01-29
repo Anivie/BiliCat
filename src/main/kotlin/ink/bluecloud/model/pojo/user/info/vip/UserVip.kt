@@ -1,11 +1,6 @@
 package ink.bluecloud.model.pojo.user.info.vip
 
-import ink.bluecloud.model.pojo.user.relationship.UserAttentionPOJO
-
 data class UserVip(
-//        val accessStatus: Int,
-//        val avatar_subscript: Int,
-//        val dueRemark: String,
         /**
          * 会员铭牌样式
          */
@@ -28,7 +23,7 @@ data class UserVip(
          * 1：有
          */
         val vipStatus: Int,
-//        val vipStatusWarn: String,
+
         /**
          * 大会员类型
          * 0：无
@@ -36,4 +31,10 @@ data class UserVip(
          * 2：年以上会员
          */
         val vipType: Int,
+
+//        val accessStatus: Int,
+//        val avatar_subscript: Int,
+//        val dueRemark: String,
+//        val vipStatusWarn: String,
+
     )

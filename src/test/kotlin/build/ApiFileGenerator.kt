@@ -43,6 +43,11 @@ fun buildAPI(){
             getUserAttention = "https://api.bilibili.com/x/relation/followings".toHttpUrl(),//20230113
             getUserAttentionV2 = "https://app.biliapi.net/x/v2/relation/followings".toHttpUrl(),//20230113
             getUserFans = "https://api.bilibili.com/x/relation/followers".toHttpUrl(),//20230123
+            getCommonFollowers = "https://api.bilibili.com/x/relation/same/followings".toHttpUrl(),//20230129
+            getUserQuietlyFollow = "https://api.bilibili.com/x/relation/whispers".toHttpUrl(),//20230129
+            getAccountMutualAttention = "https://api.bilibili.com/x/relation/friends".toHttpUrl(),//20230129
+            getAccountBlacklist = "https://api.bilibili.com/x/relation/blacks".toHttpUrl(),//20230129
+            getUserFollow = "https://api.bilibili.com/x/relation/followings/search".toHttpUrl(),//20230129
             //  Other
             getBili = "https://www.bilibili.com".toHttpUrl(),
             // Barrage

@@ -35,6 +35,12 @@ data class HttpApi(
     val getAccountInfo: HttpUrl,
     val getUserAttention: HttpUrl,
     val getUserAttentionV2: HttpUrl,
+    val getUserFans: HttpUrl,
+    val getCommonFollowers: HttpUrl,
+    val getUserQuietlyFollow: HttpUrl,
+    val getAccountMutualAttention: HttpUrl,
+    val getAccountBlacklist: HttpUrl,
+    val getUserFollow: HttpUrl,
 //    Other
     val getBili: HttpUrl,
 //    Barrage

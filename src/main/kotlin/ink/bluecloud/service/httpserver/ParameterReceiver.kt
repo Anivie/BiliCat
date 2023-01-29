@@ -20,7 +20,6 @@ class ParameterReceiver(private val timestamp: String,private val result:(url:Ht
             logger.error("获取的url超时")
             return
         }
-        logger.info("correspond 路径: $url")
         response.send("ok")
         result(url.toHttpUrl())
     }

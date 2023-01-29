@@ -10,16 +10,16 @@ import ink.bluecloud.network.http.CookieManager
 import ink.bluecloud.service.APIResources
 import ink.bluecloud.service.httpserver.ParameterReceiver
 import ink.bluecloud.service.httpserver.core.BiliCatHttpServer
-import ink.bluecloud.service.seeting.SettingCenterImpl
 import ink.bluecloud.service.seeting.saveSetting
 import ink.bluecloud.utils.getForCodePojo
-import ink.bluecloud.utils.getForString
-import ink.bluecloud.utils.postForString
 import ink.bluecloud.utils.toObjJson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.jsoup.HttpStatusException
 import org.koin.core.annotation.Factory
-import java.util.UUID
+import java.util.*
 
 @Factory
 class CookieUpdate : APIResources() {
@@ -34,7 +34,7 @@ class CookieUpdate : APIResources() {
         updateCookie()
     }
 
-    fun getCookieStore(): CookieManager {
+    public override fun getCookieStore(): CookieManager {
         return httpClient.getCookieStore()
     }
 
@@ -42,7 +42,8 @@ class CookieUpdate : APIResources() {
      * 更新 Cookie (不等待更新，但在未来更新完毕)
      */
     private fun updateCookie() = httpClient.getFor(API.getBili) {
-//        httpClient.getCookieStore().parseTo("buvid3=${UUID.randomUUID()}")
+        //手动添加字段
+        httpClient.getCookieStore().parseTo("buvid3=${UUID.randomUUID()}")
         //首页更新Cookie，以此来添加字段
         use {
             logger.info("System-services Get Cookie-Update -> ${API.getBili}")
@@ -53,7 +54,8 @@ class CookieUpdate : APIResources() {
     }
 
     /**
-     * 注：客户端的 Cookie 不需要主动频繁更新，请保持周期在 90 天左右
+     * 注：客户端的 Cookie 不需要主动频繁更新，请保持周期在合理日期
+     * 注：客户端的 Cookie 只要不主动更新就不会失效，请按需更新
      * 是否需要更新Cookie
      * https://github.com/SocialSisterYi/bilibili-API-collect/issues/524
      * 更新流程：
@@ -80,10 +82,18 @@ class CookieUpdate : APIResources() {
         //开始更新: 计算路径
         var server: BiliCatHttpServer? = null
         server = BiliCatHttpServer().addRoute(ParameterReceiver(timestamp) { urlHashPath ->
+            logger.info(
+                "获取到加密后的(correspond)更新路径: ${
+                    urlHashPath.toString().substring(0, urlHashPath.toString().length / 2)
+                }**********"
+            )
+            logger.info("阶段一 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
             //关闭服务器
             server!!.stop(0)
+            logger.info("内置http服务器关闭")
             //访问计算出的 URL 路径
             httpClient.getFor(api(urlHashPath).url) {
+                logger.info("阶段二 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
                 //获取最新 Cookie(将以header set-cookie 形式返回,okhttp 会自动维护) 与 token
                 val updateAPI = api(API.postUpdateCookie, APILevel.Post) {
                     it["csrf"] = getCsrf()
@@ -92,39 +102,65 @@ class CookieUpdate : APIResources() {
                     it["source"] = "main_web"
                 }
                 httpClient.postFor(updateAPI.url, updateAPI.params) {
+                    logger.info("阶段三 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
                     val newToken =
                         body.string().toObjJson(CodePojo::class.java).data!!.parseObject().getString("refresh_token")
+                    logger.info(
+                        "访问更新路径成功获取到新 token: ${newToken.substring(0, newToken.length / 2)}*******************"
+                    )
+
                     //确认更新(老cookie将失效)
                     val confirmUpdateAPI = api(API.postConfirmUpdateCookie, APILevel.Post) {
                         it["csrf"] = getCsrf()
                         it["refresh_token"] = getRefreshToken() ?: throw InvalidCookieException()
                     }
                     httpClient.postFor(confirmUpdateAPI.url, confirmUpdateAPI.params) {
+                        logger.info("已确认更新，老Cookie等已失效")
+                        logger.info("阶段四 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
                         //SSO 刷新
                         val ssoAPI = api(API.postSSOCookie) {
                             it["biliCSRF"] = getCsrf()
                         }
                         httpClient.getFor(ssoAPI.url) {
+                            logger.info("阶段五 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
                             val urlCookieList =
                                 body.string().toObjJson(CodePojo::class.java).data!!.parseObject().getJSONArray("sso")
+                            var successCount: Int = 0 //完成更新的域名数
                             urlCookieList.forEach {
                                 val urlCookie = it.toString().toHttpUrl()
                                 httpClient.getFor(it.toString().toHttpUrl()) {
-                                    logger.info("success updating cookie :${urlCookie.host}")
+                                    logger.info("SSO -> success updating cookie :${urlCookie.host}")
+                                    logger.info("阶段五(续) Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
+                                    successCount++
                                 }
                             }
+                            logger.info("阶段六 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
+                            //阻塞协程。直到更新完毕或者超时（6s）
+                            val start = System.currentTimeMillis()
+                            while (successCount < urlCookieList.size) {
+                                if (System.currentTimeMillis() - start > 6000) {
+                                    logger.error("更新SSO超时")
+                                    break
+                                }
+                            }
+                            logger.info("阶段七 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
+                            logger.info("SSO正在进行刷新，刷新完毕后Cookie将自动更新至okhttp")
                             //构建最终的 新Cookie
                             val newCookie = httpClient.getCookieStore().toCookies()
                             newCookie.refreshToken = newToken
                             newCookie.timestamp = System.currentTimeMillis()
                             settingCenter.saveSetting(newCookie)
                             logger.info("cookie 已本地序列化")
+                            logger.info("阶段八 Cookie :\n${httpClient.getCookieStore().toCookies().toPreCookie()}\n\n")
                         }
                     }
                 }
             }
         }).start()
-        Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler http://127.0.0.1:8080");//使用默认浏览器打开url
+        //使用默认浏览器打开url
+        withContext(Dispatchers.IO) {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler http://127.0.0.1:8080")
+        }
 
     }
 

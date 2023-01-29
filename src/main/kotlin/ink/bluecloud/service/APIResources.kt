@@ -1,21 +1,17 @@
 package ink.bluecloud.service
 
+import ink.bluecloud.model.data.cookie.CookieJson
+import ink.bluecloud.network.http.CookieManager
 import okhttp3.HttpUrl
 
 abstract class APIResources : ClientService() {
     protected val API = netWorkResourcesProvider.api
 
-    protected fun getCsrf(): String {
-        return httpClient.getCookieStore().toCookies().csrf
-    }
-
-    protected fun getSession(): String {
-        return httpClient.getCookieStore().toCookies().session
-    }
-
-    protected fun getRefreshToken(): String? {
-        return httpClient.getCookieStore().toCookies().refreshToken
-    }
+    protected fun getCsrf(): String = httpClient.getCookieStore().toCookies().csrf
+    protected fun getSession(): String = httpClient.getCookieStore().toCookies().session
+    protected fun getRefreshToken(): String = httpClient.getCookieStore().toCookies().refreshToken
+    protected open fun getCookieStore(): CookieManager = httpClient.getCookieStore()
+    protected fun getCookie(): CookieJson = getCookieStore().toCookies()
 
     /**
      * 构建参数

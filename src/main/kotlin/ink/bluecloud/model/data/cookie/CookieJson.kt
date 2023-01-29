@@ -34,6 +34,18 @@ data class CookieJson(
         return "bili_jct=${csrf};DedeUserID=${id};gourl=${url};DedeUserID__ckMd5=${hashCode};SESSDATA=${session};"
     }
 
+    fun toPreCookie(): String {
+        return """
+             bili_jct=${csrf.substring(0,csrf.length/2)}**********;
+             DedeUserID=${id.substring(0,id.length/2)}**********;;
+             gourl=${url}
+             DedeUserID__ckMd5=${hashCode.substring(0,hashCode.length/2)}**********;;
+             SESSDATA=${session.substring(0,session.length/2)}**********;;
+             refresh_token=${refreshToken.substring(0,refreshToken.length/2)}**********;;
+             timestamp=${timestamp};
+        """.trimIndent()
+    }
+
     fun update() {
         CookieUpdate().loadCookie(this)
     }

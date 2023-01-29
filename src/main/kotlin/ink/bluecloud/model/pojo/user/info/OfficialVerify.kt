@@ -16,6 +16,6 @@ package ink.bluecloud.model.pojo.user.info
          */
         val type: Int,
 
-        val role: Int,
+        val role: Int?,
         val title: String?,
     )

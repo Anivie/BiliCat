@@ -58,7 +58,7 @@ class AccountInfo : APIResources() {
                 },
 
                 officialDesc = official!!.desc!!,
-                officialRole = official.role,
+                officialRole = official.role!!,
                 officialTitle = official.title!!,
                 officialType = official.type
             )
