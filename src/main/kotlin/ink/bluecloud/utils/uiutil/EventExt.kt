@@ -1,4 +1,4 @@
-@file:Suppress("DuplicatedCode", "NOTHING_TO_INLINE", "unused")
+@file:Suppress("DuplicatedCode", "unused")
 
 package ink.bluecloud.utils.uiutil
 
@@ -30,18 +30,18 @@ data class CoroutineEvent <T: Event>(
     }
 }
 
-inline fun <T: Event> getSuspendHandler() = object : SuspendEventHandler<T>() {
+private fun <T: Event> getSuspendHandler() = object : SuspendEventHandler<T>() {
     override fun handle(event: T) {
         continuation.resume(CoroutineEvent(event))
     }
 }
 
-inline fun <T: Event> Node.regSuspendHandler(eventType: EventType<T>) = getSuspendHandler<T>().apply {
+private fun <T: Event> Node.regSuspendHandler(eventType: EventType<T>) = getSuspendHandler<T>().apply {
     addEventHandler(eventType, this)
 }
 
 context(KoinComponent)
-fun <T: Event> Node.newCoroutineEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = newIO {
+fun <T: Event> Node.newSuspendEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = newIO {
     val handler = regSuspendHandler(eventType)
 
     while (isActive) {
@@ -58,7 +58,7 @@ fun <T: Event> Node.newCoroutineEventHandler(eventType: EventType<T>, block: sus
     }
 }
 context(KoinComponent, CoroutineScope)
-suspend fun <T: Event> Node.coroutineEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = launch (ioContext) {
+suspend fun <T: Event> Node.suspendEventHandler(eventType: EventType<T>, block: suspend CoroutineEvent<T>.() -> Unit) = launch (ioContext) {
     val handler = regSuspendHandler(eventType)
 
     while (isActive) {

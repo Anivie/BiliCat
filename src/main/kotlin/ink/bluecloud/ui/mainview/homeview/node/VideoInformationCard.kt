@@ -2,7 +2,7 @@ package ink.bluecloud.ui.mainview.homeview.node
 
 import ink.bluecloud.cloudtools.CLOUD_INTERPOLATOR
 import ink.bluecloud.model.data.video.HomePagePushCard
-import ink.bluecloud.utils.newUI
+import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onUI
 import ink.bluecloud.utils.uiutil.*
 import javafx.beans.binding.Bindings
@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Factory
 import org.koin.core.component.KoinComponent
 import tornadofx.*
-import kotlin.coroutines.suspendCoroutine
 
 @Factory([VideoInformationCard::class])
 class VideoInformationCard(
@@ -38,8 +37,8 @@ class VideoInformationCard(
     }
 
     private val cardCache = ArrayList<HomePagePushCard>()
-    private val coverCache = ArrayList<Image>()
-    private var cacheIndex = -1
+    private val coverCache = HashMap<HomePagePushCard, Image>()
+    private var cacheIndex = 0
 
     init {
         pane {
@@ -49,8 +48,9 @@ class VideoInformationCard(
                 onUI {
                     background = Background(
                         BackgroundImage(
+                            coverCache[cardCache[cacheIndex]]?:
                             Image(stream).apply {
-                                coverCache += this
+                                coverCache[cardCache[cacheIndex]] = this
                             },
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundRepeat.NO_REPEAT,
@@ -60,6 +60,7 @@ class VideoInformationCard(
                     )
                 }
             }
+
         }
 
         stackpane {
@@ -108,22 +109,14 @@ class VideoInformationCard(
             }
 
             val rightButton = button(">") {
-                newUI {
-                    val handler = regSuspendHandler(MouseEvent.MOUSE_CLICKED)
-
+                newIO {
                     card.collect {
-                        if (cacheIndex !in cardCache.indices || cacheIndex < cardCache.size) {
-                            currentCard = it.apply {
-                                cardCache += this
-                                ++cacheIndex
-                            }
-                        } else {
-                            currentCard = cardCache[++cacheIndex]
-                        }
+                        cardCache += it
+                    }
+                    onUI { currentCard = cardCache.first() }
 
-                        suspendCoroutine<CoroutineEvent<MouseEvent>> { c ->
-                            handler.continuation = c
-                        }
+                    suspendEventHandler(MouseEvent.MOUSE_CLICKED) {
+                        currentCard = cardCache[++cacheIndex]
                     }
                 }
 
@@ -141,7 +134,7 @@ class VideoInformationCard(
             }
 
             Bindings.createDoubleBinding({
-                Math.max(leftButton.height, rightButton.height)
+                leftButton.height.coerceAtLeast(rightButton.height)
             },leftButton.heightProperty(), rightButton.heightProperty()).run {
                 maxHeightProperty().bind(this)
             }

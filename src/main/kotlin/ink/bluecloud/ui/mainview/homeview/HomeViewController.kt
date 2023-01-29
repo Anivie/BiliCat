@@ -13,7 +13,7 @@ import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.newUI
 import ink.bluecloud.utils.onUI
 import ink.bluecloud.utils.sceneRoot
-import ink.bluecloud.utils.uiutil.newCoroutineEventHandler
+import ink.bluecloud.utils.uiutil.newSuspendEventHandler
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single
@@ -63,7 +63,7 @@ class HomeViewController: CloudController<HomeView>() {
             hgrow = Priority.ALWAYS
         }
 
-        videoInformationCard.newCoroutineEventHandler(MouseEvent.MOUSE_CLICKED) {
+        videoInformationCard.newSuspendEventHandler(MouseEvent.MOUSE_CLICKED) {
             val (video, audio) = videoStream.getVideoStream(
                 videoInformationCard.currentCard.id,
                 videoInformationCard.currentCard.cid

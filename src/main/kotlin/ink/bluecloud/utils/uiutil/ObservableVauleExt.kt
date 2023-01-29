@@ -1,4 +1,4 @@
-@file:Suppress("DuplicatedCode", "NOTHING_TO_INLINE", "unused")
+@file:Suppress("DuplicatedCode", "unused")
 
 package ink.bluecloud.utils.uiutil
 
@@ -32,13 +32,13 @@ data class ObservableChangeEvent <T>(
     }
 }
 
-inline fun <T> getSuspendObservableEventHandler() = object : SuspendObservableEventHandler<T>() {
+private fun <T> getSuspendObservableEventHandler() = object : SuspendObservableEventHandler<T>() {
     override fun changed(observable: ObservableValue<out T>?, oldValue: T, newValue: T) {
         continuation.resume(ObservableChangeEvent(observable,oldValue,newValue))
     }
 }
 
-inline fun <T> ObservableValue<T>.regSuspendObservableHandler() = getSuspendObservableEventHandler<T>().apply {
+private fun <T> ObservableValue<T>.regSuspendObservableHandler() = getSuspendObservableEventHandler<T>().apply {
     addListener(this)
 }
 
