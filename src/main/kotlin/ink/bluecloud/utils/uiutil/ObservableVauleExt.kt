@@ -4,7 +4,6 @@ package ink.bluecloud.utils.uiutil
 
 import ink.bluecloud.utils.ioContext
 import ink.bluecloud.utils.newIO
-import ink.bluecloud.utils.onUI
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +50,7 @@ fun <T> ObservableValue<T>.newSuspendEventHandler(block: suspend ObservableChang
             handler.continuation = it
         }
 
-        onUI { block(event) }
+        block(event)
 
         if (event.cancel) {
             removeListener(handler)
@@ -68,7 +67,7 @@ suspend fun <T> ObservableValue<T>.suspendEventHandler(block: suspend Observable
             handler.continuation = it
         }
 
-        onUI { block(event) }
+        block(event)
 
         if (event.cancel) {
             removeListener(handler)

@@ -116,7 +116,7 @@ class VideoInformationCard(
                     onUI { currentCard = cardCache.first() }
 
                     suspendEventHandler(MouseEvent.MOUSE_CLICKED) {
-                        currentCard = cardCache[++cacheIndex]
+                        onUI { currentCard = cardCache[++cacheIndex] }
                     }
                 }
 

@@ -4,7 +4,6 @@ package ink.bluecloud.utils.uiutil
 
 import ink.bluecloud.utils.ioContext
 import ink.bluecloud.utils.newIO
-import ink.bluecloud.utils.onUI
 import javafx.event.Event
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -49,7 +48,7 @@ fun <T: Event> Node.newSuspendEventHandler(eventType: EventType<T>, block: suspe
             handler.continuation = it
         }
 
-        onUI { block(event) }
+        block(event)
 
         if (event.cancel) {
             removeEventHandler(eventType, handler)
@@ -66,7 +65,7 @@ suspend fun <T: Event> Node.suspendEventHandler(eventType: EventType<T>, block: 
             handler.continuation = it
         }
 
-        onUI { block(event) }
+        block(event)
 
         if (event.cancel) {
             removeEventHandler(eventType, handler)
