@@ -1,4 +1,4 @@
-package ink.bluecloud.ui.fragment.javafxmediaplayer.node
+package ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer.node
 
 import javafx.scene.control.Button
 import javafx.scene.control.ProgressBar

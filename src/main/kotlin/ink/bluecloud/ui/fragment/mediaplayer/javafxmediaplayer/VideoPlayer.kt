@@ -1,16 +1,15 @@
-package ink.bluecloud.ui.fragment.javafxmediaplayer
+package ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer
 
-import ink.bluecloud.ui.fragment.javafxmediaplayer.node.ControlBar
+import ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer.node.ControlBar
 import ink.bluecloud.utils.ioScope
 import javafx.beans.binding.Bindings
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.Pane
 import javafx.scene.media.MediaPlayer
 import javafx.scene.media.MediaView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Factory
-import tornadofx.*
+import tornadofx.stackpane
 import kotlin.collections.set
 
 data class PlayingData(
@@ -19,7 +18,7 @@ data class PlayingData(
 )
 
 @Factory
-class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
+class VideoPlayer(data: PlayingData): VideoPlayerNodes() {
 
     val videoPlayer:MediaPlayer
     val audioPlayer:MediaPlayer
@@ -78,20 +77,15 @@ class VideoPlayer(data: PlayingData):VideoPlayerNodes() {
 
             addListener { _, _, newValue ->
                 newValue.printStackTrace()
-                back(audioPlayer, audioPlayer)
+                back()
             }
-        }
-
-        setOnMouseClicked {
-            back(videoPlayer, audioPlayer)
         }
 
         VideoPlayerController(this)
     }
 
-    private fun back(player: MediaPlayer, audioPlayer: MediaPlayer) {
-        (this@VideoPlayer.parent as Pane).children -= this@VideoPlayer
-        player.dispose()
+    fun back() {
+        videoPlayer.dispose()
         audioPlayer.dispose()
     }
 

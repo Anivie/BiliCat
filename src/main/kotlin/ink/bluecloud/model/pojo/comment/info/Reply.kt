@@ -1,3 +1,4 @@
+@file:Suppress("PropertyName")
 package ink.bluecloud.model.pojo.comment.info
 
 import ink.bluecloud.model.pojo.user.info.LevelInfo

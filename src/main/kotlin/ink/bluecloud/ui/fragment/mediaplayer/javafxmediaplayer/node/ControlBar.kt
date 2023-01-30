@@ -1,4 +1,4 @@
-package ink.bluecloud.ui.fragment.javafxmediaplayer.node
+package ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer.node
 
 import ink.bluecloud.utils.uiutil.CssNode
 import javafx.geometry.Pos

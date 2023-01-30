@@ -25,42 +25,58 @@ internal inline val KoinComponent.uiScope
 internal inline val KoinComponent.uiContext
     get() = get<CoroutineScope>(named("uiScope")).coroutineContext
 
-internal inline fun <T> KoinComponent.newIO(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+internal inline fun <T> KoinComponent.newIO(
+    name: String? = null,
+    line: Int? = null,
+    crossinline block: suspend CoroutineScope.() -> T
+) {
     name?.run {
         ioScope.launch(CoroutineName(this)) {
             block()
         }
-    }?: ioScope.launch(CoroutineName(this::class.simpleName ?: "UnknownName")) {
+    }?: ioScope.launch(CoroutineName("${this::class.simpleName}:${line}")) {
         block()
     }
 }
 
-internal inline fun <T> KoinComponent.newUI(name: String? = null, crossinline block: suspend CoroutineScope.() -> T) {
+internal inline fun <T> KoinComponent.newUI(
+    name: String? = null,
+    line: Int? = null,
+    crossinline block: suspend CoroutineScope.() -> T
+) {
     name?.run {
         uiScope.launch(CoroutineName(this)) {
             block()
         }
-    }?: uiScope.launch(CoroutineName(this::class.simpleName ?: "UnknownName")) {
+    }?: uiScope.launch(CoroutineName("${this::class.simpleName}:${line}")) {
         block()
     }
 }
 
-internal suspend inline fun <T> KoinComponent.onIO(name: String? = null, crossinline block: suspend CoroutineScope.() -> T):T {
+internal suspend inline fun <T> KoinComponent.onIO(
+    name: String? = null,
+    line: Int? = null,
+    crossinline block: suspend CoroutineScope.() -> T
+):T {
     return name?.run {
         withContext(ioContext + CoroutineName(this)) {
             block()
         }
-    } ?: withContext(ioContext) {
+    } ?: withContext(ioContext + CoroutineName("${this::class.simpleName}:${line}")) {
         block()
     }
 }
 
-internal suspend inline fun <T> KoinComponent.onUI(name: String? = null, crossinline block: suspend CoroutineScope.() -> T):T {
+internal suspend inline fun <T> KoinComponent.onUI(
+    name: String? = null,
+    line: Int? = null,
+    crossinline block: suspend CoroutineScope.() -> T
+):T {
     return name?.run {
         withContext(uiContext + CoroutineName(this)) {
             block()
         }
-    } ?: withContext(uiContext) {
+    } ?: withContext(uiContext + CoroutineName("${this::class.simpleName}:${line}")) {
         block()
     }
 }

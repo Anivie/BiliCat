@@ -4,10 +4,8 @@ import ink.bluecloud.service.video.hot.FrontVideo
 import ink.bluecloud.service.video.hot.FullRank
 import ink.bluecloud.service.video.hot.HotVideoList
 import ink.bluecloud.service.video.hot.VideoWeeklyList
-import ink.bluecloud.service.video.stream.VideoStream
 import ink.bluecloud.ui.CloudController
-import ink.bluecloud.ui.fragment.javafxmediaplayer.PlayingData
-import ink.bluecloud.ui.fragment.javafxmediaplayer.VideoPlayer
+import ink.bluecloud.ui.fragment.videoview.VideoView
 import ink.bluecloud.ui.mainview.homeview.node.VideoInformationCard
 import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.newUI
@@ -18,14 +16,12 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single
 import org.koin.core.component.get
-import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import tornadofx.hgrow
 import tornadofx.vgrow
 
 @Single
 class HomeViewController: CloudController<HomeView>() {
-    private val videoStream by inject<VideoStream>()
     override fun   initUi(view: HomeView) = view.run {
         newIO {
             val videoInformationCard = generateVideoInformationCard<HotVideoList>()
@@ -64,18 +60,10 @@ class HomeViewController: CloudController<HomeView>() {
         }
 
         videoInformationCard.newSuspendEventHandler(MouseEvent.MOUSE_CLICKED) {
-            val (video, audio) = videoStream.getVideoStream(
-                videoInformationCard.currentCard.id,
-                videoInformationCard.currentCard.cid
-            )
-
             onUI {
-                rootBox.sceneRoot.children += get<VideoPlayer> {
+                rootBox.sceneRoot.children += get<VideoView> {
                     parametersOf(
-                        PlayingData(
-                            video.get().url.first(),
-                            audio.get().url.first()
-                        )
+                        videoInformationCard.currentCard
                     )
                 }
             }

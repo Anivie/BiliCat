@@ -1,4 +1,4 @@
-package ink.bluecloud.ui.fragment.javafxmediaplayer
+package ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer
 
 import javafx.scene.media.MediaPlayer.Status
 import org.koin.core.annotation.Factory
