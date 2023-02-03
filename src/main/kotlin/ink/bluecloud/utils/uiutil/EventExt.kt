@@ -10,12 +10,10 @@ import javafx.event.EventType
 import javafx.scene.Node
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 abstract class SuspendEventHandler<T: Event> : EventHandler<T> {
-    lateinit var continuation: Continuation<CoroutineEvent<T>>
+    lateinit var continuation: CancellableContinuation<CoroutineEvent<T>>
 }
 
 data class CoroutineEvent <T: Event>(
@@ -31,7 +29,7 @@ data class CoroutineEvent <T: Event>(
 
 private fun <T: Event> getSuspendHandler() = object : SuspendEventHandler<T>() {
     override fun handle(event: T) {
-        continuation.resume(CoroutineEvent(event))
+        if (continuation.isActive) continuation.resume(CoroutineEvent(event))
     }
 }
 
@@ -44,7 +42,7 @@ fun <T: Event> Node.newSuspendEventHandler(eventType: EventType<T>, block: suspe
     val handler = regSuspendHandler(eventType)
 
     while (isActive) {
-        val event = suspendCoroutine {
+        val event = suspendCancellableCoroutine {
             handler.continuation = it
         }
 
@@ -61,7 +59,7 @@ suspend fun <T: Event> Node.suspendEventHandler(eventType: EventType<T>, block: 
     val handler = regSuspendHandler(eventType)
 
     while (isActive) {
-        val event = suspendCoroutine {
+        val event = suspendCancellableCoroutine {
             handler.continuation = it
         }
 
