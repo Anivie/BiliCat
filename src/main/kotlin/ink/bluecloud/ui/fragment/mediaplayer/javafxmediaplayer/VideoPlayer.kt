@@ -6,10 +6,13 @@ import javafx.beans.binding.Bindings
 import javafx.scene.input.MouseEvent
 import javafx.scene.media.MediaPlayer
 import javafx.scene.media.MediaView
+import javafx.scene.paint.Color
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Factory
+import tornadofx.fitToParentSize
 import tornadofx.stackpane
+import tornadofx.style
 import kotlin.collections.set
 
 data class PlayingData(
@@ -21,6 +24,7 @@ data class PlayingData(
 class VideoPlayer(data: PlayingData): VideoPlayerNodes() {
 
     val videoPlayer:MediaPlayer
+    lateinit var videoView:MediaView
     val audioPlayer:MediaPlayer
 
     init {
@@ -46,20 +50,24 @@ class VideoPlayer(data: PlayingData): VideoPlayerNodes() {
             }
         }
 
-        stackpane {
+        stackpane player@{
             children += MediaView(videoPlayer).apply {
-                fitWidthProperty().bind(this@VideoPlayer.widthProperty())
-                fitHeightProperty().bind(this@VideoPlayer.heightProperty())
+                isPreserveRatio = true
 
-                layoutBoundsProperty().addListener { _, _, newValue ->
-                    this@stackpane.maxWidth = newValue.width
-                    this@stackpane.maxHeight = newValue.height
-                }
+                fitWidthProperty().bind(this@player.widthProperty())
+                fitHeightProperty().bind(this@player.heightProperty())
+
+                videoView = this
+            }
+
+            style {
+                backgroundColor += Color.BLACK
             }
 
             children += ControlBar().apply {
                 controlBar = this
             }
+            fitToParentSize()
         }
 
         val registerForControllerBar = registerForControllerBar()

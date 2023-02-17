@@ -7,5 +7,4 @@ import org.koin.core.component.inject
 
 abstract class VideoViewNodes: KoinComponent,BorderPane() {
     protected val videoStream by inject<VideoStream>()
-
 }

@@ -7,6 +7,7 @@ import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onUI
 import ink.bluecloud.utils.sceneRoot
 import javafx.geometry.Pos
+import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import org.koin.core.annotation.Factory
 import org.koin.core.component.get
@@ -16,7 +17,7 @@ import tornadofx.*
 @Factory
 class VideoView(
     card: HomePagePushCard
-): VideoViewNodes() {
+) : VideoViewNodes() {
     init {
         newIO {
             val (video, audio) = videoStream.getVideoStream(
@@ -51,37 +52,26 @@ class VideoView(
                     alignment = Pos.CENTER_LEFT
                 }
 
+                center = player
 
-                center = scrollpane {
-                    borderpane {
-                        heightProperty().map {
-                            it.toDouble() / 2.0
-                        }.run {
-                            player.prefHeightProperty().bind(this)
-                        }
-                        center = player
-
-
-
-                    }
-                }
-
-
-            }
-
-/*
-            get<CommentAreaLazyLoad>().getCommentAreaInfo(card.id).run {
-                data?.replies?.forEach {
-
+                right = vbox {
+                    minWidth = 200.0
                 }
             }
-*/
         }
 
         style {
             backgroundColor += Color.WHITE
             backgroundRadius += box(10.px)
         }
+
+        boundsInParentProperty().addListener { _, _, _ ->
+            (parent as Pane).run {
+                this@VideoView.minHeightProperty().bind(heightProperty())
+                this@VideoView.minWidthProperty().bind(widthProperty())
+            }
+        }
+
         paddingAll = 10
     }
 }
