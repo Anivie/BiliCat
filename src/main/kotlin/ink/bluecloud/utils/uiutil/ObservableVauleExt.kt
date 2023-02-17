@@ -1,4 +1,4 @@
-@file:Suppress("DuplicatedCode", "unused")
+@file:Suppress("DuplicatedCode", "unused", "UNCHECKED_CAST")
 
 package ink.bluecloud.utils.uiutil
 
@@ -6,17 +6,16 @@ import ink.bluecloud.utils.ioContext
 import ink.bluecloud.utils.newIO
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
-import kotlin.coroutines.Continuation
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 abstract class SuspendObservableEventHandler<T> : ChangeListener<T> {
-    lateinit var continuation: Continuation<ObservableChangeEvent<T>>
+    companion object {
+        val eventMap = ConcurrentHashMap<Any,Any>()
+    }
+    lateinit var continuation: CancellableContinuation<ObservableChangeEvent<T>>
 }
 
 data class ObservableChangeEvent <T>(
@@ -31,9 +30,20 @@ data class ObservableChangeEvent <T>(
     }
 }
 
-private fun <T> getSuspendObservableEventHandler() = object : SuspendObservableEventHandler<T>() {
+private fun <T> ObservableValue<T>.getSuspendObservableEventHandler() = object : SuspendObservableEventHandler<T>() {
     override fun changed(observable: ObservableValue<out T>?, oldValue: T, newValue: T) {
-        continuation.resume(ObservableChangeEvent(observable,oldValue,newValue))
+        if (continuation.isActive) {
+            continuation.resume(ObservableChangeEvent(observable, oldValue, newValue))
+            return
+        }
+
+        (eventMap[this@getSuspendObservableEventHandler]as? ArrayDeque<ObservableChangeEvent<T>>)?.run {
+            this += ObservableChangeEvent(observable, oldValue, newValue)
+        }?: run {
+            eventMap[this@getSuspendObservableEventHandler] = ArrayDeque<ObservableChangeEvent<T>>().apply {
+                this += ObservableChangeEvent(observable, oldValue, newValue)
+            }
+        }
     }
 }
 
@@ -46,11 +56,11 @@ fun <T> ObservableValue<T>.newSuspendEventHandler(block: suspend ObservableChang
     val handler = regSuspendObservableHandler()
 
     while (isActive) {
-        val event = suspendCoroutine {
+        val event = suspendCancellableCoroutine {
             handler.continuation = it
         }
 
-        block(event)
+        processEvent(block, event)
 
         if (event.cancel) {
             removeListener(handler)
@@ -58,12 +68,27 @@ fun <T> ObservableValue<T>.newSuspendEventHandler(block: suspend ObservableChang
         }
     }
 }
+
+private suspend fun <T> ObservableValue<T>.processEvent(
+    block: suspend ObservableChangeEvent<T>.() -> Unit,
+    event: ObservableChangeEvent<T>
+) {
+    block(event)
+
+    (SuspendObservableEventHandler.eventMap[this@processEvent] as? ArrayDeque<ObservableChangeEvent<T>>)?.run {
+        if (isNotEmpty()) {
+            block(removeFirst())
+            if (isNotEmpty()) processEvent(block, removeFirst())
+        }
+        if (isEmpty()) SuspendObservableEventHandler.eventMap.remove(this@processEvent)
+    }
+}
+
 context(KoinComponent, CoroutineScope)
 suspend fun <T> ObservableValue<T>.suspendEventHandler(block: suspend ObservableChangeEvent<T>.() -> Unit) = launch (ioContext) {
     val handler = regSuspendObservableHandler()
-
     while (isActive) {
-        val event = suspendCoroutine {
+        val event = suspendCancellableCoroutine {
             handler.continuation = it
         }
 

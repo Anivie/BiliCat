@@ -7,6 +7,7 @@ import tornadofx.*
 
 class ControlBar: ControlBarNodes() {
     init {
+/*
         top = borderpane {
             left {
                 backButton = button("\uE629")
@@ -19,6 +20,7 @@ class ControlBar: ControlBarNodes() {
             paddingAll = 5
             minHeight = 50.0
         }
+*/
 
         bottom = vbox(5) {
             borderpane {

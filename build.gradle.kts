@@ -21,11 +21,7 @@ repositories {
     mavenCentral()
 }
 
-javafx {
-    version = "19.0.2.1"
-    modules = listOf("javafx.controls", "javafx.media")
-}
-
+val javafxVersion:String by properties
 val zxingVersion:String by properties
 val koinVersion:String by properties
 val koinLoggerVersion:String by properties
@@ -42,6 +38,11 @@ val protobufVersion:String by properties
 val h2Version:String by properties
 val ktormCoreVersion:String by properties
 val ktormKspVersion:String by properties
+
+javafx {
+    version = javafxVersion
+    modules = listOf("javafx.controls", "javafx.media")
+}
 
 dependencies {
     //GUI
