@@ -6,7 +6,7 @@
 JavaFX版本使用最新稳定版  
 
  - 测试流程：  
-   - Fork仓库
+   - Clone仓库
    - 在idea运行配置中添加VM参数
    - 运行`ink.bluecloud.MainKt#main`
 
