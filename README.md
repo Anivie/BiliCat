@@ -1,5 +1,10 @@
 ![](screenshot/home.png)
 
+### 运行环境：
+本项目使用最新LTS版本的JDK进行开发，当前为JDK17.  
+使用Zulu17开发，经测试可以运行于Zulu17,Liberica17,IBM17  
+JavaFX版本使用最新稳定版  
+
  - 测试流程：  
    - Fork仓库
    - 在idea运行配置中添加VM参数
