@@ -5,9 +5,8 @@ import ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer.PlayingData
 import ink.bluecloud.ui.fragment.mediaplayer.javafxmediaplayer.VideoPlayer
 import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.onUI
-import ink.bluecloud.utils.sceneRoot
+import ink.bluecloud.utils.uiutil.sceneRoot
 import javafx.geometry.Pos
-import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import org.koin.core.annotation.Factory
 import org.koin.core.component.get
@@ -35,13 +34,17 @@ class VideoView(
             }
 
             onUI {
-                top = hbox {
-                    button("\uE629") {
+                hbox {
+                    button(/*"\uE629"*/"<") {
                         stylesheets += "css/node/suspended-button.css"
-                        style(true) {
-                            fontSize = 25.px
-                            fontFamily = "mediaplayer"
+
+/*
+                        skinProperty().addListener { _, _, _ ->
+                            style(true) {
+                                fontFamily = "mediaplayer"
+                            }
                         }
+*/
 
                         action {
                             sceneRoot.children -= this@VideoView
@@ -52,10 +55,15 @@ class VideoView(
                     alignment = Pos.CENTER_LEFT
                 }
 
-                center = player
+                scrollpane {
+                    content = vbox {
+                        children += player
+                        textarea {  }
 
-                right = vbox {
-                    minWidth = 200.0
+                        skinProperty().addListener { _, _, _ -> fitToParentSize() }
+                    }
+
+                    boundsInParentProperty().addListener { _, _, _ -> fitToParentSize() }
                 }
             }
         }
@@ -65,13 +73,7 @@ class VideoView(
             backgroundRadius += box(10.px)
         }
 
-        boundsInParentProperty().addListener { _, _, _ ->
-            (parent as Pane).run {
-                this@VideoView.minHeightProperty().bind(heightProperty())
-                this@VideoView.minWidthProperty().bind(widthProperty())
-            }
-        }
-
+        boundsInParentProperty().addListener { _, _, _ -> fitToParentSize() }
         paddingAll = 10
     }
 }

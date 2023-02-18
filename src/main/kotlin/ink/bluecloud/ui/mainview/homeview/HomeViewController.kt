@@ -10,8 +10,8 @@ import ink.bluecloud.ui.mainview.homeview.node.VideoInformationCard
 import ink.bluecloud.utils.newIO
 import ink.bluecloud.utils.newUI
 import ink.bluecloud.utils.onUI
-import ink.bluecloud.utils.sceneRoot
 import ink.bluecloud.utils.uiutil.newSuspendEventHandler
+import ink.bluecloud.utils.uiutil.sceneRoot
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import org.koin.core.annotation.Single
